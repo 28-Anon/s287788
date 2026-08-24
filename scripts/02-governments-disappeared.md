@@ -24,7 +24,7 @@
 | 17 | 0:48 | RULES. BORDERS. TAX. FORCE. | four hard cuts, one per word |
 | 18 | 0:51 | CONGRATULATIONS — THAT'S A GOVERNMENT | a flag going UP over the barricade |
 | 19 | 0:54 | IT TOOK FOUR DAYS | calendar, four pages torn |
-| 20 | 0:57 | YOU DON'T GET TO CHOOSE IF YOU HAVE ONE — ONLY IF YOU PICK IT, OR IT PICKS YOU | split frame: a ballot box / a hand on the valve. cut to black |
+| 20 | 0:57 | YOU EITHER PICK ONE, OR ONE PICKS YOU | split frame: a ballot box / a hand on the valve. cut to black |
 
 **Notes.** Beat 17 is the accelerator — four single words, one frame each, no
 breath. Beat 19 is the gut-punch stat and it's the only "number" in the script;

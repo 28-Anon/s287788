@@ -7,7 +7,7 @@
 |---|---|---|---|
 | 1 | 0:00 | IMAGINE MONEY STOPPED WORKING TOMORROW | card declined, red X, hand frozen at the terminal |
 | 2 | 0:03 | EVERY PRICE TAG ON EARTH GOES TO ZERO | price stickers peeling off, blank shelves labels |
-| 3 | 0:06 | SO YOU WALK INTO A SHOP AND TAKE WHAT YOU WANT | slow push down an aisle, trolley filling |
+| 3 | 0:06 | SO YOU TAKE WHATEVER YOU WANT | slow push down an aisle, trolley filling |
 | 4 | 0:09 | AND SO DOES EVERYONE ELSE | crowd pouring through automatic doors |
 | 5 | 0:12 | BY DAY THREE THE SHELVES ARE BARE | empty aisle, one tin rolling |
 | 6 | 0:15 | BUT WHAT IF THE TRUCKS KEPT COMING? | convoy on a highway, dawn |
@@ -24,7 +24,7 @@
 | 17 | 0:48 | BECAUSE MONEY WAS NEVER THE PAPER | banknote catching fire, curling |
 | 18 | 0:51 | IT'S THE ANSWER TO ONE QUESTION | ash falling |
 | 19 | 0:54 | WHO GOES FIRST | a queue, seen from the front |
-| 20 | 0:57 | YOU CAN BURN THE PAPER — YOU CANNOT DELETE THE LINE | pull back: the queue runs to the horizon. cut to black |
+| 20 | 0:57 | YOU CAN BURN THE PAPER. NOT THE LINE. | pull back: the queue runs to the horizon. cut to black |
 
 **Notes.** Beat 6 is the hinge — that's the viewer's own objection, said out
 loud before they can type it. Beats 9-11 are a rhythm triplet, deliver them

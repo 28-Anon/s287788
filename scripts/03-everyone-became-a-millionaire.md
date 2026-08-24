@@ -1,32 +1,38 @@
 # 03 — WHAT IF EVERYONE BECAME A MILLIONAIRE
 
-**Runtime:** ~60s · 20 beats
-**Payoff:** the only thing that ever made you rich was everyone else not being.
+**Engine:** strict reference format — one continuous scene, constraint-removal
+pivots, no clock.
+**Scene:** a car dealership forecourt. The camera never leaves it.
+**Runtime:** 45s captioned + 15s silent replay. 15 beats · 89 words.
+**Payoff image:** a horizon of identical Ferraris with nobody looking at them.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IMAGINE EVERY PERSON ON EARTH WAKES UP WITH A MILLION | phone screen, balance ticking up, sunrise |
-| 2 | 0:03 | YOU QUIT YOUR JOB IN THE FIRST HOUR | badge dropped on a desk |
-| 3 | 0:06 | SO DOES YOUR BOSS | corner office, chair spinning, empty |
-| 4 | 0:09 | AND YOUR PILOT | cockpit, no one in either seat |
-| 5 | 0:12 | AND EVERY NURSE ON YOUR WARD | nurses' station, phones ringing out |
-| 6 | 0:15 | THEN YOU DRIVE TO THE CAR DEALERSHIP | convertible on an open road, grinning |
-| 7 | 0:18 | AND SO DOES EVERYBODY ELSE | aerial: the forecourt swarmed |
-| 8 | 0:21 | THERE ARE EIGHT BILLION BUYERS | crowd stretching out of frame |
-| 9 | 0:24 | AND STILL ONLY ONE FERRARI | one car, mob pressed against the glass |
-| 10 | 0:27 | SO IT GOES TO WHOEVER BIDS HIGHEST | auction paddles, fast cuts |
-| 11 | 0:30 | A MILLION. TEN MILLION. A BILLION. | number climbing, blurring |
-| 12 | 0:33 | THE SAME THING HAPPENS TO HOUSES | for-sale board, price re-stickered three times |
-| 13 | 0:36 | THEN TO PETROL | pump display spinning out of control |
-| 14 | 0:39 | THEN TO BREAD | one loaf on an auction block, spotlit |
-| 15 | 0:42 | YOUR MILLION NOW BUYS A SANDWICH | wheelbarrow of cash, one sandwich |
-| 16 | 0:45 | YOU ARE EXACTLY AS RICH AS YOU WERE YESTERDAY | same flat, same sofa, same view |
-| 17 | 0:48 | BECAUSE MONEY ISN'T AN AMOUNT | notes fanning, then dissolving |
-| 18 | 0:51 | IT'S A PLACE IN A LINE | queue seen from above, numbered |
-| 19 | 0:54 | AND EVERYONE MOVED UP TOGETHER | whole queue slides forward — order unchanged |
-| 20 | 0:57 | WHICH MEANS NOBODY MOVED AT ALL | pull back, the line is identical. cut to black |
+| 1 | 0:00 | IF EVERYONE ON EARTH GOT A MILLION DOLLARS | forecourt at sunrise, empty, one car under lights |
+| 2 | 0:03 | YOU'D DRIVE STRAIGHT TO A DEALERSHIP | your car pulling onto the forecourt |
+| 3 | 0:06 | AND BUY THE FERRARI IN THE WINDOW | the car, spotlit behind glass |
+| 4 | 0:09 | BUT EVERYONE ELSE IS ALREADY HERE | pull back — the forecourt is full of people |
+| 5 | 0:12 | AND THERE IS ONLY ONE | the same car, mob pressed against the glass |
+| 6 | 0:15 | SO THE PRICE STARTS CLIMBING | price board flipping upward, faster |
+| 7 | 0:18 | **BUT WHAT IF THEY BUILT MORE?** | factory doors rolling open at the back of the lot |
+| 8 | 0:21 | SOMEBODY HAS TO BUILD THEM | empty assembly line through the open doors |
+| 9 | 0:24 | AND NOBODY WORKS ANY MORE | tools dropped on the factory floor |
+| 10 | 0:27 | **BUT WHAT IF ROBOTS BUILT THEM?** | robot arms waking up, one after another |
+| 11 | 0:30 | NOW THERE IS A FERRARI FOR EVERYONE | cars rolling out, filling the forecourt |
+| 12 | 0:33 | PARKED ON EVERY STREET IN THE WORLD | identical cars to the horizon |
+| 13 | 0:36 | AND NOBODY WANTS ONE ANY MORE | the crowd walking away, cars untouched |
+| 14 | 0:39 | BECAUSE IT ONLY MEANT SOMETHING | dust settling on a bonnet |
+| 15 | 0:42 | WHEN YOU COULDN'T HAVE IT | final image: a field of identical Ferraris, weeds through the tarmac, nobody in frame |
+| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 11, 13, 15 recut fast |
+| — | 0:57 | *(no captions)* | outro card |
 
-**Notes.** Beats 12-14 are a descending ladder — houses, petrol, bread. Going
-from luxury to survival in three beats is what makes the sandwich land. Beat 16
-should be visually *boring* on purpose: it's the flattest frame in the video and
-it's the whole point.
+**Notes.** Two pivots, and they are the whole script: beat 7 removes scarcity of
+supply, beat 10 removes the labour needed to satisfy it. Everything between them
+is just the consequence playing out.
+
+Never cut away from the forecourt. The factory is at the *back of the lot* and
+you see it through the open doors — that's what keeps this shootable as one
+continuous world instead of twenty setups.
+
+Beat 15 is the payoff and it's carried by the picture, not the words. Hold the
+final shot for the full three seconds before the replay starts.

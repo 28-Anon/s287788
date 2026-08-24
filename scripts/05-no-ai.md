@@ -1,47 +1,45 @@
 # 05 — WHAT IF THERE WAS NO AI
 
-**Runtime:** ~60s · 20 beats
-**Payoff:** it was never the thing you talk to — it was the floor you were standing on.
+**Engine:** strict reference format — one continuous scene, constraint-removal
+pivots, no clock.
+**Scene:** a supermarket checkout. You never move from it. Everything outside
+is seen through the window.
+**Runtime:** 45s captioned + 15s silent replay. 15 beats · 99 words.
+**Payoff image:** the whole store frozen, every person stuck at their till.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IMAGINE EVERY AI ON EARTH SWITCHED OFF TONIGHT | server hall, rack lights dropping row by row |
-| 2 | 0:03 | ALL OF IT. EVERYWHERE. AT ONCE. | wide shot, the last light goes |
-| 3 | 0:06 | DAY ONE YOU BARELY NOTICE | someone shrugging, phone in hand |
-| 4 | 0:09 | YOU'LL JUST GOOGLE IT LIKE YOU USED TO | cursor blinking in a search bar |
-| 5 | 0:12 | BUT SEARCH RESULTS ARE RANKED BY AI | clean results page, then it scrambles |
-| 6 | 0:15 | SO NOW YOU GET NINE BILLION PAGES IN NO ORDER | infinite scroll of junk, accelerating |
-| 7 | 0:18 | YOUR INBOX IS NEXT | unread counter starting to climb |
-| 8 | 0:21 | THE SPAM FILTER WAS AI TOO | flood of junk mail filling the frame |
-| 9 | 0:24 | FOUR THOUSAND EMAILS BEFORE LUNCH | counter spinning past 4000 |
-| 10 | 0:27 | THEN YOUR CARD GETS DECLINED IN THE SHOP | terminal, red cross, queue behind |
-| 11 | 0:30 | BECAUSE FRAUD DETECTION WAS AI | card turning in a hand |
-| 12 | 0:33 | AND SO WAS THE THING THAT APPROVED IT | dead terminal, no lights |
-| 13 | 0:36 | THE TRAFFIC LIGHTS STOP ADAPTING | junction from above, everything stalling |
-| 14 | 0:39 | THE WHOLE CITY TIMES OUT AT ONCE | aerial, gridlock in every direction |
-| 15 | 0:42 | HOSPITALS READ EVERY SCAN BY HAND AGAIN | one radiologist, a wall of film |
-| 16 | 0:45 | THE QUEUE GOES FROM HOURS TO WEEKS | waiting room, chairs full, clock spinning |
-| 17 | 0:48 | YOU'D MISS THE CHATBOT IN A SECOND | empty chat window, cursor blinking |
-| 18 | 0:51 | AND EVERYTHING ELSE IN ABOUT A WEEK | fast montage of all of the above |
-| 19 | 0:54 | IT WAS NEVER THE THING YOU TALK TO | phone face-down on a table |
-| 20 | 0:57 | IT WAS THE FLOOR YOU WERE STANDING ON | camera tilts down — the ground is server racks. cut to black |
+| 1 | 0:00 | IF EVERY AI ON EARTH SWITCHED OFF | strip lights flickering down a checkout lane |
+| 2 | 0:03 | YOU'D BE STANDING HERE WITH A FULL TROLLEY | you at the terminal, trolley loaded |
+| 3 | 0:06 | AND YOUR CARD WOULD JUST STOP WORKING | red cross on the card reader |
+| 4 | 0:09 | THAT WAS AI TOO | the card, close, turning in your hand |
+| 5 | 0:12 | SO YOU PAY IN CASH INSTEAD | notes counted onto the counter |
+| 6 | 0:15 | **BUT WHAT IF THE SHELVES WERE EMPTY?** | camera pans off you — bare shelves behind |
+| 7 | 0:18 | NOTHING TOLD THE WAREHOUSE TO RESTOCK | empty aisle stretching to the back wall |
+| 8 | 0:21 | SO YOU GO TO ANOTHER SHOP | your car, seen through the front window |
+| 9 | 0:24 | **BUT WHAT IF THE ROADS DIDN'T MOVE?** | through the window: gridlock, nothing moving |
+| 10 | 0:27 | THE LIGHTS STOPPED DECIDING | traffic light stuck on red, rain starting |
+| 11 | 0:30 | SO YOU CALL SOMEONE TO COME AND GET YOU | phone to your ear, still at the till |
+| 12 | 0:33 | BUT NOTHING KNOWS HOW TO FIND THEM | map on the screen, blank grey, no roads |
+| 13 | 0:36 | AND YOU ARE STILL AT THE CHECKOUT | same framing as beat 2, unchanged |
+| 14 | 0:39 | YOU NEVER ASKED FOR ANY OF IT | you, motionless, trolley still full |
+| 15 | 0:42 | YOU JUST STOPPED BEING ABLE TO LEAVE | final image: slow pull back — every till in the store has someone frozen at it |
+| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 9, 13, 15 recut fast |
+| — | 0:57 | *(no captions)* | outro card |
 
-**Notes.** Play this one completely neutral. It isn't pro-AI or anti-AI, and that's
-exactly why both sides share it — the second it picks a team, half the comments
-turn into an argument about something you didn't say.
+**Notes.** Two pivots: beat 6 removes the supply chain, beat 9 removes the road
+network. Both are the viewer's own escape route being taken away, which is what
+makes them land — every rung is you *trying to leave* and finding you can't.
 
-Beat 5 is the trapdoor. Everyone thinks "no AI" means "no chatbot"; beat 5 is
-where they realise they never knew where the edge was. Hold it a beat longer
-than the others.
+The camera stays inside the shop for all 45 seconds. The car, the gridlock and
+the rain all happen through the front window. One location, one lighting setup,
+one afternoon.
 
-**One honesty check.** Beats 5, 8 and 11 are solid — search ranking, spam
-filtering and card fraud detection genuinely run on machine learning today, and
-they'd degrade immediately. Beat 15 is the weakest claim: scan-reading AI is
-real and growing but hospitals are not yet dependent on it, so "hours to weeks"
-overstates it. If you want the script airtight, swap beats 15-16 for:
+Still neutral — no side taken. Beat 14 does the work the old version's ending
+did, without arguing with anybody.
 
-> 15 — YOUR PHONE STOPS UNDERSTANDING YOUR VOICE
-> 16 — AND CAN'T FIND A SINGLE PHOTO YOU ASK FOR
-
-Less dramatic, completely true. Your call, but don't let the one soft claim be
-the thing the comments latch onto.
+**Honesty check.** Beats 3-4 (card approval) and 7 (warehouse restocking) are
+solid — both genuinely run on machine learning today. Beat 10 is the soft one:
+adaptive signal timing is real but not universal, so a total freeze overstates
+it. If you want it airtight, swap beat 10 to `NOTHING IS TIMING THEM ANY MORE`,
+which is true wherever adaptive signalling exists and doesn't claim more.

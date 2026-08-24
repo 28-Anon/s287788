@@ -24,7 +24,7 @@
 | 17 | 0:48 | AND EVERYONE IS OLD | wide shot, an entire city of the elderly |
 | 18 | 0:51 | EVENTUALLY THERE IS ONE PERSON LEFT | single figure in an empty square |
 | 19 | 0:54 | EVERY SONG. EVERY LANGUAGE. EVERY NAME. | flicker montage, faster and faster |
-| 20 | 0:57 | ALL OF IT ENDS IN ONE ROOM — WITH NOBODY TO TELL | a lamp, a chair, a hand. lamp goes off. black |
+| 20 | 0:57 | ALL OF IT ENDS IN ONE ROOM | a lamp, a chair, a hand. lamp goes off. black |
 
 **Notes.** This one is quiet, not loud. Drop the music out completely at beat 18
 and run beats 19-20 on room tone alone — the silence is the effect. Beats 5-8
