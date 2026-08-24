@@ -1,7 +1,7 @@
 # 10 — WHAT IF PAIN DIDN'T EXIST
 
 **Scene:** a kitchen. The camera never leaves the room.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 81 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 119 words.
 **Payoff image:** the kitchen, spotless, everything still switched on, nobody in it.
 
 | # | t | CAPTION | VISUAL |
@@ -21,8 +21,14 @@
 | 13 | 0:36 | A HEART YOU CAN'T HEAR | a hand on a chest. no reaction at all |
 | 14 | 0:39 | PAIN WAS NEVER THE ENEMY | the kitchen, quiet |
 | 15 | 0:42 | IT WAS THE ONLY THING TELLING YOU | final image: the kitchen spotless, every appliance still on, nobody in it, a hand-shaped scorch on the pan handle |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 9, 13, 15 |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND SOME PEOPLE LIVE LIKE THIS | the scorched pan handle |
+| 17 | 0:48 | THEY ARE BORN WITHOUT IT | the quiet kitchen |
+| 18 | 0:51 | THEY DON'T LIVE VERY LONG | the hob, still on |
+| 19 | 0:54 | NOT BECAUSE ANYTHING ATTACKS THEM | the wide room |
+| 20 | 0:57 | BECAUSE NOTHING EVER TELLS THEM | the room, unchanged |
+| 21 | 1:00 | SO THE NEXT TIME IT HURTS | a hand, unhurt, in the light |
+| 22 | 1:03 | WHAT IS IT TRYING TO SAY? | spotless kitchen, everything on, nobody in it. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Pivot 1 removes the scar — without visible damage there's no record
 either. Pivot 2 removes the last backup, your own attention. What's left is a

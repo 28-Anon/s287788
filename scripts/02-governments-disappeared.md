@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** your own street, shot from your front door. The camera never leaves it.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 95 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 136 words.
 **Payoff image:** the same view as beat 1 — but now there's a barricade, guards
 and a flag at the end of your road.
 
@@ -24,8 +24,14 @@ and a flag at the end of your road.
 | 13 | 0:36 | AND MAKE THEM PAY TO CROSS IT | a sack handed over the line |
 | 14 | 0:39 | RULES. A BORDER. TAX. FORCE. | four hard cuts — all on the same street |
 | 15 | 0:42 | YOU JUST BUILT ONE YOURSELF | final image: your front door again, identical framing to beat 1 — barricade, guards, a flag |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 11, 14, 15 recut fast |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND YOU DIDN'T VOTE FOR IT | the flag over the barricade |
+| 17 | 0:48 | NOBODY ASKED IF YOU WANTED IT | the guards at the line |
+| 18 | 0:51 | IT JUST BECAME THE ONLY WAY THROUGH | the line scraped in the road |
+| 19 | 0:54 | THAT'S HOW EVERY ONE OF THEM STARTED | the barricade, wide |
+| 20 | 0:57 | SOMEBODY GUARDING SOMETHING EVERYBODY NEEDS | the water tank |
+| 21 | 1:00 | SO WHEN THEY ASK FOR MORE | a hand held out at the line |
+| 22 | 1:03 | WHEN DO YOU STOP PAYING? | your front door, the flag at the end of the road. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Pivot 1 removes the idea that a rule enforces itself. Pivot 2 removes
 the idea that your street is alone in the world. Those are the only two moves in

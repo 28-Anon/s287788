@@ -1,7 +1,7 @@
 # 09 — WHAT IF NOBODY EVER FORGOT ANYTHING
 
 **Scene:** a parked car at night, two people in it. The camera never leaves the car.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 84 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 121 words.
 **Payoff image:** the car still parked, both still in it, the rain not letting up.
 
 | # | t | CAPTION | VISUAL |
@@ -21,8 +21,14 @@
 | 13 | 0:36 | YOU CAN STILL FORGIVE SOMEBODY | a hand almost moving |
 | 14 | 0:39 | YOU JUST CAN'T STOP KNOWING | the hand stopping |
 | 15 | 0:42 | FORGETTING WAS THE MERCY | final image: the car, still parked, both still in it, dawn never coming |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 5, 6, 9, 13, 15 |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | NOT FORGIVENESS. FORGETTING. | the rain on the glass |
+| 17 | 0:48 | THE THING WE CALL BEING BAD WITH NAMES | one face |
+| 18 | 0:51 | IS WHAT LETS PEOPLE STAY | the other face |
+| 19 | 0:54 | YOU'VE FORGOTTEN SOMETHING SOMEBODY DID | hands loosening on the wheel |
+| 20 | 0:57 | AND THEY'RE STILL IN YOUR LIFE | the two of them, closer |
+| 21 | 1:00 | SO THINK OF ONE YOU DIDN'T | the rain, unchanged |
+| 22 | 1:03 | WOULD YOU GIVE IT BACK? | the car, still parked, both still in it. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Pivot 1 removes the idea that not saying it means it's gone. Pivot 2
 removes the asymmetry — if only one of you remembered, you could still be

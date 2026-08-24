@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a single market stall. You stand at it for the whole video.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 86 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 132 words.
 **Payoff image:** a coin in the trader's palm, and the queue behind you running
 to the horizon.
 
@@ -24,8 +24,14 @@ to the horizon.
 | 13 | 0:36 | AND WHOEVER DECIDES IS THE ONE IN CHARGE | the trader's hand, choosing |
 | 14 | 0:39 | SO YOU OFFER HIM SOMETHING | your hand holding out a watch |
 | 15 | 0:42 | TO GO FIRST | final image: a coin in his palm, the queue behind you to the horizon |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 5, 6, 9, 11, 15 recut fast |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND THAT'S ALL MONEY HAS EVER BEEN | the coin, close, in his palm |
+| 17 | 0:48 | A WAY OF DECIDING THE ORDER | the queue, from above |
+| 18 | 0:51 | YOU CAN CALL IT SOMETHING ELSE | the trader pocketing it |
+| 19 | 0:54 | PAPER. GOLD. NUMBERS ON A SCREEN. | three quick cuts, all at the stall |
+| 20 | 0:57 | BUT SOMEONE IS ALWAYS AT THE FRONT | one figure served, everyone waiting |
+| 21 | 1:00 | SO HERE'S WHAT I CAN'T WORK OUT | the queue, held |
+| 22 | 1:03 | WHO SHOULD IT BE? | the queue to the horizon. question held on screen |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** The two pivots are the two escape hatches every viewer reaches for.
 Pivot 1 kills "we'd just make more of everything" — fine, the stall never runs

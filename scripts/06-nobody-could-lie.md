@@ -1,7 +1,7 @@
 # 06 — WHAT IF NOBODY COULD LIE
 
 **Scene:** a family dinner table. The camera never leaves it.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 83 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 121 words.
 **Payoff image:** the table, every plate still full, every chair empty.
 
 | # | t | CAPTION | VISUAL |
@@ -21,8 +21,14 @@
 | 13 | 0:36 | COMES OUT AT ONCE | a chair pushed back hard |
 | 14 | 0:39 | YOU NEVER WANTED HONESTY | the door, open |
 | 15 | 0:42 | YOU WANTED TO CHOOSE | final image: the table, every plate full, every chair empty |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 5, 6, 10, 13, 15 |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | EVERY KIND THING YOU HAVE EVER SAID | a full plate |
+| 17 | 0:48 | WASN'T ALWAYS COMPLETELY TRUE | an empty chair |
+| 18 | 0:51 | AND THEY NEEDED TO HEAR IT ANYWAY | the table, laid |
+| 19 | 0:54 | THAT'S NOT LYING EXACTLY | a folded napkin |
+| 20 | 0:57 | BUT IT ISN'T THE TRUTH EITHER | the open door |
+| 21 | 1:00 | SO IF IT WAS TOMORROW | the table, laid again, morning light |
+| 22 | 1:03 | WHO WOULD YOU STOP SPEAKING TO? | the table, plates full, chairs empty. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Pivot 1 removes the assumption that not-lying and truth-telling are the
 same thing. Pivot 2 removes the last exit. The payoff is the true one: almost

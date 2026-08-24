@@ -1,7 +1,7 @@
 # 08 — WHAT IF YOU COULD SEE HOW LONG YOU HAD LEFT
 
 **Scene:** a bus stop. The camera never leaves it.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 84 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 119 words.
 **Payoff image:** a bus pulling away, every window a face with a number, sorted.
 
 | # | t | CAPTION | VISUAL |
@@ -21,8 +21,14 @@
 | 13 | 0:36 | WHO GETS THE HOUSE | same two, one turned away |
 | 14 | 0:39 | WHO GETS SAT NEXT TO | an empty seat beside a low number |
 | 15 | 0:42 | IT WAS NEVER A NUMBER. IT WAS A PRICE. | final image: the bus pulling away, every window a face with a number, sorted highest at the front |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 6, 9, 11, 14, 15 |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND SOMEBODY ALREADY HAS YOURS | the bus gone. empty stop |
+| 17 | 0:48 | NOT EXACTLY. NOT GLOWING. | the bench |
+| 18 | 0:51 | BUT CLOSE ENOUGH TO SELL YOU THINGS | a poster on the shelter |
+| 19 | 0:54 | CLOSE ENOUGH TO PRICE YOUR INSURANCE | the same poster, closer |
+| 20 | 0:57 | YOU JUST CAN'T SEE IT | the empty stop |
+| 21 | 1:00 | SO WOULD IT BE BETTER | the bench, no number above it |
+| 22 | 1:03 | IF EVERYONE COULD? | empty bus stop, no numbers anywhere. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Pivot 1 turns the number from a fact into a decision. Pivot 2 turns it
 from private into public — and that's the one that lands, because it's already

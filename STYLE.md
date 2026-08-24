@@ -16,11 +16,17 @@ This is the engine. Every script below runs on it.
    Remove one constraint. Answer. Remove the next. 3-5 rungs.
    Each rung must feel like the viewer's own next question.
 4. **THE TERMINAL STATE (48-54s)** — the system has nowhere left to go.
-5. **THE PAYOFF (last 6s)** — one line that reframes the whole thing.
+5. **THE PAYOFF (0:39-0:45)** — one line that reframes the whole thing, landed
+   on the payoff image.
+6. **THE SPOKEN CLOSE (0:45-1:03)** — seven beats, still talking, turned to
+   camera. Restate the payoff in plainer words, concede the complication,
+   then make it personal and ask them something you genuinely can't answer
+   for them. The last beat is a question held on screen over the final image.
+   This is what takes the video past a minute and what makes the comments.
 
 ## Beat rules
 
-- **3-8 words per caption.** ALL CAPS, centred, held ~3s. ~20 beats for a 60s video.
+- **3-8 words per caption.** ALL CAPS, centred, held ~3s. 22 beats for a 69s video.
 - **One new idea per beat.** If a beat contains two, split it.
 - **Every beat either answers or escalates. Never explains.**
   The moment a beat teaches, retention drops.
@@ -58,8 +64,9 @@ left to go, and remove those instead.
 
 ## Production
 
-- **45s of captions, then ~12s of silent replay, then the outro card.** The
-  reference does this and it loops for free.
+- **Never go silent.** The reference pads its last 23 seconds with a wordless
+  replay, and that's the one thing not to copy — no voice is where people
+  leave. Run the voice all the way to 1:03.
 - 9:16. Captions burned in, centred, high on the frame, thick white with shadow.
 - **Proofread every caption.** The reference has six typos in 45 seconds
   ("WHOUD", "A HULT", "YOU HANDS"). It reads as slop and caps who shares it.

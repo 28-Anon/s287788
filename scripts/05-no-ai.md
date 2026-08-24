@@ -4,7 +4,7 @@
 pivots, no clock.
 **Scene:** a supermarket checkout. You never move from it. Everything outside
 is seen through the window.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 99 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 139 words.
 **Payoff image:** the whole store frozen, every person stuck at their till.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
@@ -24,8 +24,14 @@ is seen through the window.
 | 13 | 0:36 | AND YOU ARE STILL AT THE CHECKOUT | same framing as beat 2, unchanged |
 | 14 | 0:39 | YOU NEVER ASKED FOR ANY OF IT | you, motionless, trolley still full |
 | 15 | 0:42 | YOU JUST STOPPED BEING ABLE TO LEAVE | final image: slow pull back — every till in the store has someone frozen at it |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 9, 13, 15 recut fast |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND NONE OF THAT WAS A CHATBOT | the phone, face down |
+| 17 | 0:48 | IT WAS BORING THINGS DECIDING BORING THINGS | card reader, shelf label, traffic light |
+| 18 | 0:51 | QUIETLY, FOR YEARS | the store, still |
+| 19 | 0:54 | NOBODY VOTED ON ANY OF IT | the frozen tills |
+| 20 | 0:57 | NOBODY EVEN NOTICED IT ARRIVE | wide, the whole shop |
+| 21 | 1:00 | SO BEFORE YOU ARGUE ABOUT THE FUTURE | everyone frozen where they stand |
+| 22 | 1:03 | WOULD YOU SWITCH IT OFF? | the whole store, motionless. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Two pivots: beat 6 removes the supply chain, beat 9 removes the road
 network. Both are the viewer's own escape route being taken away, which is what

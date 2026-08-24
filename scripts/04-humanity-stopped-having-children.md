@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a primary school classroom. The camera never leaves the room.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 85 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 117 words.
 **Payoff image:** every classroom in the school, lit, spotless, and empty forever.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
@@ -23,8 +23,14 @@ pivots, no clock.
 | 13 | 0:36 | THE SAME PEOPLE. THE SAME DAY. | the teacher in the doorway, same pose, sun in the same place |
 | 14 | 0:39 | FOREVER | the room. unmoving. hold it |
 | 15 | 0:42 | WITH NOBODY LEFT TO SHOW IT TO | final image: pull back through the window — every classroom in the school, lit, spotless, empty |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 10, 13, 15 recut fast |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | AND NOTHING ABOUT IT IS SAD | the perfect room |
+| 17 | 0:48 | NOBODY IS SUFFERING | sun on the floor |
+| 18 | 0:51 | NOBODY IS EVEN DYING | the corridor beyond the door |
+| 19 | 0:54 | IT JUST STOPS MATTERING | the room again, identical |
+| 20 | 0:57 | WHICH MIGHT BE WORSE | the same shot, held |
+| 21 | 1:00 | SO TELL ME HONESTLY | the empty doorway |
+| 22 | 1:03 | WOULD YOU WANT TO LIVE THERE? | every classroom lit and empty. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** This is the one that needed the most rethinking, because time was the
 old version's whole engine. The fix: remove the two things that made the clock

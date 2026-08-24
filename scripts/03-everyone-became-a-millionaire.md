@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a car dealership forecourt. The camera never leaves it.
-**Runtime:** 45s captioned + 15s silent replay. 15 beats · 89 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 128 words.
 **Payoff image:** a horizon of identical Ferraris with nobody looking at them.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
@@ -23,8 +23,14 @@ pivots, no clock.
 | 13 | 0:36 | AND NOBODY WANTS ONE ANY MORE | the crowd walking away, cars untouched |
 | 14 | 0:39 | BECAUSE IT ONLY MEANT SOMETHING | dust settling on a bonnet |
 | 15 | 0:42 | WHEN YOU COULDN'T HAVE IT | final image: a field of identical Ferraris, weeds through the tarmac, nobody in frame |
-| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 11, 13, 15 recut fast |
-| — | 0:57 | *(no captions)* | outro card |
+| 16 | 0:45 | WHICH IS AN UGLY THING TO KNOW | dust settling on a bonnet |
+| 17 | 0:48 | THAT HALF OF WHAT YOU WANT | the cars, endless |
+| 18 | 0:51 | IS JUST WANTING WHAT OTHERS CAN'T HAVE | the crowd walking away |
+| 19 | 0:54 | MAYBE NOT ALL OF IT | one person looking back |
+| 20 | 0:57 | MAYBE NOT YOU | that person's face |
+| 21 | 1:00 | BUT BE HONEST FOR ONE SECOND | the field of cars |
+| 22 | 1:03 | WOULD YOU STILL WANT ONE? | the field of identical Ferraris. question held |
+| — | 1:06 | *(no captions)* | outro card, 3s |
 
 **Notes.** Two pivots, and they are the whole script: beat 7 removes scarcity of
 supply, beat 10 removes the labour needed to satisfy it. Everything between them
