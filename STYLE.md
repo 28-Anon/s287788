@@ -36,8 +36,27 @@ For these four premises the *true* answer is the more shocking one. Don't
 invent a bigger ending than reality; find the real one and land it hard.
 That's the difference between a video that gets watched and one that gets sent.
 
+## The strict engine (what 02-05 run on)
+
+The reference does three things that are easy to miss and easy to lose:
+
+- **One continuous location, all 45 seconds.** It never leaves the car / sword /
+  tree world. Everything else is at the far end of that place, or through a
+  window. This is also why one person could make it.
+- **It never advances a clock.** No "day two", no "year fifty". It escalates
+  only by removing a constraint: *but what if the car can't stop / but if the
+  tree is indestructible too*. Exactly two pivots.
+- **It ends on a picture, not a sentence.** The final caption sits over the
+  payoff image; the image is what people screenshot.
+
+If a premise seems to need a timeline, you haven't found its pivots yet. Ask
+what two things would have to stop being true for the situation to have nowhere
+left to go, and remove those instead.
+
 ## Production
 
+- **45s of captions, then ~12s of silent replay, then the outro card.** The
+  reference does this and it loops for free.
 - 9:16. Captions burned in, centred, high on the frame, thick white with shadow.
 - **Proofread every caption.** The reference has six typos in 45 seconds
   ("WHOUD", "A HULT", "YOU HANDS"). It reads as slop and caps who shares it.

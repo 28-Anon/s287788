@@ -26,17 +26,17 @@ winner.
 
 ## 02 · Governments disappeared
 
-- **A · Cold premise** — IMAGINE EVERY GOVERNMENT ON EARTH VANISHED TONIGHT · *empty parliament, papers settling*
-- **B · Drop-in** — NOBODY IS IN CHARGE OF ANYTHING ANY MORE. STARTING NOW. · *flags sliding down poles*
-- **C · Outcome-first** — IT TAKES FOUR DAYS TO ACCIDENTALLY BUILD A GOVERNMENT · *a hand on a valve wheel*
-- **D · False comfort** — THE DAY EVERY GOVERNMENT DISAPPEARED WAS THE BEST DAY OF YOUR LIFE · *fireworks, people on car roofs*
+- **A · Cold premise** — IF EVERY GOVERNMENT ON EARTH VANISHED · *your street at dawn, from your front door*
+- **B · Drop-in** — NOBODY IS IN CHARGE OF ANYTHING ANY MORE · *neighbours stepping out of their doors*
+- **C · Outcome-first** — YOUR OWN STREET WOULD BUILD A NEW ONE · *barricade and a flag at the end of the road*
+- **D · False comfort** — IT WOULD BE THE BEST DAY OF YOUR LIFE · *fireworks over the rooftops*
 
 **Pick D to scale.** It reads as a political video for two seconds, then isn't —
 that mismatch is what makes people stay and argue in the comments.
 
 ## 03 · Everyone became a millionaire
 
-- **A · Cold premise** — IMAGINE EVERY PERSON ON EARTH WAKES UP WITH A MILLION · *balance ticking up at sunrise*
+- **A · Cold premise** — IF EVERYONE ON EARTH GOT A MILLION DOLLARS · *forecourt at sunrise, one car under lights*
 - **B · Drop-in** — YOU'RE A MILLIONAIRE. SO IS EVERY PERSON YOU HAVE EVER MET. · *crowd, every face lit by a phone*
 - **C · Outcome-first** — EVERYONE GOT A MILLION DOLLARS AND IT MADE THEM POORER · *wheelbarrow of cash, one sandwich*
 - **D · False comfort** — CONGRATULATIONS. YOU NEVER HAVE TO WORK AGAIN. · *badge dropped on a desk*
@@ -46,19 +46,19 @@ catch you being wrong.
 
 ## 04 · Humanity stopped having children
 
-- **A · Cold premise** — IMAGINE NO BABY IS EVER BORN AGAIN · *maternity ward, rows of empty cots*
-- **B · Drop-in** — THE LAST BABY ON EARTH WAS BORN THIS MORNING · *one cot, occupied. everything else empty*
-- **C · Outcome-first** — THERE ARE EIGHT BILLION PEOPLE ALIVE AND NONE OF THEM ARE UNDER TWENTY · *crowd of grey, one young face*
-- **D · False comfort** — FOR THE FIRST FIVE YEARS IT IS ACTUALLY QUITE NICE · *quiet street, birdsong, no traffic*
+- **A · Cold premise** — IF NO BABY WAS EVER BORN AGAIN · *classroom full of empty chairs, morning light*
+- **B · Drop-in** — THE LAST BABY ON EARTH WAS BORN TODAY · *one chair, occupied. everything else empty*
+- **C · Outcome-first** — NOTHING WOULD BREAK. THAT'S THE PROBLEM. · *an immaculate, empty classroom*
+- **D · False comfort** — AT FIRST IT WOULD SEEM LIKE GOOD NEWS · *sun moving across an empty floor*
 
 **Pick B to scale.** It's the best line in the whole deck. Present tense, one
 image, and the entire premise lands without the word "imagine".
 
 ## 05 · No AI
 
-- **A · Cold premise** — IMAGINE EVERY AI ON EARTH SWITCHED OFF TONIGHT · *server hall going dark row by row*
+- **A · Cold premise** — IF EVERY AI ON EARTH SWITCHED OFF · *strip lights flickering down a checkout lane*
 - **B · Drop-in** — SOMEBODY JUST TURNED ALL OF IT OFF · *the last rack light dies*
-- **C · Outcome-first** — WE SWITCHED OFF AI FOR ONE WEEK. THE CITY STOPPED FIRST. · *aerial gridlock*
+- **C · Outcome-first** — WE SWITCHED OFF AI AND NOBODY COULD LEAVE THE SHOP · *wide: every till with someone frozen at it*
 - **D · Curiosity gap** — YOU'D NOTICE IN ABOUT NINE SECONDS. NOT FOR THE REASON YOU THINK. · *phone face-down on a table*
 
 **Pick D to scale.** Everyone arrives certain they know what breaks first, and

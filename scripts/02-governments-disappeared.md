@@ -1,31 +1,39 @@
 # 02 — WHAT IF EVERY GOVERNMENT DISAPPEARED
 
-**Runtime:** ~60s · 20 beats
-**Payoff:** you can't delete government, only choose whether you pick it or it picks you.
+**Engine:** strict reference format — one continuous scene, constraint-removal
+pivots, no clock.
+**Scene:** your own street, shot from your front door. The camera never leaves it.
+**Runtime:** 45s captioned + 15s silent replay. 15 beats · 95 words.
+**Payoff image:** the same view as beat 1 — but now there's a barricade, guards
+and a flag at the end of your road.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IMAGINE EVERY GOVERNMENT ON EARTH VANISHED TONIGHT | empty parliament, papers settling on seats |
-| 2 | 0:03 | NO LAWS. NO TAXES. NO ONE IN CHARGE. | flags sliding down poles |
-| 3 | 0:06 | DAY ONE FEELS INCREDIBLE | fireworks, people on car roofs |
-| 4 | 0:09 | DAY TWO THE TRAFFIC LIGHTS GO DARK | four-way junction, everyone edging forward |
-| 5 | 0:12 | BECAUSE NOBODY IS PAYING THE POWER STATION | control room, screens dead, chairs empty |
-| 6 | 0:15 | DAY FOUR YOUR TAP RUNS BROWN | brown water spitting into a white sink |
-| 7 | 0:18 | NOBODY IS CLEANING THE WATER EITHER | treatment plant, still pools, no lights |
-| 8 | 0:21 | SO YOUR STREET GETS TOGETHER | neighbours in a driveway at dusk |
-| 9 | 0:24 | YOU AGREE ON A FEW RULES | chalk list on a garage door |
-| 10 | 0:27 | BUT A RULE NOBODY ENFORCES ISN'T A RULE | someone walking straight past the list |
-| 11 | 0:30 | SO YOU PICK THE STRONGEST PEOPLE YOU HAVE | figures at a barricade, silhouetted |
-| 12 | 0:33 | AND YOU SEND THEM TO GUARD THE WATER | armed group around a reservoir gate |
-| 13 | 0:36 | NOW THEY DECIDE WHO DRINKS | a hand resting on a valve wheel |
-| 14 | 0:39 | AND THEY WANT PAYING FOR IT | sack of food handed over at the gate |
-| 15 | 0:42 | AND THE NEXT STREET WANTS THE WATER TOO | headlights approaching the barricade |
-| 16 | 0:45 | SO YOU DRAW A LINE AND DEFEND IT | line scraped across tarmac |
-| 17 | 0:48 | RULES. BORDERS. TAX. FORCE. | four hard cuts, one per word |
-| 18 | 0:51 | CONGRATULATIONS — THAT'S A GOVERNMENT | a flag going UP over the barricade |
-| 19 | 0:54 | IT TOOK FOUR DAYS | calendar, four pages torn |
-| 20 | 0:57 | YOU EITHER PICK ONE, OR ONE PICKS YOU | split frame: a ballot box / a hand on the valve. cut to black |
+| 1 | 0:00 | IF EVERY GOVERNMENT ON EARTH VANISHED | your street at dawn, from your front door, empty |
+| 2 | 0:03 | YOU'D FIND OUT ON YOUR OWN STREET | same framing, neighbours stepping out of doors |
+| 3 | 0:06 | AND NOTHING WOULD HAPPEN AT ALL | quiet road, a kid's bike on a lawn |
+| 4 | 0:09 | UNTIL THE TAPS RAN BROWN | a hose running brown across the tarmac |
+| 5 | 0:12 | SO THE STREET AGREES ON SOME RULES | chalk list on a garage door |
+| 6 | 0:15 | **BUT WHAT IF NOBODY FOLLOWS THEM?** | someone walking straight past the list |
+| 7 | 0:18 | A RULE IS JUST A SUGGESTION | chalk half rubbed off |
+| 8 | 0:21 | UNLESS SOMEONE MAKES YOU | a hand writing it back on, pressing harder |
+| 9 | 0:24 | SO YOU PICK THE STRONGEST PEOPLE HERE | three figures stepping forward on the road |
+| 10 | 0:27 | AND SEND THEM TO GUARD THE WATER | them standing over the tank at the end of the street |
+| 11 | 0:30 | **BUT WHAT IF THE NEXT STREET WANTS IT?** | headlights turning in at the far end |
+| 12 | 0:33 | SO YOU DRAW A LINE ACROSS THE ROAD | a line scraped into the tarmac |
+| 13 | 0:36 | AND MAKE THEM PAY TO CROSS IT | a sack handed over the line |
+| 14 | 0:39 | RULES. A BORDER. TAX. FORCE. | four hard cuts — all on the same street |
+| 15 | 0:42 | YOU JUST BUILT ONE YOURSELF | final image: your front door again, identical framing to beat 1 — barricade, guards, a flag |
+| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 11, 14, 15 recut fast |
+| — | 0:57 | *(no captions)* | outro card |
 
-**Notes.** Beat 17 is the accelerator — four single words, one frame each, no
-breath. Beat 19 is the gut-punch stat and it's the only "number" in the script;
-that's why it lands. Do not add another.
+**Notes.** Pivot 1 removes the idea that a rule enforces itself. Pivot 2 removes
+the idea that your street is alone in the world. Those are the only two moves in
+the script; everything else is consequence.
+
+Beat 15 must be the exact same lens, height and time of day as beat 1. The whole
+video is the difference between two identical shots — if the framing drifts, the
+ending stops working.
+
+Never leave the street. The water tank, the barricade and the other street's
+headlights are all at the far end of the same road.

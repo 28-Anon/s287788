@@ -1,32 +1,42 @@
 # 04 — WHAT IF HUMANITY STOPPED HAVING CHILDREN
 
-**Runtime:** ~60s · 20 beats
-**Payoff:** everything we ever made ends in one room, with nobody to tell.
+**Engine:** strict reference format — one continuous scene, constraint-removal
+pivots, no clock.
+**Scene:** a primary school classroom. The camera never leaves the room.
+**Runtime:** 45s captioned + 15s silent replay. 15 beats · 85 words.
+**Payoff image:** every classroom in the school, lit, spotless, and empty forever.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IMAGINE NO BABY IS EVER BORN AGAIN | maternity ward, rows of empty cots |
-| 2 | 0:03 | STARTING TOMORROW MORNING | sunrise through hospital blinds |
-| 3 | 0:06 | FOR FIVE YEARS IT'S ALMOST NICE | quiet street, birdsong, no traffic |
-| 4 | 0:09 | NO SCHOOL RUN. NO CROWDS. | empty motorway at 8am |
-| 5 | 0:12 | YEAR SIX THE PRIMARY SCHOOLS CLOSE | playground, one swing moving in the wind |
-| 6 | 0:15 | YEAR TWELVE THERE ARE NO TEENAGERS | skate park, weeds through the concrete |
-| 7 | 0:18 | YEAR TWENTY NOBODY NEW STARTS WORK | job board, every card yellowed |
-| 8 | 0:21 | THE YOUNGEST PERSON ALIVE IS TWENTY | one young face in a crowd of grey |
-| 9 | 0:24 | AND THEY WILL BE THE YOUNGEST FOREVER | same face, ageing in a slow morph |
-| 10 | 0:27 | YEAR FORTY THE SURGEONS ARE SIXTY | trembling gloved hands under the lamp |
-| 11 | 0:30 | YEAR FIFTY THE FARMERS ARE SEVENTY | old man on a tractor, half the field unplanted |
-| 12 | 0:33 | NOBODY IS LEFT TO CLIMB THE PYLONS | pylon against a white sky, cables sagging |
-| 13 | 0:36 | SO THE LIGHTS START GOING OUT | Earth from orbit, city clusters winking off |
-| 14 | 0:39 | COUNTRY BY COUNTRY | continents darkening in sequence |
-| 15 | 0:42 | THE HOSPITALS EMPTY LAST | corridor, wheelchairs parked in a row |
-| 16 | 0:45 | THERE AREN'T ENOUGH HANDS TO CARE FOR THE OLD | one carer, a long ward |
-| 17 | 0:48 | AND EVERYONE IS OLD | wide shot, an entire city of the elderly |
-| 18 | 0:51 | EVENTUALLY THERE IS ONE PERSON LEFT | single figure in an empty square |
-| 19 | 0:54 | EVERY SONG. EVERY LANGUAGE. EVERY NAME. | flicker montage, faster and faster |
-| 20 | 0:57 | ALL OF IT ENDS IN ONE ROOM | a lamp, a chair, a hand. lamp goes off. black |
+| 1 | 0:00 | IF NO BABY WAS EVER BORN AGAIN | classroom full of empty chairs, morning light |
+| 2 | 0:03 | THIS ROOM IS WHERE YOU'D SEE IT FIRST | same room, one chair, dust in the beam |
+| 3 | 0:06 | AND AT FIRST IT SEEMS FINE | clean room, sun moving across the floor |
+| 4 | 0:09 | THERE ARE FEWER OF US TO FEED | a lunch tray, one apple on it |
+| 5 | 0:12 | BUT SOMEBODY STILL HAS TO DO THE WORK | a caretaker's coat on a hook |
+| 6 | 0:15 | **BUT WHAT IF MACHINES DID ALL OF IT?** | a small robot cleaning between the desks |
+| 7 | 0:18 | NOW NOTHING BREAKS | lights coming on by themselves, clock still ticking |
+| 8 | 0:21 | THE LIGHTS STAY ON BY THEMSELVES | the room, immaculate |
+| 9 | 0:24 | BUT THERE IS STILL NOBODY NEW | empty chairs, name labels faded |
+| 10 | 0:27 | **BUT WHAT IF NOBODY EVER GOT OLD?** | a teacher in the doorway, unchanged, watching |
+| 11 | 0:30 | THEN NOTHING ENDS | the room, perfect |
+| 12 | 0:33 | AND NOTHING BEGINS | the identical shot again |
+| 13 | 0:36 | THE SAME PEOPLE. THE SAME DAY. | the teacher in the doorway, same pose, sun in the same place |
+| 14 | 0:39 | FOREVER | the room. unmoving. hold it |
+| 15 | 0:42 | WITH NOBODY LEFT TO SHOW IT TO | final image: pull back through the window — every classroom in the school, lit, spotless, empty |
+| — | 0:45 | *(no captions)* | **silent replay** — beats 3, 6, 10, 13, 15 recut fast |
+| — | 0:57 | *(no captions)* | outro card |
 
-**Notes.** This one is quiet, not loud. Drop the music out completely at beat 18
-and run beats 19-20 on room tone alone — the silence is the effect. Beats 5-8
-are the trap: they're gentle, which is what makes 12-17 hurt. Resist any urge to
-add a hopeful ending; the flat delivery is why it gets shared.
+**Notes.** This is the one that needed the most rethinking, because time was the
+old version's whole engine. The fix: remove the two things that made the clock
+matter. Pivot 1 removes the need for anyone to do the work, so nothing decays.
+Pivot 2 removes death itself, so nothing is lost either. What's left is a world
+that runs perfectly and permanently with nothing new in it — which is stranger
+and colder than the old version's slow collapse, and it gets there without a
+single date.
+
+Beats 11-14 must be the *same frame*, repeated. Not similar shots — the same
+shot, cut four times. That repetition is the argument.
+
+Play it quiet. Drop the music at beat 11 and run the last five beats on room
+tone. "FOREVER" is one word held for three full seconds; don't be tempted to
+add to it.
