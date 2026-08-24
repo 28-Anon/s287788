@@ -109,6 +109,16 @@ they're wrong. That gap is the whole video.
 
 **Pick B to scale.** It's the only hook in either set where the viewer sees the danger before the character does. That gap is unbearable in the best way.
 
+## 11 · Woke up without a phone
+
+- **A · Cold premise** — IF YOU WOKE UP TOMORROW WITHOUT A PHONE · *empty platform at dawn, you standing on it*
+- **B · Drop-in** — HE HASN'T HAD A PHONE SINCE THIS MORNING · *empty hands, hands in pockets*
+- **C · Outcome-first** — HE REMEMBERED HER NUMBER AND SHE STILL DIDN'T ANSWER · *the receiver, ringing out*
+- **D · False comfort** — NOTHING TO CHECK. NOTHING BUZZING AT YOU. · *you looking up at the sky*
+
+**Pick C to scale.** A complete story in eight words with an unexplained cruelty
+sitting in the middle of it. Nobody scrolls past a "still didn't answer".
+
 ---
 
 ## Testing it properly
