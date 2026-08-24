@@ -1,5 +1,8 @@
 # The Format
 
+Ten scripts, all on one engine. 01-05 are the civilisational what-ifs;
+06-10 are the personal ones, which run the same machinery at close range.
+
 Reverse-engineered from the reference TikTok (sword/tree/car, @tl_hd7, 76s).
 This is the engine. Every script below runs on it.
 

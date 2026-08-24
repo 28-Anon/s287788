@@ -64,6 +64,51 @@ image, and the entire premise lands without the word "imagine".
 **Pick D to scale.** Everyone arrives certain they know what breaks first, and
 they're wrong. That gap is the whole video.
 
+## 06 · Nobody could lie
+
+- **A · Cold premise** — IF NOBODY COULD EVER LIE AGAIN · *dinner table laid, nobody seated yet*
+- **B · Drop-in** — EVERYONE AT THIS TABLE HAS TO TELL THE TRUTH NOW · *the family sitting down*
+- **C · Outcome-first** — WE MADE LYING IMPOSSIBLE AND DINNER ENDED IN NINE MINUTES · *a chair pushed back hard*
+- **D · False comfort** — FINALLY NOBODY IS PRETENDING ANY MORE · *someone laughing, easy*
+
+**Pick C to scale.** Specific, absurd, and it promises a scene rather than a lecture.
+
+## 07 · Nobody needed sleep
+
+- **A · Cold premise** — IF NOBODY EVER NEEDED SLEEP AGAIN · *bedroom at dusk, bed made, lamp on*
+- **B · Drop-in** — NOBODY HAS SLEPT FOR A WHILE NOW · *dust settling on an untouched bed*
+- **C · Outcome-first** — WE GOT EIGHT HOURS BACK AND LOST ALL OF THEM · *the city, every window lit*
+- **D · False comfort** — YOU JUST GOT EIGHT HOURS A DAY FOR FREE · *clock on the nightstand*
+
+**Pick D to scale.** Everybody wants this one. Letting them want it for three seconds is the whole trick.
+
+## 08 · Seeing how long you had left
+
+- **A · Cold premise** — IF YOU COULD SEE HOW LONG YOU HAD LEFT · *empty bus stop, a number glowing over the bench*
+- **B · Drop-in** — EVERYONE ON THIS BUS HAS A NUMBER ABOVE THEIR HEAD · *faces, one number each*
+- **C · Outcome-first** — IT STOPPED BEING A NUMBER THE DAY EVERYONE COULD SEE IT · *an empty seat beside a low number*
+- **D · False comfort** — YOU'D FINALLY STOP WASTING TIME · *you checking a watch*
+
+**Pick B to scale.** No premise setup at all — the image explains itself and the dread arrives before the words do.
+
+## 09 · Nobody ever forgot
+
+- **A · Cold premise** — IF NOBODY EVER FORGOT ANYTHING · *parked car at night, rain on the glass*
+- **B · Drop-in** — THESE TWO REMEMBER EVERY WORD THEY HAVE EVER SAID · *two people in a car, not looking at each other*
+- **C · Outcome-first** — PERFECT MEMORY IS WHY THEY ARE STILL SITTING THERE · *the car, still parked, dawn not coming*
+- **D · False comfort** — YOU'D NEVER LOSE A GOOD DAY AGAIN · *a smile, remembering something*
+
+**Pick D to scale.** The turn from "never lose a good day" to "or a bad one" happens in six seconds and it does all the work.
+
+## 10 · Pain didn't exist
+
+- **A · Cold premise** — IF PAIN JUST STOPPED EXISTING · *kitchen, morning, a pan on the hob*
+- **B · Drop-in** — HIS HAND HAS BEEN ON THAT PAN FOR A WHILE · *a hand on a hot handle, calm face*
+- **C · Outcome-first** — THEY TURNED OFF PAIN AND NOBODY NOTICED THEY WERE DYING · *spotless kitchen, nobody in it*
+- **D · False comfort** — NOTHING WOULD EVER HURT YOU AGAIN · *the calm face, humming*
+
+**Pick B to scale.** It's the only hook in either set where the viewer sees the danger before the character does. That gap is unbearable in the best way.
+
 ---
 
 ## Testing it properly
