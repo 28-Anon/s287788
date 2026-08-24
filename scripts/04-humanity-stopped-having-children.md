@@ -8,11 +8,12 @@ pivots, no clock.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF NO BABY WAS EVER BORN AGAIN | classroom full of empty chairs, morning light |
-| 2 | 0:03 | THIS ROOM IS WHERE YOU'D SEE IT FIRST | same room, one chair, dust in the beam |
+| 1 | 0:00 | THE LAST BABY ON EARTH WAS BORN TODAY | classroom — one chair occupied, every other empty |
+| 2 | 0:03 | THIS ROOM IS WHERE YOU'D SEE IT FIRST | same room. dust in the beam |
 | 3 | 0:06 | AND AT FIRST IT SEEMS FINE | clean room, sun moving across the floor |
-| 4 | 0:09 | THERE ARE FEWER OF US TO FEED | a lunch tray, one apple on it |
+| 4 | 0:09 | THERE ARE FEWER OF US TO FEED | a lunch tray. one apple on it |
 | 5 | 0:12 | BUT SOMEBODY STILL HAS TO DO THE WORK | a caretaker's coat on a hook |
+
 | 6 | 0:15 | **BUT WHAT IF MACHINES DID ALL OF IT?** | a small robot cleaning between the desks |
 | 7 | 0:18 | NOW NOTHING BREAKS | lights coming on by themselves, clock still ticking |
 | 8 | 0:21 | THE LIGHTS STAY ON BY THEMSELVES | the room, immaculate |
@@ -46,3 +47,35 @@ shot, cut four times. That repetition is the argument.
 Play it quiet. Drop the music at beat 11 and run the last five beats on room
 tone. "FOREVER" is one word held for three full seconds; don't be tempted to
 add to it.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+THE LAST BABY ON EARTH WAS BORN TODAY
+THIS ROOM IS WHERE YOU'D SEE IT FIRST
+AND AT FIRST IT SEEMS FINE
+THERE ARE FEWER OF US TO FEED
+BUT SOMEBODY STILL HAS TO DO THE WORK
+BUT WHAT IF MACHINES DID ALL OF IT?
+NOW NOTHING BREAKS
+THE LIGHTS STAY ON BY THEMSELVES
+BUT THERE IS STILL NOBODY NEW
+BUT WHAT IF NOBODY EVER GOT OLD?
+THEN NOTHING ENDS
+AND NOTHING BEGINS
+THE SAME PEOPLE. THE SAME DAY.
+FOREVER
+WITH NOBODY LEFT TO SHOW IT TO
+AND NOTHING ABOUT IT IS SAD
+NOBODY IS SUFFERING
+NOBODY IS EVEN DYING
+IT JUST STOPS MATTERING
+WHICH MIGHT BE WORSE
+SO TELL ME HONESTLY
+WOULD YOU WANT TO LIVE THERE?
+```

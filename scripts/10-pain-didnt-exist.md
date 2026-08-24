@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF PAIN JUST STOPPED EXISTING | kitchen, morning, a pan on the hob |
-| 2 | 0:03 | YOU'D FIND OUT IN YOUR KITCHEN | you cooking, humming |
-| 3 | 0:06 | AND IT WOULD FEEL LIKE A GIFT | your hand resting on the hot handle, calm face |
+| 1 | 0:00 | YOUR HAND HAS BEEN ON THAT PAN A WHILE | the hand resting on the hot handle. calm face |
+| 2 | 0:03 | PAIN JUST STOPPED EXISTING | kitchen, morning, steam rising |
+| 3 | 0:06 | AND IT FEELS LIKE A GIFT | the calm face, humming |
 | 4 | 0:09 | NOTHING HURTS ANY MORE | the hand, still there |
-| 5 | 0:12 | SO YOU DON'T MOVE IT | steam rising, the hand unmoved |
+| 5 | 0:12 | SO YOU DON'T MOVE IT | steam rising. the hand unmoved |
+
 | 6 | 0:15 | **BUT WHAT IF YOU STILL HEALED?** | the burn closing over |
 | 7 | 0:18 | THEN NOTHING SHOWS FOR LONG | a clean hand again |
 | 8 | 0:21 | AND NOTHING EVER WARNS YOU | the hob, still on |
@@ -41,3 +42,35 @@ found far too late. The video isn't inventing a consequence — it's describing 
 documented one. That makes it the most defensible script in either set.
 
 Play beats 10-13 completely flat. No stings, no music swell. The calm is the horror.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+YOUR HAND HAS BEEN ON THAT PAN A WHILE
+PAIN JUST STOPPED EXISTING
+AND IT FEELS LIKE A GIFT
+NOTHING HURTS ANY MORE
+SO YOU DON'T MOVE IT
+BUT WHAT IF YOU STILL HEALED?
+THEN NOTHING SHOWS FOR LONG
+AND NOTHING EVER WARNS YOU
+BUT WHAT IF YOU NEVER LOOKED?
+THE BODY STOPS SENDING WORD
+A CUT YOU DIDN'T FEEL
+A TOOTH YOU DIDN'T NOTICE
+A HEART YOU CAN'T HEAR
+PAIN WAS NEVER THE ENEMY
+IT WAS THE ONLY THING TELLING YOU
+AND SOME PEOPLE LIVE LIKE THIS
+THEY ARE BORN WITHOUT IT
+THEY DON'T LIVE VERY LONG
+NOT BECAUSE ANYTHING ATTACKS THEM
+BECAUSE NOTHING EVER TELLS THEM
+SO THE NEXT TIME IT HURTS
+WHAT IS IT TRYING TO SAY?
+```

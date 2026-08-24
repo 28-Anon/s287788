@@ -9,11 +9,12 @@ to the horizon.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF MONEY STOPPED WORKING TOMORROW | market stall at dawn, a hand turning the sign round |
-| 2 | 0:03 | YOU'D FIND OUT AT A MARKET STALL | you walking up to it, the trader watching |
-| 3 | 0:06 | AND EVERYTHING ON IT IS FREE | the stall, full, every price card blank |
+| 1 | 0:00 | WE DELETED MONEY AND IT CAME STRAIGHT BACK | a coin landing in a trader's palm |
+| 2 | 0:03 | AND IT HAPPENED AT ONE MARKET STALL | the stall at dawn, a hand turning the sign round |
+| 3 | 0:06 | EVERYTHING ON IT IS FREE NOW | the stall, full, every price card blank |
 | 4 | 0:09 | SO YOU TAKE WHATEVER YOU WANT | your arms filling up |
-| 5 | 0:12 | AND SO DOES EVERYONE BEHIND YOU | crowd closing in, the stall stripped bare |
+| 5 | 0:12 | AND SO DOES EVERYONE BEHIND YOU | crowd closing in. the stall stripped bare |
+
 | 6 | 0:15 | **BUT WHAT IF IT NEVER RAN OUT?** | the stall refilling itself, endlessly |
 | 7 | 0:18 | NOW THERE IS ENOUGH FOR EVERY SINGLE PERSON | full stall, the crowd gone calm |
 | 8 | 0:21 | AND NOTHING LEFT TO FIGHT OVER | people taking what they need, unhurried |
@@ -45,3 +46,35 @@ splits its opener. Land "TO GO FIRST" on the coin.
 The old version of this script visited a sewer, a mine and a hospital at 3am.
 Those were better lines but twenty separate setups; this holds the same argument
 at one stall you could shoot in a morning.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+WE DELETED MONEY AND IT CAME STRAIGHT BACK
+AND IT HAPPENED AT ONE MARKET STALL
+EVERYTHING ON IT IS FREE NOW
+SO YOU TAKE WHATEVER YOU WANT
+AND SO DOES EVERYONE BEHIND YOU
+BUT WHAT IF IT NEVER RAN OUT?
+NOW THERE IS ENOUGH FOR EVERY SINGLE PERSON
+AND NOTHING LEFT TO FIGHT OVER
+EXCEPT ONE THING
+SOMEBODY IS STILL STANDING AT THE FRONT
+BUT WHAT IF EVERYONE ARRIVED AT ONCE?
+THEN SOMEONE HAS TO DECIDE
+AND WHOEVER DECIDES IS THE ONE IN CHARGE
+SO YOU OFFER HIM SOMETHING
+TO GO FIRST
+AND THAT'S ALL MONEY HAS EVER BEEN
+A WAY OF DECIDING THE ORDER
+YOU CAN CALL IT SOMETHING ELSE
+PAPER. GOLD. NUMBERS ON A SCREEN.
+BUT SOMEONE IS ALWAYS AT THE FRONT
+SO HERE'S WHAT I CAN'T WORK OUT
+WHO SHOULD IT BE?
+```

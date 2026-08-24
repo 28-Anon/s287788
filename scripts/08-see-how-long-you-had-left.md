@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF YOU COULD SEE HOW LONG YOU HAD LEFT | empty bus stop, a number glowing over the bench |
-| 2 | 0:03 | IT WOULD JUST BE A NUMBER | the number, close |
-| 3 | 0:06 | FLOATING ABOVE YOUR HEAD | you sitting down underneath it |
-| 4 | 0:09 | AND AT FIRST IT'S USEFUL | you looking up, calm |
+| 1 | 0:00 | EVERYONE HERE HAS A NUMBER ABOVE THEIR HEAD | bus stop, a few people waiting, one number each |
+| 2 | 0:03 | IT'S HOW LONG THEY HAVE LEFT | the numbers, close |
+| 3 | 0:06 | AND YOU HAVE ONE TOO | you sitting down underneath yours |
+| 4 | 0:09 | AT FIRST IT'S USEFUL | you looking up, calm |
 | 5 | 0:12 | YOU STOP WASTING TIME | you checking a watch |
+
 | 6 | 0:15 | **BUT WHAT IF YOU COULD CHANGE IT?** | the number ticking up by one |
 | 7 | 0:18 | THEN EVERY CHOICE HAS A PRICE | it drops as you light a cigarette |
 | 8 | 0:21 | AND YOU STOP LIVING TO STAY ALIVE | you put it out. sit rigid |
@@ -36,3 +37,35 @@ half-true: insurers and lenders price people on estimated lifespan right now.
 The video just makes the number visible.
 
 Beat 11 is three words and the shortest in the script. That's where it turns.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+EVERYONE HERE HAS A NUMBER ABOVE THEIR HEAD
+IT'S HOW LONG THEY HAVE LEFT
+AND YOU HAVE ONE TOO
+AT FIRST IT'S USEFUL
+YOU STOP WASTING TIME
+BUT WHAT IF YOU COULD CHANGE IT?
+THEN EVERY CHOICE HAS A PRICE
+AND YOU STOP LIVING TO STAY ALIVE
+BUT WHAT IF EVERYONE COULD SEE YOURS?
+NOW IT ISN'T INFORMATION
+IT'S A SCORE
+WHO GETS THE JOB
+WHO GETS THE HOUSE
+WHO GETS SAT NEXT TO
+IT WAS NEVER A NUMBER. IT WAS A PRICE.
+AND SOMEBODY ALREADY HAS YOURS
+NOT EXACTLY. NOT GLOWING.
+BUT CLOSE ENOUGH TO SELL YOU THINGS
+CLOSE ENOUGH TO PRICE YOUR INSURANCE
+YOU JUST CAN'T SEE IT
+SO WOULD IT BE BETTER
+IF EVERYONE COULD?
+```

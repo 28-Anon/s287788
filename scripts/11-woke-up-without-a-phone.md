@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF YOU WOKE UP TOMORROW WITHOUT A PHONE | empty platform at dawn, you standing on it |
-| 2 | 0:03 | NOT LOST. NOT BROKEN. GONE. | your empty hands |
+| 1 | 0:00 | YOU REMEMBERED HER NUMBER AND SHE STILL DIDN'T ANSWER | the receiver at your ear, ringing out |
+| 2 | 0:03 | THIS STARTED WHEN YOU WOKE UP WITHOUT A PHONE | empty platform at dawn, you standing on it |
 | 3 | 0:06 | AND AT FIRST IT'S PEACEFUL | you looking up. sky. departure board |
 | 4 | 0:09 | NOTHING TO CHECK | hands in your pockets |
 | 5 | 0:12 | NOTHING BUZZING AT YOU | the quiet platform |
+
 | 6 | 0:15 | **BUT WHAT IF YOU DIDN'T NEED IT ANYWAY?** | a paper ticket, a watch, coins in a palm |
 | 7 | 0:18 | YOU HAVE A TICKET AND THE TIME | the watch |
 | 8 | 0:21 | SO NOTHING IS ACTUALLY STOPPING YOU | the train pulling in |
@@ -44,3 +45,35 @@ just the ringing.
 
 **Casting note.** "She" is whoever the video is for; swap the pronoun freely.
 The beat works because someone is waiting, not because of who they are.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+YOU REMEMBERED HER NUMBER AND SHE STILL DIDN'T ANSWER
+THIS STARTED WHEN YOU WOKE UP WITHOUT A PHONE
+AND AT FIRST IT'S PEACEFUL
+NOTHING TO CHECK
+NOTHING BUZZING AT YOU
+BUT WHAT IF YOU DIDN'T NEED IT ANYWAY?
+YOU HAVE A TICKET AND THE TIME
+SO NOTHING IS ACTUALLY STOPPING YOU
+EXCEPT SHE'S WAITING AND YOU'RE LATE
+AND YOU CAN'T TELL HER
+BUT WHAT IF YOU REMEMBERED HER NUMBER?
+SO YOU FIND A PHONE AND YOU RING IT
+AND IT RINGS OUT
+SHE DOESN'T ANSWER STRANGE NUMBERS
+NOBODY KNOWS IT'S YOU ANY MORE
+AND THAT'S THE PART THAT'S REAL
+YOU DON'T KNOW ANYONE'S NUMBER
+NOT YOUR MUM'S. NOT YOUR BEST FRIEND'S.
+THE PHONE ISN'T HOLDING YOUR CONTACTS
+IT'S HOLDING PROOF THAT YOU'RE YOU
+SO WITHOUT IT, HONESTLY
+WHO COULD YOU STILL REACH?
+```

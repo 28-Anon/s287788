@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF NOBODY EVER NEEDED SLEEP AGAIN | bedroom at dusk, bed made, lamp on |
-| 2 | 0:03 | YOU'D NOTICE IN THIS ROOM FIRST | you sitting on the edge of the bed |
-| 3 | 0:06 | AND YOU'D GET EIGHT HOURS BACK | clock on the nightstand |
-| 4 | 0:09 | EVERY SINGLE NIGHT FOREVER | the lamp, steady |
+| 1 | 0:00 | YOU JUST GOT EIGHT HOURS A DAY FOR FREE | clock on the nightstand |
+| 2 | 0:03 | NOBODY EVER NEEDS SLEEP AGAIN | bedroom at dusk, bed made, lamp on |
+| 3 | 0:06 | EVERY SINGLE NIGHT FOREVER | the lamp, steady |
+| 4 | 0:09 | YOU'D NOTICE IN THIS ROOM FIRST | you sitting on the edge of the bed |
 | 5 | 0:12 | SO YOU USE THEM | you leaving frame. bed untouched |
+
 | 6 | 0:15 | **BUT WHAT IF EVERYONE ELSE DID TOO?** | through the window — every window in the block lit |
 | 7 | 0:18 | NOW THE EXTRA HOURS ARE NORMAL | the city, fully lit |
 | 8 | 0:21 | AND YOU ARE BEHIND AGAIN | bed still made, dust settling on it |
@@ -37,3 +38,35 @@ hour left that isn't contested.
 
 Light this one so shadows disappear as it goes. By beat 13 the room should be
 flat and shadowless, and it should feel worse, not better.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+YOU JUST GOT EIGHT HOURS A DAY FOR FREE
+NOBODY EVER NEEDS SLEEP AGAIN
+EVERY SINGLE NIGHT FOREVER
+YOU'D NOTICE IN THIS ROOM FIRST
+SO YOU USE THEM
+BUT WHAT IF EVERYONE ELSE DID TOO?
+NOW THE EXTRA HOURS ARE NORMAL
+AND YOU ARE BEHIND AGAIN
+BUT WHAT IF YOU COULD NEVER STOP?
+NOTHING MAKES ANYONE PAUSE
+THE SHOPS NEVER SHUT
+NOBODY IS EVER OFF
+THERE IS NO NIGHT TO HIDE IN
+SLEEP WAS NEVER REST
+IT WAS THE ONLY THING THAT STOPPED US
+EVERY OTHER LIMIT WE FOUND A WAY AROUND
+DISTANCE. DARKNESS. BEING UNREACHABLE.
+SLEEP WAS THE LAST ONE LEFT
+THE ONE NOBODY COULD ASK YOU TO SKIP
+AND YOU ALREADY GIVE IT AWAY
+SO BE HONEST
+WOULD YOU TAKE THE EIGHT HOURS?
+```

@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF NOBODY EVER FORGOT ANYTHING | parked car at night, rain on the glass |
-| 2 | 0:03 | YOU'D FIND OUT IN A PARKED CAR | two people in it, not looking at each other |
-| 3 | 0:06 | AND AT FIRST IT'S A GIFT | a smile — remembering something good |
+| 1 | 0:00 | YOU'D NEVER LOSE A GOOD DAY AGAIN | a smile — remembering something good |
+| 2 | 0:03 | IF NOBODY EVER FORGOT ANYTHING | parked car at night, rain on the glass |
+| 3 | 0:06 | YOU'D FIND OUT IN A PARKED CAR | two people in it, not looking at each other |
 | 4 | 0:09 | EVERY GOOD DAY KEPT PERFECTLY | headlights sweeping across their faces |
 | 5 | 0:12 | BUT SO IS EVERY BAD ONE | the smile going |
+
 | 6 | 0:15 | **BUT WHAT IF YOU NEVER BROUGHT IT UP?** | a mouth closing |
 | 7 | 0:18 | YOU'D STILL BE HOLDING IT | hands tight on the wheel |
 | 8 | 0:21 | AS SHARP AS THE DAY IT HAPPENED | the rain, unchanged |
@@ -37,3 +38,35 @@ anything, it relies on the sharpness fading. Take the fading away and you keep
 the forgiveness and lose the peace.
 
 Two actors, one car, one night. Cheapest script in either set.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+YOU'D NEVER LOSE A GOOD DAY AGAIN
+IF NOBODY EVER FORGOT ANYTHING
+YOU'D FIND OUT IN A PARKED CAR
+EVERY GOOD DAY KEPT PERFECTLY
+BUT SO IS EVERY BAD ONE
+BUT WHAT IF YOU NEVER BROUGHT IT UP?
+YOU'D STILL BE HOLDING IT
+AS SHARP AS THE DAY IT HAPPENED
+BUT WHAT IF THEY REMEMBERED IT TOO?
+THEN NOBODY MOVES PAST ANYTHING
+SORRY STOPS MEANING ANYTHING
+BECAUSE NOTHING EVER FADES
+YOU CAN STILL FORGIVE SOMEBODY
+YOU JUST CAN'T STOP KNOWING
+FORGETTING WAS THE MERCY
+NOT FORGIVENESS. FORGETTING.
+THE THING WE CALL BEING BAD WITH NAMES
+IS WHAT LETS PEOPLE STAY
+YOU'VE FORGOTTEN SOMETHING SOMEBODY DID
+AND THEY'RE STILL IN YOUR LIFE
+SO THINK OF ONE YOU DIDN'T
+WOULD YOU GIVE IT BACK?
+```

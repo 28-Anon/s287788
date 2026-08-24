@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF EVERY AI ON EARTH SWITCHED OFF | strip lights flickering down a checkout lane |
-| 2 | 0:03 | YOU'D BE STANDING HERE WITH A FULL TROLLEY | you at the terminal, trolley loaded |
-| 3 | 0:06 | AND YOUR CARD WOULD JUST STOP WORKING | red cross on the card reader |
-| 4 | 0:09 | THAT WAS AI TOO | the card, close, turning in your hand |
+| 1 | 0:00 | YOU'D NOTICE IN ABOUT NINE SECONDS | strip lights flickering down a checkout lane |
+| 2 | 0:03 | IF EVERY AI ON EARTH SWITCHED OFF | you at the terminal, trolley loaded |
+| 3 | 0:06 | BUT NOT FOR THE REASON YOU THINK | the card reader, red cross |
+| 4 | 0:09 | YOUR CARD STOPS. THAT WAS AI. | the card, close, turning in your hand |
 | 5 | 0:12 | SO YOU REACH FOR CASH | notes counted onto the counter |
+
 | 6 | 0:15 | **BUT WHAT IF THE MACHINE COULDN'T SEE YOU?** | the loss-prevention camera above you, lens dead |
 | 7 | 0:18 | IT CAN'T TELL WHAT WENT IN THE BAG | bagging area, warning light flashing |
 | 8 | 0:21 | SO IT WON'T LET YOU LEAVE | the barrier staying shut |
@@ -53,3 +54,35 @@ standing fails *immediately* and is genuinely ML today:
   claim holds.
 
 Still neutral. No side taken — beat 14 does that work without arguing with anybody.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+YOU'D NOTICE IN ABOUT NINE SECONDS
+IF EVERY AI ON EARTH SWITCHED OFF
+BUT NOT FOR THE REASON YOU THINK
+YOUR CARD STOPS. THAT WAS AI.
+SO YOU REACH FOR CASH
+BUT WHAT IF THE MACHINE COULDN'T SEE YOU?
+IT CAN'T TELL WHAT WENT IN THE BAG
+SO IT WON'T LET YOU LEAVE
+YOU TAKE OUT YOUR PHONE TO SORT IT
+BUT WHAT IF IT COULDN'T ANSWER ANYTHING?
+NINE BILLION PAGES IN NO ORDER
+FOUR THOUSAND ADVERTS IN YOUR INBOX
+AND YOU ARE STILL AT THE CHECKOUT
+YOU NEVER ASKED FOR ANY OF IT
+YOU JUST STOPPED BEING ABLE TO LEAVE
+AND NONE OF THAT WAS A CHATBOT
+IT WAS BORING THINGS DECIDING BORING THINGS
+QUIETLY, FOR YEARS
+NOBODY VOTED ON ANY OF IT
+NOBODY EVEN NOTICED IT ARRIVE
+SO BEFORE YOU ARGUE ABOUT THE FUTURE
+WOULD YOU SWITCH IT OFF?
+```

@@ -9,11 +9,12 @@ and a flag at the end of your road.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF EVERY GOVERNMENT ON EARTH VANISHED | your street at dawn, from your front door, empty |
-| 2 | 0:03 | YOU'D FIND OUT ON YOUR OWN STREET | same framing, neighbours stepping out of doors |
-| 3 | 0:06 | AND NOTHING WOULD HAPPEN AT ALL | quiet road, a kid's bike on a lawn |
+| 1 | 0:00 | IT WOULD BE THE BEST DAY OF YOUR LIFE | fireworks over the rooftops |
+| 2 | 0:03 | EVERY GOVERNMENT ON EARTH JUST VANISHED | your street at dawn, from your front door |
+| 3 | 0:06 | AND NOTHING WOULD HAPPEN AT ALL | quiet road. a kid's bike on a lawn |
 | 4 | 0:09 | UNTIL THE TAPS RAN BROWN | a hose running brown across the tarmac |
 | 5 | 0:12 | SO THE STREET AGREES ON SOME RULES | chalk list on a garage door |
+
 | 6 | 0:15 | **BUT WHAT IF NOBODY FOLLOWS THEM?** | someone walking straight past the list |
 | 7 | 0:18 | A RULE IS JUST A SUGGESTION | chalk half rubbed off |
 | 8 | 0:21 | UNLESS SOMEONE MAKES YOU | a hand writing it back on, pressing harder |
@@ -43,3 +44,35 @@ ending stops working.
 
 Never leave the street. The water tank, the barricade and the other street's
 headlights are all at the far end of the same road.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+IT WOULD BE THE BEST DAY OF YOUR LIFE
+EVERY GOVERNMENT ON EARTH JUST VANISHED
+AND NOTHING WOULD HAPPEN AT ALL
+UNTIL THE TAPS RAN BROWN
+SO THE STREET AGREES ON SOME RULES
+BUT WHAT IF NOBODY FOLLOWS THEM?
+A RULE IS JUST A SUGGESTION
+UNLESS SOMEONE MAKES YOU
+SO YOU PICK THE STRONGEST PEOPLE HERE
+AND SEND THEM TO GUARD THE WATER
+BUT WHAT IF THE NEXT STREET WANTS IT?
+SO YOU DRAW A LINE ACROSS THE ROAD
+AND MAKE THEM PAY TO CROSS IT
+RULES. A BORDER. TAX. FORCE.
+YOU JUST BUILT ONE YOURSELF
+AND YOU DIDN'T VOTE FOR IT
+NOBODY ASKED IF YOU WANTED IT
+IT JUST BECAME THE ONLY WAY THROUGH
+THAT'S HOW EVERY ONE OF THEM STARTED
+SOMEBODY GUARDING SOMETHING EVERYBODY NEEDS
+SO WHEN THEY ASK FOR MORE
+WHEN DO YOU STOP PAYING?
+```

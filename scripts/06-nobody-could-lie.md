@@ -6,11 +6,12 @@
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IF NOBODY COULD EVER LIE AGAIN | dinner table laid, nobody seated yet |
-| 2 | 0:03 | YOU'D FIND OUT AT DINNER | the family sitting down |
+| 1 | 0:00 | LYING BECAME IMPOSSIBLE AND DINNER ENDED IN NINE MINUTES | a chair pushed back hard |
+| 2 | 0:03 | IT STARTED LIKE ANY OTHER NIGHT | the table laid, the family sitting down |
 | 3 | 0:06 | AND AT FIRST IT'S A RELIEF | someone laughing, easy |
 | 4 | 0:09 | NOBODY IS PRETENDING ANY MORE | open glances across the table |
 | 5 | 0:12 | THEN SOMEONE ASKS A REAL QUESTION | a fork stops halfway up |
+
 | 6 | 0:15 | **BUT WHAT IF YOU COULD STAY QUIET?** | a mouth closing, eyes going down |
 | 7 | 0:18 | SO YOU SAY NOTHING AT ALL | silence at the table |
 | 8 | 0:21 | AND EVERYONE HEARS THAT TOO | the others turning to look |
@@ -37,3 +38,35 @@ that right is what privacy *is*, and the script gets there without ever using th
 word.
 
 Shoot beat 15 from the same seat as beat 2.
+
+---
+
+## VO / caption script — copy-paste
+
+One line per beat, 3 seconds each. Paste straight into a text-to-speech
+tool or a caption track.
+
+```
+LYING BECAME IMPOSSIBLE AND DINNER ENDED IN NINE MINUTES
+IT STARTED LIKE ANY OTHER NIGHT
+AND AT FIRST IT'S A RELIEF
+NOBODY IS PRETENDING ANY MORE
+THEN SOMEONE ASKS A REAL QUESTION
+BUT WHAT IF YOU COULD STAY QUIET?
+SO YOU SAY NOTHING AT ALL
+AND EVERYONE HEARS THAT TOO
+SILENCE BECOMES THE NEW LIE
+BUT WHAT IF YOU HAD TO ANSWER?
+THEN EVERY THOUGHT YOU EVER HAD
+ABOUT EVERY PERSON AT THIS TABLE
+COMES OUT AT ONCE
+YOU NEVER WANTED HONESTY
+YOU WANTED TO CHOOSE
+EVERY KIND THING YOU HAVE EVER SAID
+WASN'T ALWAYS COMPLETELY TRUE
+AND THEY NEEDED TO HEAR IT ANYWAY
+THAT'S NOT LYING EXACTLY
+BUT IT ISN'T THE TRUTH EITHER
+SO IF IT WAS TOMORROW
+WHO WOULD YOU STOP SPEAKING TO?
+```
