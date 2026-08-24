@@ -17,12 +17,12 @@ winner.
 
 ## 01 · Nobody needed money
 
-- **A · Cold premise** — IMAGINE MONEY STOPPED WORKING TOMORROW · *card declined, red X, hand frozen at the terminal*
-- **B · Drop-in** — EVERY PRICE TAG ON EARTH JUST WENT TO ZERO · *sticker peeling off a shelf edge in close-up*
-- **C · Outcome-first** — WE DELETED MONEY. IT CAME BACK IN FOUR DAYS. · *a single coin landing in a palm*
-- **D · False comfort** — THIS SHOP IS FREE NOW. SO IS EVERY OTHER SHOP. · *slow push down a full aisle, nobody in it*
+- **A · Cold premise** — IF MONEY STOPPED WORKING TOMORROW · *market stall at dawn, a hand turning the sign round*
+- **B · Drop-in** — EVERYTHING ON THIS STALL IS FREE NOW · *the stall, full, every price card blank*
+- **C · Outcome-first** — WE DELETED MONEY AND IT CAME STRAIGHT BACK · *a coin landing in a trader's palm*
+- **D · False comfort** — TAKE WHATEVER YOU WANT. IT COSTS NOTHING. · *your arms filling up*
 
-**Pick C to scale.** "It came back" is a question nobody can leave alone.
+**Pick C to scale.** "It came straight back" is a question nobody can leave alone.
 
 ## 02 · Governments disappeared
 

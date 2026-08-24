@@ -1,31 +1,41 @@
 # 01 — WHAT IF NOBODY NEEDED MONEY
 
-**Runtime:** ~60s · 20 beats
-**Payoff:** you can burn the paper, you can't delete the queue.
+**Engine:** strict reference format — one continuous scene, constraint-removal
+pivots, no clock.
+**Scene:** a single market stall. You stand at it for the whole video.
+**Runtime:** 45s captioned + 15s silent replay. 15 beats · 86 words.
+**Payoff image:** a coin in the trader's palm, and the queue behind you running
+to the horizon.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | IMAGINE MONEY STOPPED WORKING TOMORROW | card declined, red X, hand frozen at the terminal |
-| 2 | 0:03 | EVERY PRICE TAG ON EARTH GOES TO ZERO | price stickers peeling off, blank shelves labels |
-| 3 | 0:06 | SO YOU TAKE WHATEVER YOU WANT | slow push down an aisle, trolley filling |
-| 4 | 0:09 | AND SO DOES EVERYONE ELSE | crowd pouring through automatic doors |
-| 5 | 0:12 | BY DAY THREE THE SHELVES ARE BARE | empty aisle, one tin rolling |
-| 6 | 0:15 | BUT WHAT IF THE TRUCKS KEPT COMING? | convoy on a highway, dawn |
-| 7 | 0:18 | SOMEBODY HAS TO DRIVE THEM | empty driver's seat, door open, engine running |
-| 8 | 0:21 | AND NOBODY NEEDS TO WORK ANY MORE | driver asleep in a hammock, keys in the dirt |
-| 9 | 0:24 | SO WHO CLEANS THE SEWERS | torchlight down a dripping tunnel |
-| 10 | 0:27 | WHO SITS WITH A DYING STRANGER AT 3AM | empty hospital corridor, one light on |
-| 11 | 0:30 | WHO GOES DOWN THE MINE | dark shaft, lift cage swinging, nobody in it |
-| 12 | 0:33 | A FEW PEOPLE STILL DO IT | one figure walking in, headlamp on |
-| 13 | 0:36 | AND THEY START ASKING FOR SOMETHING BACK | open palm, held out |
-| 14 | 0:39 | FIRST FAVOURS | two hands shaking |
-| 15 | 0:42 | THEN FOOD. THEN GOLD. | grain sack, then a coin turning in the light |
-| 16 | 0:45 | AND YOU HAVE JUST INVENTED MONEY AGAIN | coin dropping into a palm, ring of sound |
-| 17 | 0:48 | BECAUSE MONEY WAS NEVER THE PAPER | banknote catching fire, curling |
-| 18 | 0:51 | IT'S THE ANSWER TO ONE QUESTION | ash falling |
-| 19 | 0:54 | WHO GOES FIRST | a queue, seen from the front |
-| 20 | 0:57 | YOU CAN BURN THE PAPER. NOT THE LINE. | pull back: the queue runs to the horizon. cut to black |
+| 1 | 0:00 | IF MONEY STOPPED WORKING TOMORROW | market stall at dawn, a hand turning the sign round |
+| 2 | 0:03 | YOU'D FIND OUT AT A MARKET STALL | you walking up to it, the trader watching |
+| 3 | 0:06 | AND EVERYTHING ON IT IS FREE | the stall, full, every price card blank |
+| 4 | 0:09 | SO YOU TAKE WHATEVER YOU WANT | your arms filling up |
+| 5 | 0:12 | AND SO DOES EVERYONE BEHIND YOU | crowd closing in, the stall stripped bare |
+| 6 | 0:15 | **BUT WHAT IF IT NEVER RAN OUT?** | the stall refilling itself, endlessly |
+| 7 | 0:18 | NOW THERE IS ENOUGH FOR EVERY SINGLE PERSON | full stall, the crowd gone calm |
+| 8 | 0:21 | AND NOTHING LEFT TO FIGHT OVER | people taking what they need, unhurried |
+| 9 | 0:24 | EXCEPT ONE THING | camera drops — the queue |
+| 10 | 0:27 | SOMEBODY IS STILL STANDING AT THE FRONT | one person at the stall, everyone else behind |
+| 11 | 0:30 | **BUT WHAT IF EVERYONE ARRIVED AT ONCE?** | the whole crowd reaching the stall together |
+| 12 | 0:33 | THEN SOMEONE HAS TO DECIDE | many hands on the same thing |
+| 13 | 0:36 | AND WHOEVER DECIDES IS THE ONE IN CHARGE | the trader's hand, choosing |
+| 14 | 0:39 | SO YOU OFFER HIM SOMETHING | your hand holding out a watch |
+| 15 | 0:42 | TO GO FIRST | final image: a coin in his palm, the queue behind you to the horizon |
+| — | 0:45 | *(no captions)* | **silent replay** — beats 5, 6, 9, 11, 15 recut fast |
+| — | 0:57 | *(no captions)* | outro card |
 
-**Notes.** Beat 6 is the hinge — that's the viewer's own objection, said out
-loud before they can type it. Beats 9-11 are a rhythm triplet, deliver them
-faster than the rest. Beat 19 is the shortest caption in the script on purpose.
+**Notes.** The two pivots are the two escape hatches every viewer reaches for.
+Pivot 1 kills "we'd just make more of everything" — fine, the stall never runs
+out. Pivot 2 kills "we'd just take turns" — everyone arrives at the same moment,
+so turns have to come from somewhere. What's left when abundance and patience
+are both removed is the only thing money was ever for.
+
+Beats 14-15 are one sentence split across two beats, the way the reference
+splits its opener. Land "TO GO FIRST" on the coin.
+
+The old version of this script visited a sewer, a mine and a hospital at 3am.
+Those were better lines but twenty separate setups; this holds the same argument
+at one stall you could shoot in a morning.

@@ -36,7 +36,7 @@ For these four premises the *true* answer is the more shocking one. Don't
 invent a bigger ending than reality; find the real one and land it hard.
 That's the difference between a video that gets watched and one that gets sent.
 
-## The strict engine (what 02-05 run on)
+## The strict engine (all five run on this)
 
 The reference does three things that are easy to miss and easy to lose:
 
