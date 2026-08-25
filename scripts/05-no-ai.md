@@ -16,9 +16,9 @@
 | 8 | 0:21 | SO YOU GET NINE BILLION PAGES | endless junk scroll |
 | 9 | 0:24 | IN NO ORDER AT ALL | scrolling, accelerating, never useful |
 | 10 | 0:27 | **BUT WHAT IF YOUR MONEY STOPPED MOVING?** | the card reader waking up. red |
-| 11 | 0:30 | EVERY PAYMENT IS CHECKED BY AI | the card, close, turning in your hand |
-| 12 | 0:33 | SO YOUR CARD JUST GETS DECLINED | red cross on the reader |
-| 13 | 0:36 | AND SO DOES EVERYONE ELSE'S | down the row of tills — red cross, red cross, red cross |
+| 11 | 0:30 | FRAUD CHECKS RUN ON AI | the card, close, turning in your hand |
+| 12 | 0:33 | WITHOUT THEM YOUR BANK JUST GUESSES | the reader thinking, thinking |
+| 13 | 0:36 | AND IT GUESSES NO | red cross. then red cross down the whole row of tills |
 | 14 | 0:39 | THE WHOLE SHOP JUST STOPS | nobody moving. every queue frozen |
 | 15 | 0:42 | AND NOBODY CAN EVEN LOOK UP WHY | final image: the whole shop stopped, every till red, everyone holding a phone that can't tell them anything |
 
@@ -52,8 +52,12 @@ different reason: restocking degrades over weeks, not seconds.
 
 - **Search ranking is machine learning.** Remove it and you get pages with no
   useful order — that is genuinely what ranking does.
-- **Card approval and fraud scoring are machine learning.** Remove them and
-  payments fail, everywhere, at once.
+- **Card fraud detection widely uses machine learning.** Note the wording: an
+  earlier draft said "every payment is checked by AI", which is false. Plenty of
+  low-value contactless payments are approved offline with no real-time check,
+  much risk logic is still rule-based, and cash is checked by nothing. What is
+  true is that fraud scoring leans on ML, and without it banks fall back to
+  blunt rules that decline far more good payments.
 
 Both fail the instant it's switched off, both are felt by everyone, and neither
 needs a caveat. If you want a third, the spam filter is the safest spare: roughly
@@ -81,9 +85,9 @@ EVERY RESULT IS RANKED BY AI
 SO YOU GET NINE BILLION PAGES
 IN NO ORDER AT ALL
 BUT WHAT IF YOUR MONEY STOPPED MOVING?
-EVERY PAYMENT IS CHECKED BY AI
-SO YOUR CARD JUST GETS DECLINED
-AND SO DOES EVERYONE ELSE'S
+FRAUD CHECKS RUN ON AI
+WITHOUT THEM YOUR BANK JUST GUESSES
+AND IT GUESSES NO
 THE WHOLE SHOP JUST STOPS
 AND NOBODY CAN EVEN LOOK UP WHY
 AND NONE OF THAT WAS A CHATBOT
