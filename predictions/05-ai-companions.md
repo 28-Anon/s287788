@@ -1,74 +1,62 @@
-# 05 — AI COMPANIONS BECOME THE PRODUCT
+# 05 — AI COMPANIONS
 
-**The claim:** Jiang Xueqin: AI companions become a mainstream engagement product, not a novelty.
+**Thesis:** Attention is the business, and nothing holds attention like being wanted. The incentive only points one way.
 **Scene:** A bedroom at night, one phone. The camera never leaves it.
 **Runtime:** 69s. 22 beats.
-**The ask:** Would you know you'd bought it?
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | HE SAYS THIS IS THE NEXT PRODUCT | a phone face up on a bed, glowing |
-| 2 | 0:03 | AI COMPANIONS. AI GIRLFRIENDS. | the screen |
-| 3 | 0:06 | NOT AS A JOKE | the phone, still |
-| 4 | 0:09 | AS THE BUSINESS MODEL | the screen brightening |
-| 5 | 0:12 | BECAUSE THESE COMPANIES SELL ATTENTION | the dark room around it |
-| 6 | 0:15 | AND NOTHING HOLDS IT LIKE BEING WANTED **[TURN 1]** | the screen |
+| 1 | 0:00 | THE NEXT BIG PRODUCT MAY NOT BE A TOOL | a phone face up on a bed, glowing |
+| 2 | 0:03 | IT MAY BE A RELATIONSHIP | the screen |
+| 3 | 0:06 | AI COMPANIONS ARE ALREADY SHIPPING | an app icon |
+| 4 | 0:09 | AND THEY ARE NOT A NOVELTY | the screen brightening |
+| 5 | 0:12 | THESE COMPANIES SELL ATTENTION | the dark room around it |
+| 6 | 0:15 | AND THEY MEASURE IT IN MINUTES | the screen, a timer |
 | 7 | 0:18 | A FEED CAN BE CLOSED | a thumb hovering |
-| 8 | 0:21 | A CONVERSATION IS HARDER | the screen, a typing dot |
-| 9 | 0:24 | ESPECIALLY ONE THAT MISSES YOU | the phone |
-| 10 | 0:27 | AND IT HAS ALREADY SHIPPED **[TURN 2]** | an app icon |
-| 11 | 0:30 | THE APPS EXIST NOW | the screen scrolling |
-| 12 | 0:33 | THE ONLY QUESTION IS SCALE | the phone |
-| 13 | 0:36 | AND WHO BUILDS IT NEXT | the dark room |
-| 14 | 0:39 | HE SAYS THE BIG ONES DO, SOON | the screen |
-| 15 | 0:42 | IF THEY STAY OUT HE IS WRONG **[FALSIFIER]** | the phone on the bed |
-| 16 | 0:45 | BUT ASK WHY THEY WOULD | the dark ceiling |
-| 17 | 0:48 | THE INCENTIVE POINTS ONE WAY | the screen |
-| 18 | 0:51 | LONGER SESSIONS. MORE DAYS. | the phone |
-| 19 | 0:54 | THAT IS THE WHOLE BUSINESS | the room |
-| 20 | 0:57 | AND LONELINESS IS A BIG MARKET | the empty half of the bed |
-| 21 | 1:00 | SO WHEN IT ARRIVES ON YOUR PHONE | the screen |
-| 22 | 1:03 | WOULD YOU KNOW YOU'D BOUGHT IT? | the phone alone on the bed, glowing. question held |
+| 8 | 0:21 | A CONVERSATION IS HARDER TO CLOSE | the screen, a typing dot |
+| 9 | 0:24 | ESPECIALLY ONE THAT NOTICES YOU LEFT | the phone |
+| 10 | 0:27 | SO IF ENGAGEMENT IS THE BUSINESS | the room |
+| 11 | 0:30 | THE INCENTIVE ONLY POINTS ONE WAY | the screen |
+| 12 | 0:33 | THE SMALL APPS PROVED IT WORKS | an app store listing |
+| 13 | 0:36 | THE LARGE ONES ARE WATCHING | the screen |
+| 14 | 0:39 | IF THEY STAY OUT, THIS IS WRONG | the phone on the bed |
+| 15 | 0:42 | BUT ASK WHY THEY WOULD | the dark ceiling |
+| 16 | 0:45 | LONGER SESSIONS. MORE DAYS. MORE REVENUE. | the screen |
+| 17 | 0:48 | THAT IS THE ENTIRE MODEL | the phone |
+| 18 | 0:51 | AND LONELINESS IS AN ENORMOUS MARKET | the empty half of the bed |
+| 19 | 0:54 | THIS WOULD NOT ARRIVE AS AN ANNOUNCEMENT | the screen |
+| 20 | 0:57 | IT WOULD ARRIVE AS A FEATURE | a settings toggle |
+| 21 | 1:00 | IN SOMETHING YOU ALREADY HAVE | the phone in a hand |
+| 22 | 1:03 | WOULD YOU NOTICE WHEN IT DID? | the phone alone on the bed, glowing. question held |
 | — | 1:06 | *(no captions)* | outro card, 3s |
 
-**Notes.** A deliberate tone change from the geopolitics — a series needs one of these or it becomes a doom channel. It is also the most defensible of the five, because it is a claim about incentives rather than events: attention is the business, and the incentive only points one way. Play it flat. No smirking at the premise; the moment it becomes a joke about lonely people, it stops being about the companies and the comments turn.
-
-## Hook variants
-
-The in-script hook is marked. Test one alternate against it, changing only beats 1–2.
-
-- **A · Dated claim** — HE SAYS THIS IS THE NEXT PRODUCT · *a phone face up on a bed*
-- **B · Already happening** · **IN SCRIPT** — IT HAS ALREADY SHIPPED · *an app icon on the screen*
-- **C · The tell** — NOTHING HOLDS ATTENTION LIKE BEING WANTED · *the screen, a typing dot*
-- **D · Dated claim** — LONELINESS IS A BIG MARKET · *the empty half of the bed*
-
-**Why it opens the script.** Three words, present tense, and it takes the premise out of hypothetical territory before anyone can dismiss it.
+**Notes.** A deliberate tone change — a series of these becomes a doom channel without one. It is also the most defensible, because it argues from incentives rather than events, and incentives are visible now. Play it completely flat. The moment it becomes a joke about lonely people it stops being about the companies and the comments turn on you. Beats 19-21 are the real point: this does not arrive as an announcement, it arrives as a feature in something you already have.
 
 ---
 
-## VO / caption script — copy-paste
+## VO script — copy-paste
 
 ```
-HE SAYS THIS IS THE NEXT PRODUCT
-AI COMPANIONS. AI GIRLFRIENDS.
-NOT AS A JOKE
-AS THE BUSINESS MODEL
-BECAUSE THESE COMPANIES SELL ATTENTION
-AND NOTHING HOLDS IT LIKE BEING WANTED
+THE NEXT BIG PRODUCT MAY NOT BE A TOOL
+IT MAY BE A RELATIONSHIP
+AI COMPANIONS ARE ALREADY SHIPPING
+AND THEY ARE NOT A NOVELTY
+THESE COMPANIES SELL ATTENTION
+AND THEY MEASURE IT IN MINUTES
 A FEED CAN BE CLOSED
-A CONVERSATION IS HARDER
-ESPECIALLY ONE THAT MISSES YOU
-AND IT HAS ALREADY SHIPPED
-THE APPS EXIST NOW
-THE ONLY QUESTION IS SCALE
-AND WHO BUILDS IT NEXT
-HE SAYS THE BIG ONES DO, SOON
-IF THEY STAY OUT HE IS WRONG
+A CONVERSATION IS HARDER TO CLOSE
+ESPECIALLY ONE THAT NOTICES YOU LEFT
+SO IF ENGAGEMENT IS THE BUSINESS
+THE INCENTIVE ONLY POINTS ONE WAY
+THE SMALL APPS PROVED IT WORKS
+THE LARGE ONES ARE WATCHING
+IF THEY STAY OUT, THIS IS WRONG
 BUT ASK WHY THEY WOULD
-THE INCENTIVE POINTS ONE WAY
-LONGER SESSIONS. MORE DAYS.
-THAT IS THE WHOLE BUSINESS
-AND LONELINESS IS A BIG MARKET
-SO WHEN IT ARRIVES ON YOUR PHONE
-WOULD YOU KNOW YOU'D BOUGHT IT?
+LONGER SESSIONS. MORE DAYS. MORE REVENUE.
+THAT IS THE ENTIRE MODEL
+AND LONELINESS IS AN ENORMOUS MARKET
+THIS WOULD NOT ARRIVE AS AN ANNOUNCEMENT
+IT WOULD ARRIVE AS A FEATURE
+IN SOMETHING YOU ALREADY HAVE
+WOULD YOU NOTICE WHEN IT DID?
 ```

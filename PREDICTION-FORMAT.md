@@ -24,6 +24,31 @@ video is a bet that resolves in public. That changes three things:
 
 ---
 
+## 1b. THE VOICE — conditional reasoning, spoken by you
+
+Not attribution. Never "he says" — it distances the narrator from their own
+video and viewers hear it as a disclaimer.
+
+> "If Trump stays in office after the midterms, the draft could come back by
+> 2027. The war with Iran was meant to be brief. It is now day 177. The
+> President will not concede willingly. So if he makes it past November, he may
+> escalate rather than withdraw."
+
+What that does:
+
+- **The conditional is the safety.** If the condition never happens, you were
+  never wrong. That replaces attribution entirely, and it's stronger, because
+  it still sounds like you know something.
+- **You own the reasoning.** If / however / therefore. The argument is yours,
+  which is what makes it worth following you for.
+- **Could and may, never will.** One hedged verb per claim. Hedge every clause
+  and it turns to mush; hedge nothing and you've bet the channel on a date.
+- **Numbers beat adjectives.** "Mounting casualties" invites an argument.
+  "Eighteen killed, seven hundred wounded, day 177" ends one.
+- **Denials are evidence.** "The White House says a draft is not the current
+  plan — they didn't say it was off the table." Reading what wasn't said is
+  what makes it feel like analysis rather than alarm.
+
 ## 2. THE ENGINE — 22 beats, 69 seconds
 
 Same runtime, same caption rules (3–9 words, ~3s a beat, one idea each, one
