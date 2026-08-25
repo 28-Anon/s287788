@@ -1,29 +1,29 @@
 # 05 — WHAT IF THERE WAS NO AI
 
 **Scene:** a supermarket checkout. You never move from it.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 141 words.
-**Payoff image:** the whole store frozen, every person stuck at their till.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 129 words.
+**Payoff image:** the whole shop stopped, every till red, everyone holding a phone that can't tell them anything.
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | YOU'D NOTICE IN ABOUT NINE SECONDS | strip lights flickering down a checkout lane |
+| 1 | 0:00 | YOU'D NOTICE IN ABOUT NINE SECONDS | checkout lane, strip lights, you at the front of the queue |
 | 2 | 0:03 | IF EVERY AI ON EARTH SWITCHED OFF | you at the terminal, trolley loaded |
-| 3 | 0:06 | BUT NOT FOR THE REASON YOU THINK | the card reader, red cross |
-| 4 | 0:09 | YOUR CARD STOPS. THAT WAS AI. | the card, close, turning in your hand |
-| 5 | 0:12 | SO YOU REACH FOR CASH | notes counted onto the counter |
+| 3 | 0:06 | BUT NOT FOR THE REASON YOU THINK | your phone in your hand |
+| 4 | 0:09 | YOU'D LOSE THE CHATBOT | empty chat window, cursor blinking |
+| 5 | 0:12 | AND JUST GOOGLE IT INSTEAD | search bar, cursor, a question half typed |
+| 6 | 0:15 | **BUT WHAT IF GOOGLE STOPPED WORKING TOO?** | the results page scrambling in front of you |
+| 7 | 0:18 | EVERY RESULT IS RANKED BY AI | the ranking dissolving, order gone |
+| 8 | 0:21 | SO YOU GET NINE BILLION PAGES | endless junk scroll |
+| 9 | 0:24 | IN NO ORDER AT ALL | scrolling, accelerating, never useful |
+| 10 | 0:27 | **BUT WHAT IF YOUR MONEY STOPPED MOVING?** | the card reader waking up. red |
+| 11 | 0:30 | EVERY PAYMENT IS CHECKED BY AI | the card, close, turning in your hand |
+| 12 | 0:33 | SO YOUR CARD JUST GETS DECLINED | red cross on the reader |
+| 13 | 0:36 | AND SO DOES EVERYONE ELSE'S | down the row of tills — red cross, red cross, red cross |
+| 14 | 0:39 | THE WHOLE SHOP JUST STOPS | nobody moving. every queue frozen |
+| 15 | 0:42 | AND NOBODY CAN EVEN LOOK UP WHY | final image: the whole shop stopped, every till red, everyone holding a phone that can't tell them anything |
 
-| 6 | 0:15 | **BUT WHAT IF THE MACHINE COULDN'T SEE YOU?** | the loss-prevention camera above you, lens dead |
-| 7 | 0:18 | IT CAN'T TELL WHAT WENT IN THE BAG | bagging area, warning light flashing |
-| 8 | 0:21 | SO IT WON'T LET YOU LEAVE | the barrier staying shut |
-| 9 | 0:24 | YOU TAKE OUT YOUR PHONE TO SORT IT | phone in hand, still at the till |
-| 10 | 0:27 | **BUT WHAT IF IT COULDN'T ANSWER ANYTHING?** | the screen, loading, loading |
-| 11 | 0:30 | NINE BILLION PAGES IN NO ORDER | search results, unranked, junk to the bottom |
-| 12 | 0:33 | FOUR THOUSAND ADVERTS IN YOUR INBOX | unread counter spinning past four thousand |
-| 13 | 0:36 | AND YOU ARE STILL AT THE CHECKOUT | same framing as beat 2, unchanged |
-| 14 | 0:39 | YOU NEVER ASKED FOR ANY OF IT | you, motionless, trolley still full |
-| 15 | 0:42 | YOU JUST STOPPED BEING ABLE TO LEAVE | final image: slow pull back — every till in the store has someone frozen at it |
 | 16 | 0:45 | AND NONE OF THAT WAS A CHATBOT | the phone, face down |
-| 17 | 0:48 | IT WAS BORING THINGS DECIDING BORING THINGS | card reader, camera lens, search bar |
+| 17 | 0:48 | IT WAS BORING THINGS DECIDING BORING THINGS | card reader, search bar, spam folder |
 | 18 | 0:51 | QUIETLY, FOR YEARS | the store, still |
 | 19 | 0:54 | NOBODY VOTED ON ANY OF IT | the frozen tills |
 | 20 | 0:57 | NOBODY EVEN NOTICED IT ARRIVE | wide, the whole shop |
@@ -31,29 +31,37 @@
 | 22 | 1:03 | WOULD YOU SWITCH IT OFF? | the whole store, motionless. question held |
 | — | 1:06 | *(no captions)* | outro card, 3s |
 
-**Notes.** Both pivots are now the same move — you trying to leave, and the exit
-being AI as well. Pivot 1 blocks the physical way out, pivot 2 blocks the
-informational one. That's tighter than the old version, which wandered off to
-warehouses, traffic lights and hospitals.
+**Notes.** Both pivots are now things the viewer can picture in one second:
+Google stops working, and money stops moving. No abstractions, nothing
+invisible, nothing that needs explaining before it lands.
 
-**Why the old pivots were cut.** "The shelves were empty" was wrong: retail
-demand forecasting does run on machine learning, but restocking degrades over
-weeks, not in the seconds the cut implied. The traffic-light freeze had the same
-problem — adaptive signalling is real but not universal, and lights don't stop
-dead without it. Hospital scan triage was overstated too. Every claim left
-standing fails *immediately* and is genuinely ML today:
+The order matters. The card declining is the scariest beat in the script, so it
+comes last — the old version spent it on beat 3 and had nowhere to climb to
+afterwards. Search failing is the softer opener because it's the objection the
+viewer is already forming ("I'd just google it"), so beat 6 takes it off them
+before they can finish thinking it.
 
-- **Card approval and fraud scoring** — real, instant, and you feel it first.
-- **Search ranking** — take it away and you get pages in no useful order.
-- **Spam filtering** — roughly half of all email is spam; the filter is the only
-  reason your inbox is usable.
-- **Checkout loss-prevention vision** — the one to know about. Overhead
-  camera systems that watch for un-scanned items are genuinely computer vision.
-  Note that plenty of self-checkouts use *weight* sensors instead, which aren't
-  AI — so shoot beat 6 on the ceiling camera, not the bagging scale, and the
-  claim holds.
+**What was cut and why.** An earlier draft had the self-checkout camera failing,
+so the machine "couldn't see you" and wouldn't let you leave. It was confusing —
+it reads as invisibility rather than a dead camera — and it wasn't true: a
+checkout without vision doesn't trap anybody. There's no gate, and staff exist.
+The draft before that had shelves emptying instantly, which was wrong for a
+different reason: restocking degrades over weeks, not seconds.
 
-Still neutral. No side taken — beat 14 does that work without arguing with anybody.
+**Every claim now standing is true and immediate:**
+
+- **Search ranking is machine learning.** Remove it and you get pages with no
+  useful order — that is genuinely what ranking does.
+- **Card approval and fraud scoring are machine learning.** Remove them and
+  payments fail, everywhere, at once.
+
+Both fail the instant it's switched off, both are felt by everyone, and neither
+needs a caveat. If you want a third, the spam filter is the safest spare: roughly
+half of all email is spam and the filter is the only reason an inbox is usable.
+
+Still neutral. No side taken — beat 15 and the close do that work without
+arguing with anybody.
+
 
 ---
 
@@ -66,18 +74,18 @@ tool or a caption track.
 YOU'D NOTICE IN ABOUT NINE SECONDS
 IF EVERY AI ON EARTH SWITCHED OFF
 BUT NOT FOR THE REASON YOU THINK
-YOUR CARD STOPS. THAT WAS AI.
-SO YOU REACH FOR CASH
-BUT WHAT IF THE MACHINE COULDN'T SEE YOU?
-IT CAN'T TELL WHAT WENT IN THE BAG
-SO IT WON'T LET YOU LEAVE
-YOU TAKE OUT YOUR PHONE TO SORT IT
-BUT WHAT IF IT COULDN'T ANSWER ANYTHING?
-NINE BILLION PAGES IN NO ORDER
-FOUR THOUSAND ADVERTS IN YOUR INBOX
-AND YOU ARE STILL AT THE CHECKOUT
-YOU NEVER ASKED FOR ANY OF IT
-YOU JUST STOPPED BEING ABLE TO LEAVE
+YOU'D LOSE THE CHATBOT
+AND JUST GOOGLE IT INSTEAD
+BUT WHAT IF GOOGLE STOPPED WORKING TOO?
+EVERY RESULT IS RANKED BY AI
+SO YOU GET NINE BILLION PAGES
+IN NO ORDER AT ALL
+BUT WHAT IF YOUR MONEY STOPPED MOVING?
+EVERY PAYMENT IS CHECKED BY AI
+SO YOUR CARD JUST GETS DECLINED
+AND SO DOES EVERYONE ELSE'S
+THE WHOLE SHOP JUST STOPS
+AND NOBODY CAN EVEN LOOK UP WHY
 AND NONE OF THAT WAS A CHATBOT
 IT WAS BORING THINGS DECIDING BORING THINGS
 QUIETLY, FOR YEARS

@@ -60,7 +60,7 @@ image, and the entire premise lands without the word "imagine".
 
 - **A · Cold premise** — IF EVERY AI ON EARTH SWITCHED OFF · *strip lights flickering down a checkout lane*
 - **B · Drop-in** — SOMEBODY JUST TURNED ALL OF IT OFF · *the last rack light dies*
-- **C · Outcome-first** — WE SWITCHED OFF AI AND NOBODY COULD LEAVE THE SHOP · *wide: every till with someone frozen at it*
+- **C · Outcome-first** — WE SWITCHED OFF AI AND EVERY TILL IN THE COUNTRY WENT RED · *down a row of tills: red cross, red cross, red cross*
 - **D · Curiosity gap · IN SCRIPT** — YOU'D NOTICE IN ABOUT NINE SECONDS · *strip lights flickering down a checkout lane*
 
 **Why it opens the script.** Everyone arrives certain they know what breaks first, and
