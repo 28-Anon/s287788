@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a primary school classroom. The camera never leaves the room.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 117 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 115 words.
 **Payoff image:** every classroom in the school, lit, spotless, and empty forever.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
@@ -11,7 +11,7 @@ pivots, no clock.
 | 1 | 0:00 | THE LAST BABY ON EARTH WAS BORN TODAY | classroom — one chair occupied, every other empty |
 | 2 | 0:03 | THIS ROOM IS WHERE YOU'D SEE IT FIRST | same room. dust in the beam |
 | 3 | 0:06 | AND AT FIRST IT SEEMS FINE | clean room, sun moving across the floor |
-| 4 | 0:09 | THERE ARE FEWER OF US TO FEED | a lunch tray. one apple on it |
+| 4 | 0:09 | AND NOBODY MISSES THEM YET | a lunch tray, one apple on it |
 | 5 | 0:12 | BUT SOMEBODY STILL HAS TO DO THE WORK | a caretaker's coat on a hook |
 
 | 6 | 0:15 | **BUT WHAT IF MACHINES DID ALL OF IT?** | a small robot cleaning between the desks |
@@ -23,7 +23,7 @@ pivots, no clock.
 | 12 | 0:33 | AND NOTHING BEGINS | the identical shot again |
 | 13 | 0:36 | THE SAME PEOPLE. THE SAME DAY. | the teacher in the doorway, same pose, sun in the same place |
 | 14 | 0:39 | FOREVER | the room. unmoving. hold it |
-| 15 | 0:42 | WITH NOBODY LEFT TO SHOW IT TO | final image: pull back through the window — every classroom in the school, lit, spotless, empty |
+| 15 | 0:42 | AND NOTHING IS EVER NEW AGAIN | final image: pull back through the window — every classroom lit, spotless, identical, forever |
 | 16 | 0:45 | AND NOTHING ABOUT IT IS SAD | the perfect room |
 | 17 | 0:48 | NOBODY IS SUFFERING | sun on the floor |
 | 18 | 0:51 | NOBODY IS EVEN DYING | the corridor beyond the door |
@@ -59,7 +59,7 @@ tool or a caption track.
 THE LAST BABY ON EARTH WAS BORN TODAY
 THIS ROOM IS WHERE YOU'D SEE IT FIRST
 AND AT FIRST IT SEEMS FINE
-THERE ARE FEWER OF US TO FEED
+AND NOBODY MISSES THEM YET
 BUT SOMEBODY STILL HAS TO DO THE WORK
 BUT WHAT IF MACHINES DID ALL OF IT?
 NOW NOTHING BREAKS
@@ -70,7 +70,7 @@ THEN NOTHING ENDS
 AND NOTHING BEGINS
 THE SAME PEOPLE. THE SAME DAY.
 FOREVER
-WITH NOBODY LEFT TO SHOW IT TO
+AND NOTHING IS EVER NEW AGAIN
 AND NOTHING ABOUT IT IS SAD
 NOBODY IS SUFFERING
 NOBODY IS EVEN DYING

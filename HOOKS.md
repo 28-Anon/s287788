@@ -40,7 +40,7 @@ that mismatch is what makes people stay and argue in the comments.
 
 - **A · Cold premise** — IF EVERYONE ON EARTH GOT A MILLION DOLLARS · *forecourt at sunrise, one car under lights*
 - **B · Drop-in** — YOU'RE A MILLIONAIRE. SO IS EVERY PERSON YOU HAVE EVER MET. · *crowd, every face lit by a phone*
-- **C · Outcome-first · IN SCRIPT** — EVERYONE GOT A MILLION AND IT MADE THEM POORER · *a field of identical Ferraris, nobody looking*
+- **C · Outcome-first · IN SCRIPT** — EVERYONE GOT A FERRARI AND NOBODY WANTED ONE · *a field of identical Ferraris, nobody looking*
 - **D · False comfort** — CONGRATULATIONS. YOU NEVER HAVE TO WORK AGAIN. · *badge dropped on a desk*
 
 **Why it opens the script.** It's a flat contradiction in nine words. People stay to
@@ -87,7 +87,7 @@ they're wrong. That gap is the whole video.
 ## 08 · Seeing how long you had left
 
 - **A · Cold premise** — IF YOU COULD SEE HOW LONG YOU HAD LEFT · *empty bus stop, a number glowing over the bench*
-- **B · Drop-in · IN SCRIPT** — EVERYONE HERE HAS A NUMBER ABOVE THEIR HEAD · *bus stop, a few people waiting, one number each*
+- **B · Drop-in · IN SCRIPT** — THERE IS A NUMBER ABOVE YOUR HEAD · *bus stop, you sitting, a number glowing over you*
 - **C · Outcome-first** — IT STOPPED BEING A NUMBER THE DAY EVERYONE COULD SEE IT · *an empty seat beside a low number*
 - **D · False comfort** — YOU'D FINALLY STOP WASTING TIME · *you checking a watch*
 

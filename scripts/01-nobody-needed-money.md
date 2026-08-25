@@ -3,19 +3,19 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a single market stall. You stand at it for the whole video.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 132 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 136 words.
 **Payoff image:** a coin in the trader's palm, and the queue behind you running
 to the horizon.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
 | 1 | 0:00 | WE DELETED MONEY AND IT CAME STRAIGHT BACK | a coin landing in a trader's palm |
-| 2 | 0:03 | AND IT HAPPENED AT ONE MARKET STALL | the stall at dawn, a hand turning the sign round |
+| 2 | 0:03 | WATCH IT HAPPEN AT ONE MARKET STALL | the stall at dawn, a hand turning the sign round |
 | 3 | 0:06 | EVERYTHING ON IT IS FREE NOW | the stall, full, every price card blank |
 | 4 | 0:09 | SO YOU TAKE WHATEVER YOU WANT | your arms filling up |
 | 5 | 0:12 | AND SO DOES EVERYONE BEHIND YOU | crowd closing in. the stall stripped bare |
 
-| 6 | 0:15 | **BUT WHAT IF IT NEVER RAN OUT?** | the stall refilling itself, endlessly |
+| 6 | 0:15 | **BUT WHAT IF THE STALL NEVER RAN OUT?** | the stall refilling itself, endlessly |
 | 7 | 0:18 | NOW THERE IS ENOUGH FOR EVERY SINGLE PERSON | full stall, the crowd gone calm |
 | 8 | 0:21 | AND NOTHING LEFT TO FIGHT OVER | people taking what they need, unhurried |
 | 9 | 0:24 | EXCEPT ONE THING | camera drops — the queue |
@@ -56,11 +56,11 @@ tool or a caption track.
 
 ```
 WE DELETED MONEY AND IT CAME STRAIGHT BACK
-AND IT HAPPENED AT ONE MARKET STALL
+WATCH IT HAPPEN AT ONE MARKET STALL
 EVERYTHING ON IT IS FREE NOW
 SO YOU TAKE WHATEVER YOU WANT
 AND SO DOES EVERYONE BEHIND YOU
-BUT WHAT IF IT NEVER RAN OUT?
+BUT WHAT IF THE STALL NEVER RAN OUT?
 NOW THERE IS ENOUGH FOR EVERY SINGLE PERSON
 AND NOTHING LEFT TO FIGHT OVER
 EXCEPT ONE THING

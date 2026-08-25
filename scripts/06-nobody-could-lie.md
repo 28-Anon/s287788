@@ -1,7 +1,7 @@
 # 06 — WHAT IF NOBODY COULD LIE
 
 **Scene:** a family dinner table. The camera never leaves it.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 121 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 123 words.
 **Payoff image:** the table, every plate still full, every chair empty.
 
 | # | t | CAPTION | VISUAL |
@@ -22,8 +22,8 @@
 | 13 | 0:36 | COMES OUT AT ONCE | a chair pushed back hard |
 | 14 | 0:39 | YOU NEVER WANTED HONESTY | the door, open |
 | 15 | 0:42 | YOU WANTED TO CHOOSE | final image: the table, every plate full, every chair empty |
-| 16 | 0:45 | EVERY KIND THING YOU HAVE EVER SAID | a full plate |
-| 17 | 0:48 | WASN'T ALWAYS COMPLETELY TRUE | an empty chair |
+| 16 | 0:45 | NOT EVERY KIND THING YOU'VE SAID | a full plate |
+| 17 | 0:48 | WAS COMPLETELY TRUE | an empty chair |
 | 18 | 0:51 | AND THEY NEEDED TO HEAR IT ANYWAY | the table, laid |
 | 19 | 0:54 | THAT'S NOT LYING EXACTLY | a folded napkin |
 | 20 | 0:57 | BUT IT ISN'T THE TRUTH EITHER | the open door |
@@ -62,8 +62,8 @@ ABOUT EVERY PERSON AT THIS TABLE
 COMES OUT AT ONCE
 YOU NEVER WANTED HONESTY
 YOU WANTED TO CHOOSE
-EVERY KIND THING YOU HAVE EVER SAID
-WASN'T ALWAYS COMPLETELY TRUE
+NOT EVERY KIND THING YOU'VE SAID
+WAS COMPLETELY TRUE
 AND THEY NEEDED TO HEAR IT ANYWAY
 THAT'S NOT LYING EXACTLY
 BUT IT ISN'T THE TRUTH EITHER

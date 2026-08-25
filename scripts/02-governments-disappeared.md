@@ -3,7 +3,7 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** your own street, shot from your front door. The camera never leaves it.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 136 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 144 words.
 **Payoff image:** the same view as beat 1 — but now there's a barricade, guards
 and a flag at the end of your road.
 
@@ -12,14 +12,14 @@ and a flag at the end of your road.
 | 1 | 0:00 | IT WOULD BE THE BEST DAY OF YOUR LIFE | fireworks over the rooftops |
 | 2 | 0:03 | EVERY GOVERNMENT ON EARTH JUST VANISHED | your street at dawn, from your front door |
 | 3 | 0:06 | AND NOTHING WOULD HAPPEN AT ALL | quiet road. a kid's bike on a lawn |
-| 4 | 0:09 | UNTIL THE TAPS RAN BROWN | a hose running brown across the tarmac |
-| 5 | 0:12 | SO THE STREET AGREES ON SOME RULES | chalk list on a garage door |
+| 4 | 0:09 | UNTIL THE TAPS RUN BROWN | a hose running brown across the tarmac |
+| 5 | 0:12 | AND ONE CLEAN TANK IS ALL THAT'S LEFT | a water tank at the end of the street |
 
-| 6 | 0:15 | **BUT WHAT IF NOBODY FOLLOWS THEM?** | someone walking straight past the list |
-| 7 | 0:18 | A RULE IS JUST A SUGGESTION | chalk half rubbed off |
-| 8 | 0:21 | UNLESS SOMEONE MAKES YOU | a hand writing it back on, pressing harder |
+| 6 | 0:15 | **BUT WHAT IF SOMEONE TAKES TOO MUCH?** | one person filling container after container |
+| 7 | 0:18 | SO YOU WRITE A RULE ABOUT IT | chalk list on a garage door |
+| 8 | 0:21 | BUT A RULE IS JUST A SUGGESTION | someone walking straight past the list |
 | 9 | 0:24 | SO YOU PICK THE STRONGEST PEOPLE HERE | three figures stepping forward on the road |
-| 10 | 0:27 | AND SEND THEM TO GUARD THE WATER | them standing over the tank at the end of the street |
+| 10 | 0:27 | AND SEND THEM TO GUARD THE TANK | them standing over the tank at the end of the street |
 | 11 | 0:30 | **BUT WHAT IF THE NEXT STREET WANTS IT?** | headlights turning in at the far end |
 | 12 | 0:33 | SO YOU DRAW A LINE ACROSS THE ROAD | a line scraped into the tarmac |
 | 13 | 0:36 | AND MAKE THEM PAY TO CROSS IT | a sack handed over the line |
@@ -56,13 +56,13 @@ tool or a caption track.
 IT WOULD BE THE BEST DAY OF YOUR LIFE
 EVERY GOVERNMENT ON EARTH JUST VANISHED
 AND NOTHING WOULD HAPPEN AT ALL
-UNTIL THE TAPS RAN BROWN
-SO THE STREET AGREES ON SOME RULES
-BUT WHAT IF NOBODY FOLLOWS THEM?
-A RULE IS JUST A SUGGESTION
-UNLESS SOMEONE MAKES YOU
+UNTIL THE TAPS RUN BROWN
+AND ONE CLEAN TANK IS ALL THAT'S LEFT
+BUT WHAT IF SOMEONE TAKES TOO MUCH?
+SO YOU WRITE A RULE ABOUT IT
+BUT A RULE IS JUST A SUGGESTION
 SO YOU PICK THE STRONGEST PEOPLE HERE
-AND SEND THEM TO GUARD THE WATER
+AND SEND THEM TO GUARD THE TANK
 BUT WHAT IF THE NEXT STREET WANTS IT?
 SO YOU DRAW A LINE ACROSS THE ROAD
 AND MAKE THEM PAY TO CROSS IT

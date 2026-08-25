@@ -1,7 +1,7 @@
 # 10 — WHAT IF PAIN DIDN'T EXIST
 
 **Scene:** a kitchen. The camera never leaves the room.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 119 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 122 words.
 **Payoff image:** the kitchen, spotless, everything still switched on, nobody in it.
 
 | # | t | CAPTION | VISUAL |
@@ -18,8 +18,8 @@
 | 9 | 0:24 | **BUT WHAT IF YOU NEVER LOOKED?** | you turning away, still humming |
 | 10 | 0:27 | THE BODY STOPS SENDING WORD | wide: small things wrong all over the room |
 | 11 | 0:30 | A CUT YOU DIDN'T FEEL | blood on a chopping board |
-| 12 | 0:33 | A TOOTH YOU DIDN'T NOTICE | your face in the curve of the kettle |
-| 13 | 0:36 | A HEART YOU CAN'T HEAR | a hand on a chest. no reaction at all |
+| 12 | 0:33 | AN INFECTION YOU NEVER FELT START | your reflection in the curve of the kettle |
+| 13 | 0:36 | A HEART ATTACK WITH NO WARNING | a hand on a chest. no reaction at all |
 | 14 | 0:39 | PAIN WAS NEVER THE ENEMY | the kitchen, quiet |
 | 15 | 0:42 | IT WAS THE ONLY THING TELLING YOU | final image: the kitchen spotless, every appliance still on, nobody in it, a hand-shaped scorch on the pan handle |
 | 16 | 0:45 | AND SOME PEOPLE LIVE LIKE THIS | the scorched pan handle |
@@ -62,8 +62,8 @@ AND NOTHING EVER WARNS YOU
 BUT WHAT IF YOU NEVER LOOKED?
 THE BODY STOPS SENDING WORD
 A CUT YOU DIDN'T FEEL
-A TOOTH YOU DIDN'T NOTICE
-A HEART YOU CAN'T HEAR
+AN INFECTION YOU NEVER FELT START
+A HEART ATTACK WITH NO WARNING
 PAIN WAS NEVER THE ENEMY
 IT WAS THE ONLY THING TELLING YOU
 AND SOME PEOPLE LIVE LIKE THIS

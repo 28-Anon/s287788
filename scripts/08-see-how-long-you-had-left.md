@@ -1,14 +1,14 @@
 # 08 — WHAT IF YOU COULD SEE HOW LONG YOU HAD LEFT
 
 **Scene:** a bus stop. The camera never leaves it.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 119 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 118 words.
 **Payoff image:** a bus pulling away, every window a face with a number, sorted.
 
 | # | t | CAPTION | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | EVERYONE HERE HAS A NUMBER ABOVE THEIR HEAD | bus stop, a few people waiting, one number each |
-| 2 | 0:03 | IT'S HOW LONG THEY HAVE LEFT | the numbers, close |
-| 3 | 0:06 | AND YOU HAVE ONE TOO | you sitting down underneath yours |
+| 1 | 0:00 | THERE IS A NUMBER ABOVE YOUR HEAD | bus stop, you sitting, a number glowing over you |
+| 2 | 0:03 | IT'S HOW LONG YOU HAVE LEFT | the number, close |
+| 3 | 0:06 | AND ONLY YOU CAN SEE IT | the others waiting — nothing above them |
 | 4 | 0:09 | AT FIRST IT'S USEFUL | you looking up, calm |
 | 5 | 0:12 | YOU STOP WASTING TIME | you checking a watch |
 
@@ -46,9 +46,9 @@ One line per beat, 3 seconds each. Paste straight into a text-to-speech
 tool or a caption track.
 
 ```
-EVERYONE HERE HAS A NUMBER ABOVE THEIR HEAD
-IT'S HOW LONG THEY HAVE LEFT
-AND YOU HAVE ONE TOO
+THERE IS A NUMBER ABOVE YOUR HEAD
+IT'S HOW LONG YOU HAVE LEFT
+AND ONLY YOU CAN SEE IT
 AT FIRST IT'S USEFUL
 YOU STOP WASTING TIME
 BUT WHAT IF YOU COULD CHANGE IT?

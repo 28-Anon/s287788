@@ -3,13 +3,13 @@
 **Engine:** strict reference format — one continuous scene, constraint-removal
 pivots, no clock.
 **Scene:** a car dealership forecourt. The camera never leaves it.
-**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 128 words.
+**Runtime:** 69s. 22 beats — 15 to the payoff, then a spoken close · 129 words.
 **Payoff image:** a horizon of identical Ferraris with nobody looking at them.
 
 | # | t | CAPTION (on screen + VO) | VISUAL |
 |---|---|---|---|
-| 1 | 0:00 | EVERYONE GOT A MILLION AND IT MADE THEM POORER | a field of identical Ferraris, nobody looking |
-| 2 | 0:03 | IT STARTED AT THIS DEALERSHIP | forecourt at sunrise, one car under lights |
+| 1 | 0:00 | EVERYONE GOT A FERRARI AND NOBODY WANTED ONE | a field of identical Ferraris, nobody looking |
+| 2 | 0:03 | IT STARTED WHEN EVERYONE GOT A MILLION | forecourt at sunrise, one car under lights |
 | 3 | 0:06 | YOU'D BUY THE FERRARI IN THE WINDOW | the car, spotlit behind glass |
 | 4 | 0:09 | BUT EVERYONE ELSE IS ALREADY HERE | pull back — the forecourt is full of people |
 | 5 | 0:12 | AND THERE IS ONLY ONE | the same car. mob pressed against the glass |
@@ -52,8 +52,8 @@ One line per beat, 3 seconds each. Paste straight into a text-to-speech
 tool or a caption track.
 
 ```
-EVERYONE GOT A MILLION AND IT MADE THEM POORER
-IT STARTED AT THIS DEALERSHIP
+EVERYONE GOT A FERRARI AND NOBODY WANTED ONE
+IT STARTED WHEN EVERYONE GOT A MILLION
 YOU'D BUY THE FERRARI IN THE WINDOW
 BUT EVERYONE ELSE IS ALREADY HERE
 AND THERE IS ONLY ONE
