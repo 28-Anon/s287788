@@ -1,6 +1,6 @@
 # 05 — AI COMPANIONS
 
-**Thesis:** Attention is the business, and nothing holds attention like being wanted. The incentive only points one way.
+**Thesis:** Attention is the business and it is measured in minutes. Nothing holds minutes like being wanted, so the incentive only points one way.
 **Scene:** A bedroom at night, one phone. The camera never leaves it.
 **Runtime:** 69s. 22 beats.
 
@@ -27,10 +27,10 @@
 | 19 | 0:54 | THIS WOULD NOT ARRIVE AS AN ANNOUNCEMENT | the screen |
 | 20 | 0:57 | IT WOULD ARRIVE AS A FEATURE | a settings toggle |
 | 21 | 1:00 | IN SOMETHING YOU ALREADY HAVE | the phone in a hand |
-| 22 | 1:03 | WOULD YOU NOTICE WHEN IT DID? | the phone alone on the bed, glowing. question held |
+| 22 | 1:03 | WOULD YOU NOTICE WHEN IT DID? | the phone alone on the bed. question held |
 | — | 1:06 | *(no captions)* | outro card, 3s |
 
-**Notes.** A deliberate tone change — a series of these becomes a doom channel without one. It is also the most defensible, because it argues from incentives rather than events, and incentives are visible now. Play it completely flat. The moment it becomes a joke about lonely people it stops being about the companies and the comments turn on you. Beats 19-21 are the real point: this does not arrive as an announcement, it arrives as a feature in something you already have.
+**Notes.** Deliberate tone change — four war videos in a row makes a doom channel. Be straight about what this one is: the softest on evidence in the set, because it argues from incentives rather than events. That is also its strength, since incentives are visible now and do not depend on anything happening. There are no casualty figures here and none should be invented. Play it completely flat: the moment it becomes a joke about lonely people it stops being about the companies and the comments turn on you. Beats 19-21 are the actual point — this arrives as a feature in something you already have, not as an announcement.
 
 ---
 
