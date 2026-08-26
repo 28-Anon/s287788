@@ -49,7 +49,34 @@ What that does:
   plan — they didn't say it was off the table." Reading what wasn't said is
   what makes it feel like analysis rather than alarm.
 
-## 2. THE ENGINE — 22 beats, 69 seconds
+## 1c. WRITE SENTENCES, NOT CAPTION CARDS
+
+The single biggest mistake made on this project: importing the 3-to-8-word
+caption rule from the what-if scripts and applying it here. It does not
+transfer, and it produced narration that reads like a slideshow.
+
+**The script is the speech.** Write full sentences with the connectives left
+in — however, therefore, we can see that. Break the *captions* at the commas
+and full stops when you edit. Those are two different jobs and the caption
+rule must never be allowed to reach back and shape the writing.
+
+Two symptoms that the voice has gone wrong:
+
+- **Every line is a fragment.** If nothing runs longer than eight words, it
+  has been chopped. Speech has long sentences and short ones.
+- **It is stuffed with figures.** One or two numbers per script, each carrying
+  weight. Chasing verifiability by piling in statistics turns a script into a
+  briefing, which is the fastest way to lose the person watching.
+
+Length: roughly 60 to 80 seconds, which is about 130 to 170 words at a natural
+pace. Do not pad to hit a number and do not chop to fit one.
+
+## 2. THE OLD BEAT ENGINE — kept for reference
+
+The structure below still describes the *shape* of the argument. Use it to
+plan what goes where, then write the result as prose.
+
+## 2b. THE ENGINE — 22 beats, 69 seconds
 
 Same runtime, same caption rules (3–9 words, ~3s a beat, one idea each, one
 location, voice running to 1:03). What changes is the spine.
