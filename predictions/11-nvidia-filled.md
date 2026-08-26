@@ -1,34 +1,32 @@
-# 11 — NVIDIA Q2 FY2027
+# 11 — NVIDIA Q2 FY2027 (plain English)
 
 **Scene:** A hallway. Post on the mat, one pension statement.  
-**Runtime:** 1:03 (134 words)
+**Runtime:** 1:02 (132 words)
 **Source:** NVIDIA press release, quarter ended 26 July 2026
 
 ---
 
-So Nvidia has just released its earnings report, and here is what we know from it.
+So Nvidia has just released its earnings, and here is what it actually says.
 
-Revenue was ninety-six point two billion, up a hundred and six per cent. Data centre did eighty-nine billion. Next quarter they guide to a hundred and eight.
+They sold ninety-six billion dollars of chips in three months. That is double last year. Next quarter they expect a hundred and eight.
 
-Enormous. But read further down.
+Huge. But look at where the cash went.
 
-Nvidia borrowed almost twenty-five billion this quarter. Its long-term debt has quadrupled since January.
+Nvidia made sixty billion in profit, and still borrowed twenty-five billion.
 
-Free cash flow fell by more than half from last quarter, while revenue went up.
+Sales went up. The cash actually coming in fell by half.
 
-It holds ninety-four billion in stakes in other companies. Nearly eight billion of its profit came from those stakes rising in value.
+And this year they have spent over forty billion buying pieces of the companies that buy their chips.
 
-None of that means the boom is over. It means it is now being financed.
+Eight billion of their profit was not money at all. It was those shares going up on paper.
 
-So in the coming months, will the market keep looking at the chips, or start looking at the balance sheet?
+None of this means the boom is over. It means it is running on borrowed money.
+
+So will the market keep watching the sales, or start watching the cash?
 
 ---
 
-**Why the penultimate line matters.** The operating business is genuinely
-excellent — 75% gross margin, 66% operating margin, data centre up 117%, and a
-$108bn guide assuming zero China. Nothing here says demand is weakening. The
-line concedes that before turning, which is what stops the video reading as a
-doom take and makes the balance-sheet point land instead.
+See `NVIDIA-WHAT-NEXT.md` for what this could mean, clearly marked as speculation.
 
 ---
 

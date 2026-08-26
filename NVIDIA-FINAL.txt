@@ -1,26 +1,41 @@
-NVIDIA Q2 FY2027 — FINAL SCRIPT (1:03)
+NVIDIA Q2 FY2027 — PLAIN ENGLISH SCRIPT (1:02)
 
-Source: the NVIDIA press release, quarter ended 26 July 2026.
+No jargon. No 'free cash flow', no 'balance sheet', no 'long-term debt'.
 
 ========================================================================
 
-RECORD THIS  (134 words)
+RECORD THIS  (132 words)
 
-So Nvidia has just released its earnings report, and here is what we know from it.
+So Nvidia has just released its earnings, and here is what it actually says.
 
-Revenue was ninety-six point two billion, up a hundred and six per cent. Data centre did eighty-nine billion. Next quarter they guide to a hundred and eight.
+They sold ninety-six billion dollars of chips in three months. That is double last year. Next quarter they expect a hundred and eight.
 
-Enormous. But read further down.
+Huge. But look at where the cash went.
 
-Nvidia borrowed almost twenty-five billion this quarter. Its long-term debt has quadrupled since January.
+Nvidia made sixty billion in profit, and still borrowed twenty-five billion.
 
-Free cash flow fell by more than half from last quarter, while revenue went up.
+Sales went up. The cash actually coming in fell by half.
 
-It holds ninety-four billion in stakes in other companies. Nearly eight billion of its profit came from those stakes rising in value.
+And this year they have spent over forty billion buying pieces of the companies that buy their chips.
 
-None of that means the boom is over. It means it is now being financed.
+Eight billion of their profit was not money at all. It was those shares going up on paper.
 
-So in the coming months, will the market keep looking at the chips, or start looking at the balance sheet?
+None of this means the boom is over. It means it is running on borrowed money.
+
+So will the market keep watching the sales, or start watching the cash?
+
+========================================================================
+
+WHAT EACH LINE IS BASED ON
+
+  sold $96bn of chips in three months     revenue $96,221m
+  double last year                        +106% from $46,743m
+  expect $108bn next quarter              Q3 outlook $108.0bn +/-2%
+  made sixty billion in profit            GAAP net income $59,688m
+  borrowed twenty-five billion            debt issued in Q2 $24,896m
+  cash coming in fell by half             operating cash flow $50.3bn -> $24.1bn
+  spent over forty billion on stakes      equity purchases, 6 months, $42,404m
+  eight billion was shares on paper       equity gains, net, $7,771m, non-cash
 
 ========================================================================
 
