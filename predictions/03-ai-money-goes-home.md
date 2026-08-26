@@ -17,6 +17,24 @@ Some deals are still going ahead, so none of this is certain. But announcements 
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Conditional** · **IN SCRIPT**  
+  If the war with Iran keeps going, the money building artificial intelligence may go home.
+- **B · Unreported fact**  
+  In March, Iranian drones hit data centres in the Gulf. Three sites out of more than two hundred, and almost nobody noticed.
+- **C · Contradiction** · **LEAD WITH THIS**  
+  The threat to artificial intelligence is not that the technology fails. It is who is paying for it.
+- **D · The tell**  
+  If you want to know whether the AI boom is ending, do not read the announcements. Read the cancellations.
+
+**Why that one.** It removes the argument you do not want before it starts. Say 'AI bubble' and half the comments are litigating whether AI works; say 'it is who is paying' and they are listening to the actual claim.
+
+---
+
 ## Copy-paste
 
 ```

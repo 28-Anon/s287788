@@ -17,6 +17,24 @@ If landing forces appear, this reading is wrong. Until then, watch the shipping 
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Direct address** · **IN SCRIPT**  
+  Odessa is under blockade right now, and that is part of why this costs what it does.
+- **B · Contradiction** · **LEAD WITH THIS**  
+  Russia has not taken Odessa, and it may not need to. It has done something cheaper.
+- **C · Unreported fact**  
+  Ukraine's only major port has been effectively blockaded since July, and the front line has barely moved.
+- **D · The tell**  
+  If you want to know how the war in Ukraine ends, stop watching the front line and watch the shipping.
+
+**Why that one.** Six words that reverse the entire expectation, then hand the viewer a puzzle. 'Something cheaper' is a question nobody can leave alone.
+
+---
+
 ## Copy-paste
 
 ```

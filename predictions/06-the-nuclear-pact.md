@@ -17,6 +17,24 @@ If the strikes stop, this quietly goes away. If they do not, it does not. And yo
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Unreported fact** · **IN SCRIPT** · **LEAD WITH THIS**  
+  Saudi Arabia has invoked a mutual defence pact with a nuclear-armed country, and almost nobody reported it.
+- **B · Conditional**  
+  If Iran keeps striking Saudi targets, Pakistan is now treaty-bound to respond. Pakistan has nuclear weapons.
+- **C · Direct address**  
+  There is a story running underneath this war that you have almost certainly not been told.
+- **D · Contradiction**  
+  Everyone is watching Iran and America. The agreement that matters most was signed in Mecca this month.
+
+**Why that one.** Already the strongest opener in the project. Nuclear, a real invoked treaty, and an accurate complaint that nobody covered it. Do not overwrite this one.
+
+---
+
 ## Copy-paste
 
 ```

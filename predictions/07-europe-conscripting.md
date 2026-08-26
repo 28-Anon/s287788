@@ -19,6 +19,24 @@ If you are under thirty in Europe, this is being decided by people it will never
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Unreported fact** · **IN SCRIPT**  
+  Europe has already started conscripting. Not soon. Now.
+- **B · Direct address** · **LEAD WITH THIS**  
+  If you are under thirty and living in Europe, this is being decided by people it will never touch.
+- **C · Contradiction**  
+  Most people in France, Germany and Poland support bringing back military service. Almost nobody under thirty does.
+- **D · Conditional**  
+  If the war in Ukraine does not settle soon, conscription spreads. It has already started in three countries.
+
+**Why that one.** The most quietly furious line available, and it is precisely true: the polling majority backing conscription vanishes among the people it would take. Aimed straight at the audience most likely to share it.
+
+---
+
 ## Copy-paste
 
 ```

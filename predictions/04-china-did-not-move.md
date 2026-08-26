@@ -17,6 +17,24 @@ If landing craft start massing, this reading is wrong. Until then, watch what th
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Contradiction** · **IN SCRIPT**  
+  America moved its forces to the Middle East, and China did not invade Taiwan. That is the story nobody is telling.
+- **B · Conditional**  
+  If China were ever going to take Taiwan, this year was the moment. It has not moved.
+- **C · The tell**  
+  Everyone is watching the wrong thing in Taiwan. Watch the landing craft, not the rhetoric.
+- **D · Unreported fact** · **LEAD WITH THIS**  
+  American intelligence quietly assessed this year that Beijing is not planning to invade Taiwan in 2027.
+
+**Why that one.** 'Quietly assessed' plus a specific finding reads as something you were not supposed to know, and it is completely sourceable. It also makes the calm answer sound like a scoop rather than a shrug.
+
+---
+
 ## Copy-paste
 
 ```

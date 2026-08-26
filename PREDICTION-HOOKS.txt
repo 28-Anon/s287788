@@ -1,0 +1,192 @@
+PREDICTION HOOKS — FORTY OPENERS
+
+Four per script. 'A' is the one written into the script.
+
+These are spoken sentences, not caption cards. If you swap the hook, the
+NEXT sentence has to carry whatever the new opener skipped — an opener that
+gives the ending away still needs the premise stated straight after it.
+
+Test by changing only the opening sentence. Same visuals, same voice, same
+everything else, or the test tells you nothing. Judge on 3-second retention.
+
+======================================================================
+
+01 — THE DRAFT COMES BACK
+
+  A · Conditional [IN SCRIPT]
+     If Trump remains in office after the midterms, the draft could come back by 2027.
+
+  B · Direct address <-- LEAD WITH THIS
+     If you are turning eighteen next year, this is the one to pay attention to.
+
+  C · Unreported fact
+     America has never switched off its register of young men. It is still running, and every name is still on it.
+
+  D · Contradiction
+     Everyone assumes a draft is a last resort. The White House was asked this year, and did not rule it out.
+
+  WHY: It turns a geopolitics video into a personal one in fourteen words. The draft is the rare foreign-policy story with a named victim, and naming them in the first line is the whole advantage.
+
+======================================================================
+
+02 — THE STRAIT ALREADY CLOSED
+
+  A · Unreported fact [IN SCRIPT]
+     The Strait of Hormuz has been closed since February, and almost nobody is talking about it.
+
+  B · Direct address
+     The reason your shopping costs more this year is a gap of water about twenty miles wide.
+
+  C · Conditional
+     If the Strait of Hormuz stays shut, prices do not go back to where they were.
+
+  D · Contradiction <-- LEAD WITH THIS
+     Iran did not need to win this war. It only needed to close one gap of water, and it has held it for six months.
+
+  WHY: It is the cleanest statement of the idea in the set, and it reframes a war as a bottleneck. People remember bottlenecks.
+
+======================================================================
+
+03 — THE AI MONEY GOES HOME
+
+  A · Conditional [IN SCRIPT]
+     If the war with Iran keeps going, the money building artificial intelligence may go home.
+
+  B · Unreported fact
+     In March, Iranian drones hit data centres in the Gulf. Three sites out of more than two hundred, and almost nobody noticed.
+
+  C · Contradiction <-- LEAD WITH THIS
+     The threat to artificial intelligence is not that the technology fails. It is who is paying for it.
+
+  D · The tell
+     If you want to know whether the AI boom is ending, do not read the announcements. Read the cancellations.
+
+  WHY: It removes the argument you do not want before it starts. Say 'AI bubble' and half the comments are litigating whether AI works; say 'it is who is paying' and they are listening to the actual claim.
+
+======================================================================
+
+04 — CHINA DID NOT MOVE
+
+  A · Contradiction [IN SCRIPT]
+     America moved its forces to the Middle East, and China did not invade Taiwan. That is the story nobody is telling.
+
+  B · Conditional
+     If China were ever going to take Taiwan, this year was the moment. It has not moved.
+
+  C · The tell
+     Everyone is watching the wrong thing in Taiwan. Watch the landing craft, not the rhetoric.
+
+  D · Unreported fact <-- LEAD WITH THIS
+     American intelligence quietly assessed this year that Beijing is not planning to invade Taiwan in 2027.
+
+  WHY: 'Quietly assessed' plus a specific finding reads as something you were not supposed to know, and it is completely sourceable. It also makes the calm answer sound like a scoop rather than a shrug.
+
+======================================================================
+
+05 — AI COMPANIONS
+
+  A · Contradiction [IN SCRIPT]
+     The next major product may not be a tool. It may be a relationship.
+
+  B · Direct address <-- LEAD WITH THIS
+     The next thing they sell you will not feel like a product. It will feel like company.
+
+  C · Conditional
+     If attention is what these companies sell, then loneliness is the largest market they have left.
+
+  D · Unreported fact
+     AI companions are not coming. They are already here, and the large platforms are watching how they perform.
+
+  WHY: It describes the experience rather than the product. 'It will feel like company' is the line people repeat, and it lands before anyone can decide the topic is beneath them.
+
+======================================================================
+
+06 — THE NUCLEAR PACT NOBODY MENTIONED
+
+  A · Unreported fact [IN SCRIPT] <-- LEAD WITH THIS
+     Saudi Arabia has invoked a mutual defence pact with a nuclear-armed country, and almost nobody reported it.
+
+  B · Conditional
+     If Iran keeps striking Saudi targets, Pakistan is now treaty-bound to respond. Pakistan has nuclear weapons.
+
+  C · Direct address
+     There is a story running underneath this war that you have almost certainly not been told.
+
+  D · Contradiction
+     Everyone is watching Iran and America. The agreement that matters most was signed in Mecca this month.
+
+  WHY: Already the strongest opener in the project. Nuclear, a real invoked treaty, and an accurate complaint that nobody covered it. Do not overwrite this one.
+
+======================================================================
+
+07 — EUROPE IS ALREADY CONSCRIPTING
+
+  A · Unreported fact [IN SCRIPT]
+     Europe has already started conscripting. Not soon. Now.
+
+  B · Direct address <-- LEAD WITH THIS
+     If you are under thirty and living in Europe, this is being decided by people it will never touch.
+
+  C · Contradiction
+     Most people in France, Germany and Poland support bringing back military service. Almost nobody under thirty does.
+
+  D · Conditional
+     If the war in Ukraine does not settle soon, conscription spreads. It has already started in three countries.
+
+  WHY: The most quietly furious line available, and it is precisely true: the polling majority backing conscription vanishes among the people it would take. Aimed straight at the audience most likely to share it.
+
+======================================================================
+
+08 — ODESSA IS THE REAL FRONT
+
+  A · Direct address [IN SCRIPT]
+     Odessa is under blockade right now, and that is part of why this costs what it does.
+
+  B · Contradiction <-- LEAD WITH THIS
+     Russia has not taken Odessa, and it may not need to. It has done something cheaper.
+
+  C · Unreported fact
+     Ukraine's only major port has been effectively blockaded since July, and the front line has barely moved.
+
+  D · The tell
+     If you want to know how the war in Ukraine ends, stop watching the front line and watch the shipping.
+
+  WHY: Six words that reverse the entire expectation, then hand the viewer a puzzle. 'Something cheaper' is a question nobody can leave alone.
+
+======================================================================
+
+09 — AMERICA IS BUYING ITS OWN DEBT
+
+  A · Unreported fact [IN SCRIPT]
+     America is now buying its own debt, and that is worth understanding.
+
+  B · Direct address <-- LEAD WITH THIS
+     The reason your mortgage costs what it does is being decided by buyers in Beijing and Tokyo.
+
+  C · Contradiction
+     The biggest competitor for America's lenders is not another country. It is the companies building artificial intelligence.
+
+  D · Conditional
+     If foreign buyers keep pulling back from American debt, rates do not come down. They climb.
+
+  WHY: It converts sovereign debt into a mortgage payment in one sentence. Beijing and Tokyo deciding your rate is a real mechanism and it sounds like a conspiracy, which is the ideal combination.
+
+======================================================================
+
+10 — THE THIRD TERM PLAN DOES NOT WORK
+
+  A · Contradiction [IN SCRIPT]
+     The third term plan does not work, and it is not close.
+
+  B · Unreported fact
+     Everyone quotes the twenty-second amendment. The one that actually settles this is the twelfth, and almost nobody reads it out.
+
+  C · Direct address
+     You have probably seen the prediction that Trump runs as vice president in 2028. Here is why it fails.
+
+  D · Conditional <-- LEAD WITH THIS
+     If Trump tried to return as vice president, one sentence written in 1804 would stop him.
+
+  WHY: 'One sentence written in 1804' is the best line in the deck. Specific, verifiable, and it promises a fact rather than an opinion, which is exactly the promise a debunk should make.
+
+======================================================================

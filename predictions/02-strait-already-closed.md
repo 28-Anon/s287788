@@ -19,6 +19,24 @@ So when the price of something jumps this winter, this is where it started.
 
 ---
 
+## Hook variants
+
+Spoken openers. **A** is the one in the script above. Swap only the opening
+sentence — and make sure the next sentence still carries the premise.
+
+- **A · Unreported fact** · **IN SCRIPT**  
+  The Strait of Hormuz has been closed since February, and almost nobody is talking about it.
+- **B · Direct address**  
+  The reason your shopping costs more this year is a gap of water about twenty miles wide.
+- **C · Conditional**  
+  If the Strait of Hormuz stays shut, prices do not go back to where they were.
+- **D · Contradiction** · **LEAD WITH THIS**  
+  Iran did not need to win this war. It only needed to close one gap of water, and it has held it for six months.
+
+**Why that one.** It is the cleanest statement of the idea in the set, and it reframes a war as a bottleneck. People remember bottlenecks.
+
+---
+
 ## Copy-paste
 
 ```
