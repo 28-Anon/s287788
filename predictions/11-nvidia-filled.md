@@ -1,26 +1,42 @@
 # 11 — NVIDIA Q2 FY2027
 
 **Scene:** A hallway. Post on the mat, one pension statement.  
-**Runtime:** ~1:05 (137 words)
+**Runtime:** 1:03 (133 words)
 **Source:** NVIDIA press release, quarter ended 26 July 2026
 
 ---
 
 So Nvidia has just released its earnings report, and here is what we know from it.
 
-Revenue was ninety-six point two billion, up a hundred and six per cent. Data centre alone did eighty-nine billion, and next quarter they are guiding to a hundred and eight.
+Revenue was ninety-six point two billion, up a hundred and six per cent. Data centre did eighty-nine billion, and next quarter they guide to a hundred and eight.
 
 Enormous. But read further down the page.
 
-Nvidia borrowed almost twenty-five billion dollars this quarter. Its long-term debt has quadrupled since January.
+Nvidia borrowed almost twenty-five billion this quarter. Its long-term debt has quadrupled since January.
 
 Free cash flow fell by more than half from last quarter, while revenue went up.
 
 Customers now owe it sixty-three billion, up from thirty-eight.
 
-And it holds ninety-four billion in stakes in other companies. Nearly eight billion of this quarter's profit came from those stakes simply rising in value.
+And it holds ninety-four billion in stakes in other companies. Nearly eight billion of this quarter's profit came from those stakes rising in value.
 
 So in the coming months, will the market keep looking at the chips, or start looking at the balance sheet?
+
+---
+
+```
+ALTERNATE PENULTIMATE LINE — if you want the nuance in the video
+
+  Swap the last two lines for:
+
+    None of that means the boom is over. It means it is now being financed.
+
+    So in the coming months, will the market keep looking at the chips,
+    or start looking at the balance sheet?
+
+  Adds ~13 words, taking it to about 1:09. Cut "Customers now owe it
+  sixty-three billion, up from thirty-eight" to stay at 1:03.
+```
 
 ---
 
