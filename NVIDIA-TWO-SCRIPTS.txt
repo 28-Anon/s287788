@@ -1,10 +1,8 @@
-NVIDIA EARNINGS — TWO INFORMATIVE SCRIPTS
+NVIDIA EARNINGS — TWO SCRIPTS, ~1:03 EACH
 
 Hook: 'So Nvidia has just released its earnings report, and here is what
-we know from it.' News-briefing register: report the numbers first, then
-say what they mean.
-
-Both ~1:05. Fill the four bracketed slots and record.
+we know from it.'  News-briefing register: numbers first, meaning second.
+Closes on the question about the coming months.
 
 ======================================================================
 
@@ -25,49 +23,61 @@ WHAT TO PASTE ME — four numbers and I rewrite in under a minute
 
 ======================================================================
 
-SCRIPT A — IF THE NUMBER IS GOOD
+SCRIPT A — IF THE NUMBER IS GOOD  (1:03)
 
 So Nvidia has just released its earnings report, and here is what we know from it.
 
-Revenue came in at [REVENUE] billion dollars, against an expected ninety-two. Earnings were [EPS] a share. The data centre division, which is the part that actually matters, did [DC] billion.
+Revenue came in at [REVENUE] billion dollars, against an expected ninety-two. Earnings were [EPS] a share, and the data centre division did [DC] billion.
 
-For context, that same quarter last year was forty-six billion. The business has roughly doubled in twelve months.
+That same quarter last year was forty-six billion, so the business has roughly doubled.
 
-Guidance for next quarter came in at [GUIDANCE], and that is usually the number that moves the stock, not the one everybody just read.
+Guidance for next quarter came in at [GUIDANCE], and that is usually the number that moves the stock.
 
-However, none of this touches the real risk. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle.
+However, none of this touches the real risk. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and every pass makes the numbers look bigger.
 
-Therefore a strong quarter does not settle anything. It makes the next commitment easier to sign.
+So in the coming months, will the market keep ignoring that circle, or finally crash on the overvaluation underneath it?
 
 ======================================================================
 
-SCRIPT B — IF THE NUMBER IS BAD
+SCRIPT B — IF THE NUMBER IS BAD  (1:01)
 
 So Nvidia has just released its earnings report, and here is what we know from it.
 
-Revenue came in at [REVENUE] billion dollars, against an expected ninety-two, and below the ninety-one the company forecast itself. Earnings were [EPS] a share, and the data centre division did [DC] billion.
+Revenue came in at [REVENUE] billion, against an expected ninety-two, and below the company's own ninety-one. Earnings were [EPS] a share, and the data centre division did [DC] billion.
 
-Guidance for next quarter was [GUIDANCE], and that is usually the number that moves the stock.
+Guidance for next quarter was [GUIDANCE], the number that usually moves the stock.
 
-However, the important part is what sits underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
+Underneath it, Nvidia has put a hundred billion into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
 
-The five biggest tech firms have signed over a trillion dollars of data centre leases that have not started yet, most of it borrowed.
+The five biggest tech firms have signed over a trillion dollars of leases that have not even started.
 
-Therefore the question now is whether the lenders stay.
+So in the coming months, will the market keep ignoring that, or finally crash on the overvaluation underneath it?
+
+======================================================================
+
+CLOSING QUESTION — four versions, swap freely
+
+  1  the circle
+    So in the coming months, will the market keep ignoring that circle, or finally crash on the overvaluation underneath it?
+
+  2  the leases
+    So in the coming months, will the market keep ignoring a trillion dollars nobody has spent yet, or crash on the overvaluation underneath it?
+
+  3  chips vs debt
+    So in the coming months, will the market keep looking at the chips, or start looking at the debt?
+
+  4  straight
+    So in the coming months, does the market keep ignoring this, or crash on the overvaluation of these AI companies?
 
 ======================================================================
 
 THIRD OUTCOME — revenue beats, guidance softens, stock falls anyway
 
-Use SCRIPT A but replace the guidance paragraph with:
+Use SCRIPT A, replace the guidance paragraph with:
 
-  Guidance for next quarter came in at [GUIDANCE], which is below what
-  the market wanted. That is the number that moves the stock, and it just
-  came in light.
+  Guidance for next quarter came in at [GUIDANCE], which is below what the
+  market wanted. That is the number that moves the stock, and it came in light.
 
-Then replace the final line with:
-
-  Therefore the quarter beat and the forecast did not. Watch what gets
-  quietly cancelled over the next month.
+The closing question still works unchanged.
 
 ======================================================================

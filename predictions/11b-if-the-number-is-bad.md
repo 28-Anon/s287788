@@ -1,22 +1,31 @@
 # 11B — IF THE NUMBER IS BAD
 
 **Scene:** A hallway. Post on the mat, one pension statement.  
-**Runtime:** ~1:05 (139 words)
+**Runtime:** ~1:01 (130 words)
 **Register:** news briefing — numbers first, meaning second.
 
 ---
 
 So Nvidia has just released its earnings report, and here is what we know from it.
 
-Revenue came in at [REVENUE] billion dollars, against an expected ninety-two, and below the ninety-one the company forecast itself. Earnings were [EPS] a share, and the data centre division did [DC] billion.
+Revenue came in at [REVENUE] billion, against an expected ninety-two, and below the company's own ninety-one. Earnings were [EPS] a share, and the data centre division did [DC] billion.
 
-Guidance for next quarter was [GUIDANCE], and that is usually the number that moves the stock.
+Guidance for next quarter was [GUIDANCE], the number that usually moves the stock.
 
-However, the important part is what sits underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
+Underneath it, Nvidia has put a hundred billion into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
 
-The five biggest tech firms have signed over a trillion dollars of data centre leases that have not started yet, most of it borrowed.
+The five biggest tech firms have signed over a trillion dollars of leases that have not even started.
 
-Therefore the question now is whether the lenders stay.
+So in the coming months, will the market keep ignoring that, or finally crash on the overvaluation underneath it?
+
+---
+
+## Closing question — swap freely
+
+- **the circle** — So in the coming months, will the market keep ignoring that circle, or finally crash on the overvaluation underneath it?
+- **the leases** — So in the coming months, will the market keep ignoring a trillion dollars nobody has spent yet, or crash on the overvaluation underneath it?
+- **chips vs debt** — So in the coming months, will the market keep looking at the chips, or start looking at the debt?
+- **straight** — So in the coming months, does the market keep ignoring this, or crash on the overvaluation of these AI companies?
 
 ---
 
