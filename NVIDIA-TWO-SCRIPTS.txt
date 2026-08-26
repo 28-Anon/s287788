@@ -1,75 +1,73 @@
-NVIDIA EARNINGS — TWO SCRIPTS, ONE OF WHICH YOU RECORD TONIGHT
+NVIDIA EARNINGS — TWO INFORMATIVE SCRIPTS
 
-Results after the US close, 26 August. Call 5pm ET / 10pm BST.
+Hook: 'So Nvidia has just released its earnings report, and here is what
+we know from it.' News-briefing register: report the numbers first, then
+say what they mean.
 
-Both scripts are ~1:02. The middle of each is identical on purpose:
-whichever way the number goes, the circular financing and the trillion
-dollars of uncommenced leases are unchanged. Only the open and close move.
+Both ~1:05. Fill the four bracketed slots and record.
 
-====================================================================
+======================================================================
+
+WHAT TO PASTE ME — four numbers and I rewrite in under a minute
+
+  [REVENUE]   headline revenue      compare: consensus $92.07bn / guidance $91bn +/-2%
+  [EPS]       adjusted EPS          compare: consensus $2.09  (last year $1.05)
+  [DC]        data centre revenue   compare: estimate $85.67bn
+  [GUIDANCE]  NEXT quarter revenue  the number that actually moves the stock
+
+  Optional but useful: gross margin (expected ~75%), any Blackwell supply
+  comment, and the after-hours share move.
+
+  Source: nvidianews.nvidia.com posts the release within a minute or two of
+  16:20 ET. The CFO commentary PDF on investor.nvidia.com has the segment
+  breakdown and the guidance line. I cannot reach either from here - the
+  network policy blocks them - so pasting is faster than me searching.
+
+======================================================================
 
 SCRIPT A — IF THE NUMBER IS GOOD
-SCENE: A hallway. Post on the mat, one pension statement.
 
-Nvidia beat expectations tonight, and the market breathed out.
+So Nvidia has just released its earnings report, and here is what we know from it.
 
-However, this was never really about one company's quarter.
+Revenue came in at [REVENUE] billion dollars, against an expected ninety-two. Earnings were [EPS] a share. The data centre division, which is the part that actually matters, did [DC] billion.
 
-Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and every pass makes the numbers look bigger.
+For context, that same quarter last year was forty-six billion. The business has roughly doubled in twelve months.
 
-The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet, most of it financed with debt, while borrowing costs sit at nineteen-year highs.
+Guidance for next quarter came in at [GUIDANCE], and that is usually the number that moves the stock, not the one everybody just read.
 
-A good quarter does not repay any of that. It only delays the question.
+However, none of this touches the real risk. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle.
 
-Therefore the danger now is relief. Every beat makes the next promise easier to sign, and the commitments get larger.
+Therefore a strong quarter does not settle anything. It makes the next commitment easier to sign.
 
-So watch what gets committed next, rather than what got reported tonight.
-
-  ALTERNATE OPENERS:
-    B · Direct address   Nvidia just beat, your pension went up, and nothing underneath it changed.
-    C · Unreported fact  The good news tonight was never the risk. The risk is what gets signed tomorrow.
-    D · Contradiction    Everybody wanted this number. That is exactly what makes it dangerous.
-
-  LEAD WITH: D
-
-====================================================================
+======================================================================
 
 SCRIPT B — IF THE NUMBER IS BAD
-SCENE: A hallway. Post on the mat, one pension statement.
 
-Nvidia missed tonight, and the whole market is going to feel it.
+So Nvidia has just released its earnings report, and here is what we know from it.
 
-However, Nvidia was only ever the trigger. The fire was already built.
+Revenue came in at [REVENUE] billion dollars, against an expected ninety-two, and below the ninety-one the company forecast itself. Earnings were [EPS] a share, and the data centre division did [DC] billion.
 
-Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and a circle only works while everybody keeps paying in.
+Guidance for next quarter was [GUIDANCE], and that is usually the number that moves the stock.
 
-The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet, most of it financed with debt, at nineteen-year-high borrowing costs.
+However, the important part is what sits underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
 
-Therefore the question is no longer whether the chips sell. It is whether the lenders stay.
+The five biggest tech firms have signed over a trillion dollars of data centre leases that have not started yet, most of it borrowed.
 
-The Bank for International Settlements already called this one of the three biggest risks to global stability.
+Therefore the question now is whether the lenders stay.
 
-So watch the credit markets tomorrow, not the share price tonight.
+======================================================================
 
-  ALTERNATE OPENERS:
-    B · Contradiction    Nvidia is not why the market is falling. It is just what went first.
-    C · Direct address   If you have a pension, you found out tonight what it was actually invested in.
-    D · Unreported fact  One company missed a forecast, and a trillion dollars of leases just got harder to finance.
+THIRD OUTCOME — revenue beats, guidance softens, stock falls anyway
 
-  LEAD WITH: B
+Use SCRIPT A but replace the guidance paragraph with:
 
-====================================================================
+  Guidance for next quarter came in at [GUIDANCE], which is below what
+  the market wanted. That is the number that moves the stock, and it just
+  came in light.
 
-THE THIRD OUTCOME — READ THIS
+Then replace the final line with:
 
-Revenue beats but next-quarter guidance disappoints, and the stock falls
-anyway. This has happened to Nvidia before, because expectations are priced
-so high that meeting them is not enough.
+  Therefore the quarter beat and the forecast did not. Watch what gets
+  quietly cancelled over the next month.
 
-If that lands: use SCRIPT B and change only the opening line to:
-
-  "Nvidia beat its own forecast tonight, and the stock fell anyway."
-
-Everything after it still holds.
-
-====================================================================
+======================================================================

@@ -1,63 +1,40 @@
-# 11b — IF THE NUMBER IS BAD
+# 11B — IF THE NUMBER IS BAD
 
 **Scene:** A hallway. Post on the mat, one pension statement.  
-**Runtime:** ~1:02 (132 words)
+**Runtime:** ~1:05 (139 words)
+**Register:** news briefing — numbers first, meaning second.
 
 ---
 
-Nvidia missed tonight, and the whole market is going to feel it.
+So Nvidia has just released its earnings report, and here is what we know from it.
 
-However, Nvidia was only ever the trigger. The fire was already built.
+Revenue came in at [REVENUE] billion dollars, against an expected ninety-two, and below the ninety-one the company forecast itself. Earnings were [EPS] a share, and the data centre division did [DC] billion.
 
-Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and a circle only works while everybody keeps paying in.
+Guidance for next quarter was [GUIDANCE], and that is usually the number that moves the stock.
 
-The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet, most of it financed with debt, at nineteen-year-high borrowing costs.
+However, the important part is what sits underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI buys Nvidia chips with it. The money moves in a circle, and a circle only works while everyone keeps paying in.
 
-Therefore the question is no longer whether the chips sell. It is whether the lenders stay.
+The five biggest tech firms have signed over a trillion dollars of data centre leases that have not started yet, most of it borrowed.
 
-The Bank for International Settlements already called this one of the three biggest risks to global stability.
-
-So watch the credit markets tomorrow, not the share price tonight.
+Therefore the question now is whether the lenders stay.
 
 ---
 
-## Hook variants
-
-**A** is the one in the script. Swap only the opening sentence.
-
-- **A · Dated claim** · **IN SCRIPT**  
-  Nvidia missed tonight, and the whole market is going to feel it.
-- **B · Contradiction** · **LEAD WITH THIS**  
-  Nvidia is not why the market is falling. It is just what went first.
-- **C · Direct address**  
-  If you have a pension, you found out tonight what it was actually invested in.
-- **D · Unreported fact**  
-  One company missed a forecast, and a trillion dollars of leases just got harder to finance.
-
-**Why that one.** On a red night every account will be shouting about Nvidia, so the way to stand out is to say it is not about Nvidia. Twelve words, immediately contrarian, and it promises an explanation nobody else in the feed is giving.
-
----
-
-## Copy-paste
+## The four slots
 
 ```
-Nvidia missed tonight, and the whole market is going to feel it.
+WHAT TO PASTE ME — four numbers and I rewrite in under a minute
 
-However, Nvidia was only ever the trigger. The fire was already built.
+  [REVENUE]   headline revenue      compare: consensus $92.07bn / guidance $91bn +/-2%
+  [EPS]       adjusted EPS          compare: consensus $2.09  (last year $1.05)
+  [DC]        data centre revenue   compare: estimate $85.67bn
+  [GUIDANCE]  NEXT quarter revenue  the number that actually moves the stock
 
-Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and a circle only works while everybody keeps paying in.
+  Optional but useful: gross margin (expected ~75%), any Blackwell supply
+  comment, and the after-hours share move.
 
-The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet, most of it financed with debt, at nineteen-year-high borrowing costs.
-
-Therefore the question is no longer whether the chips sell. It is whether the lenders stay.
-
-The Bank for International Settlements already called this one of the three biggest risks to global stability.
-
-So watch the credit markets tomorrow, not the share price tonight.
+  Source: nvidianews.nvidia.com posts the release within a minute or two of
+  16:20 ET. The CFO commentary PDF on investor.nvidia.com has the segment
+  breakdown and the guidance line. I cannot reach either from here - the
+  network policy blocks them - so pasting is faster than me searching.
 ```
-
-**Notes.** The third outcome is the one most likely to catch you out, and it is not in either script: revenue beats but next-quarter guidance disappoints, and the stock falls anyway. That has happened to Nvidia before, because expectations are priced so high that meeting them is not enough. If that is what lands, use the BAD script and change only the opening line to: 'Nvidia beat its own forecast tonight, and the stock fell anyway.' Everything after it still holds, because the argument was never about the quarter.
-
-Both scripts are deliberately identical in the middle. That is not laziness, it is the point: whichever way the number goes, the circular financing and the trillion dollars of uncommenced leases are unchanged. Only the opening and the closing move.
-
-Verified before writing: Nvidia guided to 91 billion dollars plus or minus two per cent against a 92.07 billion consensus and 2.09 dollars adjusted EPS, versus 46.74 billion and 1.05 dollars in the same quarter last year. Nvidia has committed 100 billion dollars to OpenAI data centres while OpenAI buys Nvidia chips for them. Microsoft, Meta, Oracle, Amazon and Alphabet hold roughly 1.09 trillion dollars in uncommenced data centre lease payments against 285 billion already recognised. The 30-year Treasury reached a 19-year high this month. The BIS has named circular financing, an AI capex bust and sovereign debt fragility as the three largest risks to global financial stability.
