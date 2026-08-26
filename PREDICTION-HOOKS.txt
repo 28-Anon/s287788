@@ -190,3 +190,21 @@ everything else, or the test tells you nothing. Judge on 3-second retention.
   WHY: 'One sentence written in 1804' is the best line in the deck. Specific, verifiable, and it promises a fact rather than an opinion, which is exactly the promise a debunk should make.
 
 ======================================================================
+
+11 — THE MATCH, NOT THE FIRE
+
+  A · Dated claim [IN SCRIPT]
+     Nvidia reports tomorrow, and it could decide which way the market goes.
+
+  B · Contradiction
+     Nvidia is not the reason the market might crash. It is just the thing that goes first.
+
+  C · Unreported fact
+     Five technology companies have signed over a trillion dollars of leases for data centres that do not exist yet.
+
+  D · Direct address <-- LEAD WITH THIS
+     If you have a pension, you already own a piece of this bet.
+
+  WHY: It makes an abstract market story personal in twelve words, and it is simply true - index-tracking pension funds hold these companies heavily, so most people watching are already exposed whether they follow markets or not. It also earns the right to talk about trillions, because you have established why it is their problem before you reach a single large number.
+
+======================================================================

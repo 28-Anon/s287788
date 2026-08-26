@@ -1,0 +1,95 @@
+WHAT THE NUMBER HAS TO BEAT  (Q2 FY2027, reported after close 26 Aug 2026)
+
+  Nvidia's own guidance ........ $91.0bn, plus or minus 2%  (so $89.2bn to $92.8bn)
+  Analyst consensus ............ $92.07bn revenue, $2.09 adjusted EPS
+  Same quarter last year ....... $46.74bn revenue, $1.05 EPS   (so ~2x)
+  Data centre segment est ...... $85.67bn
+  Gross margin expected ........ ~75%
+
+  THE THING MOST PEOPLE MISS: next-quarter GUIDANCE usually moves the stock
+  more than the quarter just reported. If revenue beats but guidance is soft,
+  the stock can still fall. Read the guidance line before you record.
+
+======================================================================
+
+FILL-IN SCRIPT — record within minutes of the number
+
+Nvidia has just reported [REVENUE] against an expected ninety-two billion.
+[BRANCH LINE]
+
+However, Nvidia was always the trigger here, not the cause.
+
+The cause is underneath. Nvidia has put a hundred billion dollars into OpenAI's
+data centres, and OpenAI is buying Nvidia chips for them. The money moves in a
+circle, and every pass makes the numbers look bigger.
+
+The largest tech companies have signed over a trillion dollars of data centre
+leases that have not started yet. Much of that is financed with debt, while
+borrowing costs sit at nineteen-year highs.
+
+[CONSEQUENCE LINE]
+
+The Bank for International Settlements calls this one of the three biggest
+risks to global stability.
+
+[CLOSING LINE]
+
+======================================================================
+
+BRANCH LINES — pick one set
+
+  BEAT — revenue above ~$93bn AND guidance strong
+    BRANCH:      And the market got exactly what it wanted.
+    CONSEQUENCE: Therefore nothing broke tonight. But nothing was fixed either, because none of this was ever about one quarter.
+    CLOSING:     So watch what gets financed next. That is where it shows first.
+
+  IN LINE — around $92bn, guidance steady
+    BRANCH:      Which is roughly what everyone expected.
+    CONSEQUENCE: Therefore this buys time rather than settling anything. The structure underneath is unchanged.
+    CLOSING:     So watch the next set of lease commitments, not the next set of results.
+
+  MISS — revenue below ~$91bn OR guidance cut
+    BRANCH:      And that is lower than the company's own guidance.
+    CONSEQUENCE: Therefore this does not just hit one company. It puts a question mark over the whole structure.
+    CLOSING:     So watch the credit markets tomorrow, not the share price tonight.
+
+  GUIDANCE TRAP — revenue beats but next-quarter guidance disappoints
+    BRANCH:      The quarter beat. The forecast did not.
+    CONSEQUENCE: Therefore the number everyone watched was not the number that mattered. Guidance is the tell, and it just softened.
+    CLOSING:     So watch what gets cancelled quietly over the next month.
+
+======================================================================
+
+VERSION A — record NOW, before the number
+
+Nvidia reports in about an hour, and it could decide which way the market goes.
+
+However, Nvidia is the trigger here, not the cause.
+
+The cause is underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and every pass makes the numbers look bigger.
+
+The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet. Much of that is financed with debt, while borrowing costs sit at nineteen-year highs.
+
+Therefore, if tonight's number disappoints, it does not just hit one company. It questions the whole structure.
+
+The Bank for International Settlements calls this one of the three biggest risks to global stability.
+
+So watch the number. But it is only the match.
+
+======================================================================
+
+VERSION B — generic after-the-report, works either way
+
+Nvidia has reported, and the number was never the real story.
+
+However, Nvidia was always the trigger here, not the cause.
+
+The cause is underneath. Nvidia has put a hundred billion dollars into OpenAI's data centres, and OpenAI is buying Nvidia chips for them. The money moves in a circle, and every pass makes the numbers look bigger.
+
+The largest tech companies have signed over a trillion dollars of data centre leases that have not started yet. Much of that is financed with debt, while borrowing costs sit at nineteen-year highs.
+
+Therefore, one good quarter does not settle this. It postpones it.
+
+The Bank for International Settlements calls this one of the three biggest risks to global stability.
+
+So watch what gets financed next. That is where it shows first.
