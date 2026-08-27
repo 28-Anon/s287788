@@ -4,17 +4,17 @@ Scene: a table, two phones side by side. Same question typed into both.
 
 ======================================================================
 
-RECORD THIS  (139 words)
+RECORD THIS  (131 words)
 
 America is spending eight times more than China on artificial intelligence, to stay about eight months ahead.
 
-Here are the numbers. The five biggest American tech companies will spend around six hundred and ninety billion dollars this year. China's four biggest will spend about a hundred billion.
+The five biggest American tech companies will spend around six hundred and ninety billion dollars this year. China's four biggest will spend about a hundred billion.
 
 Eight times less. However, an American government test put China's best model roughly eight months behind America's best. On some tasks, level.
 
 And here is the part that matters. Running the same job on a Chinese model costs about fourteen dollars a month. On a top American one, over a thousand.
 
-So if cheap and slightly behind is good enough, that six hundred and ninety billion never earns itself back.
+So if cheap and slightly behind is good enough, that money never earns itself back.
 
 Which is exactly why Nvidia is lending its own customers the money to keep buying.
 
