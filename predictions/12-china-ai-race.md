@@ -23,16 +23,20 @@ So who is actually winning this race?
 
 ## Hook variants
 
-- **A · Cold statement** · **IN SCRIPT**  
-  America is spending eight times more than China on artificial intelligence, to stay about eight months ahead.
-- **B · Contradiction** · **LEAD WITH THIS**  
-  America is winning the AI race. It just costs ninety times more to use.
-- **C · Direct address**  
-  The AI you pay for and the AI you don't are about eight months apart.
+- **A · Distinction** · **IN SCRIPT** · **LEAD WITH THIS**  
+  America is ahead in the AI race. That is not the same as winning it.
+- **B · Contradiction**  
+  You cannot call it winning if it costs you eight times more.
+- **C · Cold statement**  
+  America is eight months ahead in AI, and paying eight times more for those eight months.
 - **D · Unreported fact**  
   China is spending eight times less on AI, and almost nobody is asking why that isn't showing.
 
-**Why that one.** Nine words that sound like a compliment and land as an indictment. It also front-loads the ninety-times number, which is the most shareable fact in the script, instead of holding it back to the middle.
+**Why that one.** "Ahead" and "winning" are not the same thing, and the whole
+script rests on that gap. Being marginally in front at eight times the cost,
+while the gap closes, is not winning — it is paying to lose slowly. Drawing that
+line in the first twelve words is what makes the closing question land instead
+of sounding rhetorical.
 
 ---
 
