@@ -14,6 +14,14 @@ numbers and hashes; the cache under `data/corpus/cache/` is gitignored and rebui
 from .edgar import EdgarClient, EdgarError, Hit, document_url, filing_index_url
 from .manifest import Agreement, Manifest
 from .normalise import NORMALISER_VERSION, normalise_html, sha256_text
+from .sections import (
+    SEGMENTER_VERSION,
+    Section,
+    Segmentation,
+    find_spans,
+    segment,
+    verify_span,
+)
 
 __all__ = [
     "Agreement",
@@ -22,8 +30,14 @@ __all__ = [
     "Hit",
     "Manifest",
     "NORMALISER_VERSION",
+    "SEGMENTER_VERSION",
+    "Section",
+    "Segmentation",
     "document_url",
     "filing_index_url",
+    "find_spans",
     "normalise_html",
+    "segment",
     "sha256_text",
+    "verify_span",
 ]

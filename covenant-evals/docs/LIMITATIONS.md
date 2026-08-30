@@ -44,7 +44,27 @@ question is arguable, which means some portion of the gold set encodes a confide
 a question that does not have one. Items found to be arguable are marked `disputed` and
 excluded from headline scores rather than silently corrected.
 
-## 4. This measures document comprehension, not deployment safety
+## 4. Section addresses come from heuristics, not from the document
+
+There is no schema for a credit agreement. Section boundaries are found by pattern-matching
+headings, and the patterns were tuned on a handful of documents. Two failure modes are known
+and neither is fully solved:
+
+- **Lettered lists that reach (h).** "(i)" is treated as roman one unless the previous
+  paragraph was "(h)". A document that ends a lettered list at (h) and opens a roman
+  sub-list immediately after will be read wrongly.
+- **Documents whose markup produced no blank lines.** Heading detection leans on a heading
+  being set off from surrounding text. Where that signal is absent the segmenter falls back
+  to relaxed rules, which admit false positives — cross-references and wrapped lines can
+  appear as sections. The fallback is reported in the warnings, never applied silently.
+
+Two false positives that reached a realistic document before being caught: a financial
+ratio wrapped onto its own line ("4.00 to 1.00;") parsed as a section, and a wrapped
+cross-reference ("Section 7.03(b) and subject to...") parsed as the heading of 7.03. Both
+are now regression-tested. Assume others remain. `corpus sections --check` exists so they
+are found across the corpus rather than in one item at a time.
+
+## 5. This measures document comprehension, not deployment safety
 
 A system scoring well here has demonstrated that it can read a contract and cite it
 accurately. It has *not* demonstrated that it is safe to deploy: nothing here tests

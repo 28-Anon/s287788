@@ -19,6 +19,7 @@ from pathlib import Path
 from .edgar import EdgarClient, Hit
 from .manifest import DEFAULT_CACHE, Agreement, Manifest
 from .normalise import NORMALISER_VERSION, normalise_html, sha256_bytes, sha256_text
+from .sections import SEGMENTER_VERSION, segment
 
 
 @dataclass
@@ -91,7 +92,17 @@ def fetch_one(
     agreement.normaliser_version = NORMALISER_VERSION
     agreement.fetched_at = datetime.now(UTC).isoformat(timespec="seconds")
 
-    return FetchResult(agreement.ref, "fetched", f"from {source}", char_count=len(text))
+    # Segment now rather than on demand: the section count is a regression signal, and a
+    # document the segmenter cannot read is worth discovering at fetch time.
+    segmentation = segment(text)
+    agreement.section_count = segmentation.count
+    agreement.segmenter_version = SEGMENTER_VERSION
+
+    detail = f"from {source}"
+    if segmentation.warnings:
+        detail += f"; {len(segmentation.warnings)} segmentation warning(s)"
+
+    return FetchResult(agreement.ref, "fetched", detail, char_count=len(text))
 
 
 def fetch_all(
@@ -106,3 +117,17 @@ def fetch_all(
     for agreement in sorted(manifest.agreements, key=lambda a: a.ref):
         results.append(fetch_one(client, agreement, cache_dir=cache_dir, force=force))
     return results
+
+
+def load_text(agreement: Agreement, *, cache_dir: Path = DEFAULT_CACHE) -> str:
+    """The normalised text of a fetched agreement, from the cache.
+
+    Raises rather than returning an empty string: silently segmenting nothing would give a
+    confident, wrong answer, which is the failure mode this whole project exists to catch.
+    """
+    path = agreement.text_path(cache_dir)
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{agreement.ref} has not been fetched yet — run `make corpus-fetch` first"
+        )
+    return path.read_text(encoding="utf-8")

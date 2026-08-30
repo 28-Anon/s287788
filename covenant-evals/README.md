@@ -59,6 +59,24 @@ second time, and a document whose text no longer matches its recorded hash is re
 **conflict** rather than silently overwritten — because any item labelled against it is then
 broken and you need to know.
 
+### Finding your way around a document
+
+```bash
+make corpus-sections REF=0000950170-24-012345 OFFSETS=1   # the section tree
+make corpus-section  REF=0000950170-24-012345 ADDR='7.02(b)'
+make corpus-locate   REF=0000950170-24-012345 Q='not to exceed the greater of'
+make corpus-check                                          # segment everything, report problems
+```
+
+`section` and `locate` both print a `gold_span: [start, end]` line ready to paste straight
+into an item file — that is the whole point of them. `locate` reports **every** match and
+fails if there is more than one, because a citation that appears twice in a document is
+ambiguous and the span you record may not be the passage you meant.
+
+Segmentation is heuristic and handles both US (`ARTICLE VII` / `SECTION 7.02`) and English
+LMA (`23. NEGATIVE COVENANTS` / `23.1`) numbering. It emits warnings rather than guessing
+quietly; `make corpus-check` runs it across the whole corpus at once.
+
 ### Jurisdiction
 
 Where a document was *filed* and which law *governs* it are different facts, and the manifest

@@ -36,6 +36,12 @@ class Agreement:
     normaliser_version: int = 0
     fetched_at: str = ""
 
+    #: How many sections the segmenter found. A cheap regression signal: if this number
+    #: moves when you did not intend it to, section addresses in existing items may now
+    #: resolve somewhere else.
+    section_count: int = 0
+    segmenter_version: int = 0
+
     #: Which law the agreement is governed by: "NY", "English", "Delaware", or "" if not
     #: yet checked. This is NOT the same as where the document was filed. EDGAR is a US
     #: filing system, but plenty of documents on it are English-law LMA-style facility
@@ -132,4 +138,15 @@ class Manifest:
         """
         return [
             a for a in self.agreements if a.is_fetched and a.normaliser_version != current_version
+        ]
+
+    def stale_sections(self, current_version: int) -> list[Agreement]:
+        """Agreements segmented by an older segmenter.
+
+        Less severe than stale text — character offsets have not moved — but a section
+        address like "7.02(b)" may now resolve to a different piece of the document, so
+        items citing those sections need re-checking by hand.
+        """
+        return [
+            a for a in self.agreements if a.is_fetched and a.segmenter_version != current_version
         ]

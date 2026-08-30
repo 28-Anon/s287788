@@ -177,15 +177,71 @@ One honest caveat: I could not reach Companies House from here to double-check w
 and doesn't publish. That paragraph is from knowledge, not verified today. Spend ten minutes
 confirming it yourself before you repeat it to anyone.
 
-## 11. What happens next
+## 11. Week 3 is done — the code can now find its way around a contract
 
-- **Week 3:** teach the code to find *sections* inside a contract, so "§7.02(b)" becomes a
-  place the code can point at.
+Every question you write has to say *which clause* the answer came from. So the code needs
+to understand that a contract has a structure — Article VII contains Section 7.02, which
+contains paragraph (b), which contains sub-paragraph (ii) — and be able to jump to any of
+them.
+
+Two commands, and the second is the one you'll live in from week 4:
+
+```bash
+make corpus-section REF=0000950170-24-012345 ADDR='7.02(b)'
+make corpus-locate  REF=0000950170-24-012345 Q='not to exceed the greater of $35,000,000'
+```
+
+`section` shows you a clause. `locate` takes a sentence you want to quote and tells you
+**exactly where it sits in the document** — printing a `gold_span: [445, 795]` line you
+paste straight into your question file. You never count characters by hand.
+
+`locate` also does something more useful than it sounds: **if your quote appears more than
+once, it fails and tells you.** A citation that matches two places in a contract is
+ambiguous, and the offsets you record might not be the passage you meant. Better to find
+that out now than to discover in week 22 that eleven of your questions cite the wrong thing.
+
+### The genuinely hard bits, in case you're curious why this took a week
+
+**The table of contents.** Nearly every credit agreement opens with a contents list that
+repeats every heading in the document with a page number after it. Left alone, the code
+finds a phantom copy of the entire structure at the front, and "7.02" resolves to a line in
+the contents list rather than the actual covenant.
+
+**"(i)" means two different things.** It's roman numeral one — and it's also the letter
+after (h). The rule the code uses: treat it as a letter only if the previous paragraph was
+(h). Otherwise it's roman one.
+
+**US and English contracts don't number themselves the same way.** US: `ARTICLE VII` then
+`SECTION 7.02. Liens.` English/LMA: `23. NEGATIVE COVENANTS` then `23.1 Financial
+Indebtedness`. Because you decided to include both, the code handles both.
+
+### The part worth actually remembering
+
+The unit tests all passed. Then I ran it on a realistic document and it was **wrong in two
+places**:
+
+- A financial ratio that wrapped onto its own line — `4.00 to 1.00;` — was read as
+  "Section 4.00", and it swallowed the rest of the covenant as its contents.
+- A cross-reference that wrapped onto its own line — `Section 7.03(b) and subject to...` —
+  was read as the *heading* of section 7.03. So every question citing 7.03 would have
+  pointed at a sentence in 7.01 instead.
+
+Neither would have thrown an error. Neither would have failed a test. They'd have quietly
+corrupted a chunk of your labels months later.
+
+**That is the entire thesis of this project, happening to you on week 3.** A system can be
+confidently, silently wrong, and the only thing that catches it is someone deliberately
+checking against reality. Both are now regression tests, and `make corpus-check` runs the
+segmenter over every document at once so the next one gets found on 25 documents rather
+than in one broken label.
+
+## 12. What happens next
+
 - **Week 4–7:** the real work — read contracts and hand-write ~110 questions with answers.
   Slow, unglamorous, and where all the value is. Nobody else does it.
 - **Week 8+:** finally point an AI at your questions and see how badly it does.
 
-## 12. Things you don't need to understand yet
+## 13. Things you don't need to understand yet
 
 Genuinely fine to not know these in week 1. They arrive when you need them:
 
