@@ -89,7 +89,7 @@ The heldout pile is the real exam. The gap between your test score and your held
 tells you how much you were fooling yourself. **That gap is one of the most interesting
 things you'll publish**, whatever it turns out to be.
 
-## 7. What's in the repo right now (week 1)
+## 7. What's in the repo right now
 
 Nothing that does any AI yet. Deliberately. This week is just the foundations:
 
@@ -117,14 +117,75 @@ make budget       # "$0.0"
 If those three work, week 1 is done. That's genuinely the whole goal for this week: a project
 that runs, tests that pass, and somewhere for everything else to go.
 
-## 9. What happens next
+## 9. Week 2 is done — here's what it added, plainly
 
-- **Week 2–3:** write the code that downloads contracts from the SEC website.
+Code that goes and gets the contracts for you.
+
+| Command | What it does |
+|---|---|
+| `make corpus-search Q='"Majority Lenders"'` | Searches every SEC filing for that phrase. Downloads nothing — just shows you what exists |
+| `make corpus-add REF=... CIK=... LAW=English` | "Yes, I want that one." Writes it into the manifest |
+| `make corpus-fetch` | Downloads them, strips the HTML down to plain text, and fingerprints the result |
+| `make corpus-status` | How many you have, how many still to get |
+
+Three ideas in there are worth understanding, because they come up again and again:
+
+**The fingerprint (hash).** When you fetch a document, the code takes the plain text and
+produces a 64-character fingerprint of it. Change one comma and the fingerprint changes
+completely. Every question you write later stores the fingerprint of the document it was
+written against. So if a contract on EDGAR ever gets replaced, the code notices immediately
+and tells you *"the questions written against this document may now be wrong"* — instead of
+you quietly scoring against text that no longer says what you thought.
+
+**Never download twice.** Run `corpus fetch` ten times and it makes one network request per
+document, ever. Partly manners — the SEC asks people not to hammer their servers — and
+partly that a script you're afraid to re-run is a script you'll avoid using.
+
+**Refusing to run.** If you haven't set your name and email in `.env`, the code stops with
+an explanation instead of calling EDGAR. The SEC requires that header, and sending a bad one
+gets your home IP blocked for ten minutes. A loud failure on your laptop beats a mysterious
+one halfway through fetching 25 documents.
+
+## 10. "Should this be US-only, or can we do the UK too?"
+
+You asked this, and it's a better question than it looks.
+
+**Short answer: the documents come from the US system, but not all of them are US-law
+documents — and that distinction is now built into the project.**
+
+Here's the thing. US law requires a company to publicly file its important contracts,
+including loan agreements. **UK law does not.** Companies House gets your accounts and a
+short note that a lender has security over your assets — it does not get the 150-page
+facility agreement. So there is no British EDGAR to point this at. That's not a preference;
+it's the reason the corpus is where it is.
+
+But — and this is the useful part — plenty of documents *on* EDGAR are governed by **English
+law**, not New York law. UK companies with US listings file there. US companies borrowing in
+London file there. And English-law loan documents are drafted in a noticeably different
+house style (the LMA style): different vocabulary — *Majority Lenders* rather than *Required
+Lenders* — different covenant structure, definitions laid out differently.
+
+So the corpus now records **which law governs each document** as a separate field from where
+it was filed, and targets at least five English-law agreements among the twenty-five.
+
+Why that's worth doing, for you specifically: you're in the UK, applying to UK institutions.
+"I built an eval for AI reading loan contracts" is good. **"...and I measured whether it
+holds up on English-law LMA-style documents, where the score drops eleven points"** is a much
+better thing to say in a London interview — and as far as I can find, nobody has measured it.
+
+One honest caveat: I could not reach Companies House from here to double-check what it does
+and doesn't publish. That paragraph is from knowledge, not verified today. Spend ten minutes
+confirming it yourself before you repeat it to anyone.
+
+## 11. What happens next
+
+- **Week 3:** teach the code to find *sections* inside a contract, so "§7.02(b)" becomes a
+  place the code can point at.
 - **Week 4–7:** the real work — read contracts and hand-write ~110 questions with answers.
-  This is slow, unglamorous, and it's where all the value is. Nobody else does it.
+  Slow, unglamorous, and where all the value is. Nobody else does it.
 - **Week 8+:** finally point an AI at your questions and see how badly it does.
 
-## 10. Things you don't need to understand yet
+## 12. Things you don't need to understand yet
 
 Genuinely fine to not know these in week 1. They arrive when you need them:
 

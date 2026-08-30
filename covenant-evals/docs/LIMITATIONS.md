@@ -18,13 +18,23 @@ non-lawyer's reading, not as settled fact.
 ## 2. The corpus is selected, not sampled
 
 Twenty-five agreements chosen by hand. They over-represent what was findable on EDGAR
-full-text search and what the labeller found interesting, and they are exclusively:
-US-law-governed, English-language, filed by SEC registrants, and public. That excludes
-private credit agreements that are never filed — which is precisely the segment the
-downstream use case cares most about.
+full-text search and what the labeller found interesting, and they are exclusively
+English-language, **filed with the SEC**, and public. That excludes private credit
+agreements that are never filed anywhere — which is precisely the segment the downstream
+use case cares most about.
 
-Results here should not be assumed to transfer to European facility agreements, to unfiled
-private credit documents, or to non-English instruments.
+Note what this does *not* exclude. Where a document was filed and which law governs it are
+different facts. EDGAR carries English-law, LMA-style facility agreements as well as
+New York-law ones, because UK groups with US listings and US groups borrowing in London
+both file there. The corpus deliberately includes at least five English-law agreements and
+records `governing_law` for every document, so results can be reported by legal tradition
+rather than pooled into a single misleading number.
+
+What is genuinely unavailable: UK-only borrowers with no US listing. The UK has no
+equivalent of the US requirement to file material contracts as exhibits, so their facility
+agreements are simply not public anywhere. Any claim this project makes about English-law
+drafting rests on the subset that reached EDGAR, which is larger and more listed-company-
+heavy than the English-law market as a whole.
 
 ## 3. Ground truth is a reading, not a legal opinion
 
