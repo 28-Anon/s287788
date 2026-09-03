@@ -1,0 +1,38 @@
+[project]
+name = "covenant-evals"
+version = "0.1.0"
+description = "An evaluation harness for LLM covenant question answering over real credit agreements"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+    "anthropic>=0.69",
+]
+
+[project.scripts]
+# Installing the package puts a `covenant-evals` command on PATH. This is what makes the
+# project work identically on Windows, where `make` does not exist.
+covenant-evals = "covenant_evals.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/covenant_evals"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

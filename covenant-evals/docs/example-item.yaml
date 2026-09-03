@@ -1,0 +1,31 @@
+# The format of an item file. This is documentation, not data — it deliberately lives in
+# docs/ rather than data/items/ so that `make validate` reports an honest zero until real
+# labelling begins in week 4.
+
+id: cov-0042
+doc: "0000950170-24-012345"        # EDGAR accession number
+doc_sha256: "3b1f...64 hex chars"  # pins the exact normalised text you labelled against
+section: "7.02(b)"                 # where a human can go and check you
+
+question: >
+  May the Borrower incur $50,000,000 of incremental term loans
+  without obtaining lender consent?
+
+answer_type: boolean               # boolean | numeric | enum | date | abstain
+gold: false
+
+gold_citation: >
+  "...in an aggregate principal amount not to exceed the greater of
+  $35,000,000 and 25% of Consolidated EBITDA..."
+gold_span: [148223, 148344]        # character offsets into the normalised text
+
+rationale: >
+  The Free and Clear amount caps incremental facilities below the requested figure;
+  anything above it requires consent under 7.02(b)(iii).
+
+difficulty: hard                   # easy | medium | hard
+traps: [defined_term_chain, basket_cap]
+
+labelled_by: SM
+labelled_at: 2026-10-04
+review_status: double_checked      # single | double_checked | disputed

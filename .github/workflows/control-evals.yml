@@ -1,0 +1,32 @@
+name: control-evals
+
+on:
+  push:
+    paths:
+      - "control-evals/**"
+      - ".github/workflows/control-evals.yml"
+  pull_request:
+    paths:
+      - "control-evals/**"
+      - ".github/workflows/control-evals.yml"
+
+defaults:
+  run:
+    working-directory: control-evals
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check src tests
+      - name: Format
+        run: ruff format --check src tests
+      - name: Test
+        run: pytest -q
