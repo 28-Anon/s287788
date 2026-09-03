@@ -157,22 +157,31 @@ leaves your machine.
 
 #### What you are deciding in `review`
 
-A **skim, about a minute each.** One question: is this the actual loan contract, or
-something attached to one? You are not reading it properly — that comes in weeks 4–7.
+A **skim, about a minute each.** One question: **does this document restrict what the
+borrower may do?** You are not reading it properly — that comes in weeks 4–7.
 
 | | |
 |---|---|
-| **keep** `k` | It is the loan contract. 100+ pages, ARTICLE I through X, a definitions section, and a section called **Negative Covenants** |
-| **drop** `d` | Short. Or an amendment, waiver, supplement, guarantee, security agreement, pledge or intercreditor agreement — related to a loan, but not the contract |
+| **keep** `k` | It has restrictions you could write a question about |
+| **drop** `d` | No restrictions at all. Or it is an amendment, waiver, supplement, guarantee, security agreement, pledge or intercreditor agreement — attached to a loan, not the loan |
 | **skip** `s` | You cannot tell in a minute. It comes back next time |
 | **quit** `q` | Stop. Everything decided so far is saved |
 
 **Ctrl+F is the whole technique.** Two searches settle almost every document:
 
-- **"Negative Covenants"** — if it is not there, there is nothing to ask questions about, so
-  drop it. This single check is the best keep/drop signal there is.
-- **"governed by"** — lands you on the governing law clause, near the end. "the State of
-  New York" → `1`. "England and Wales" → `2`.
+- **"Negative Covenants"** — or `"shall not incur"`, or `"Restricted Payments"`. If none of
+  them appear, there is nothing to ask questions about, so drop it. This is the real test.
+- **"governed by"** — lands on the governing law clause, near the end. "the State of New
+  York" → `1`. "England and Wales" → `2`.
+
+**Length is a preference, not a rule.** A 300-page syndicated agreement gives more items and
+harder ones — chained definitions, baskets, carve-outs. A 20-page bilateral loan agreement
+with a real covenants section is still worth keeping, and two or three of them are actively
+useful: they are the easy end of the difficulty range, and an eval where every item is hard
+tells you as little as one where every item is easy. Note them as such.
+
+What length does tell you is how many questions you will get out of it. If you cannot
+imagine eight non-trivial questions in there, it is probably not worth a slot.
 
 #### The note
 
