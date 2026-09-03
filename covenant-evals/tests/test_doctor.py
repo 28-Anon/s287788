@@ -235,3 +235,48 @@ def test_an_unreadable_document_is_a_warning_not_a_failure():
     assert step.level == "warn"
     assert report.ok, "warnings must not fail the run"
     assert "census" in report.observed, "an unreadable document must attach the diagnosis"
+
+
+def test_a_supplement_never_outranks_a_plain_agreement():
+    # Second live run: the sample was a Credit Agreement *Supplement*, 18k characters, with
+    # no article or section skeleton. Its filename scored better than a real agreement's.
+    from covenant_evals.corpus.doctor import _pick_sample
+    from covenant_evals.corpus.edgar import Hit
+
+    def hit(filename, description):
+        return Hit(
+            accession="0000950170-24-012345",
+            filename=filename,
+            cik="320123",
+            company="Acme",
+            form="8-K",
+            filed="2024-03-04",
+            file_type="EX-10.1",
+            description=description,
+        )
+
+    agreement = hit("ex101.htm", "Credit Agreement")
+    for derivative in (
+        hit("e62154570ex10_1.htm", "Credit Agreement Supplement"),
+        hit("cm-2ndamendmentexecuted.htm", "Second Amendment to Credit Agreement"),
+        hit("waiver.htm", "Waiver to Credit Agreement"),
+        hit("joinder.htm", "Joinder to Credit Agreement"),
+    ):
+        assert _pick_sample([derivative, agreement]) is agreement, derivative.description
+
+
+def test_an_unreadable_document_carries_its_diagnosis():
+    prose = (
+        b"<html><body><p>" + b"Plain prose with no headings at all. " * 200 + b"</p></body></html>"
+    )
+    report = run(
+        client_for(
+            {
+                "search-index": Response(200, search_body()),
+                "index.json": Response(200, INDEX_BODY),
+                "ex101.htm": Response(200, prose),
+            }
+        )
+    )
+    assert "diagnosis" in report.observed
+    assert "diagnosis:" in steps(report)["segmenter finds sections"].detail

@@ -394,3 +394,80 @@ def test_census_samples_are_truncated():
     long_heading = "SECTION 7.01. " + "x" * 500
     census = pattern_census(f"{long_heading}\n\nbody text\n")
     assert all(len(sample) <= 90 for samples in census["samples"].values() for sample in samples)
+
+
+# -- amendment and supplement structure, needed for the week 20 trap --------------
+
+
+AMENDMENT_DOC = """SECOND AMENDMENT TO CREDIT AGREEMENT
+
+RECITALS:
+
+WHEREAS the Borrower has requested certain amendments;
+
+SECTION 1. Amendments.
+
+Section 7.01(b) of the Credit Agreement is amended by replacing "$35,000,000"
+with "$50,000,000".
+
+SECTION 2. Conditions Precedent.
+
+This Amendment becomes effective when the Administrative Agent has received
+counterparts signed by each Lender.
+
+SECTION 3. Governing Law.
+
+THIS AMENDMENT SHALL BE GOVERNED BY THE LAW OF THE STATE OF NEW YORK.
+"""
+
+
+def test_amendments_number_themselves_with_single_integers():
+    # Live finding: a Credit Agreement Supplement matched none of the decimal patterns and
+    # segmented to nothing. Week 20 needs amendments segmented, because supersession items
+    # have to cite a clause inside one.
+    result = segment(AMENDMENT_DOC)
+    assert [s.label for s in result if s.level <= LEVEL_SECTION] == ["1", "2", "3"]
+
+
+def test_an_amendment_section_resolves_and_carries_its_text():
+    section = segment(AMENDMENT_DOC).find("1")
+    assert section.title == "Amendments"
+    assert "replacing" in section.text(AMENDMENT_DOC)
+    assert "Conditions Precedent" not in section.text(AMENDMENT_DOC)
+
+
+def test_a_single_integer_reference_mid_sentence_is_still_not_a_heading():
+    doc = (
+        "SECTION 1. Amendments.\n\n"
+        "The Borrower shall comply with the covenant as set out in\n"
+        "Section 2 of this Amendment.\n\n"
+        "SECTION 2. Conditions Precedent.\n\nEffective on receipt.\n"
+    )
+    result = segment(doc)
+    assert [s.label for s in result if s.level <= LEVEL_SECTION] == ["1", "2"]
+    assert "Conditions Precedent" == result.find("2").title
+
+
+# -- explaining a document that segments to nothing --------------------------------
+
+
+def test_explains_a_normalisation_problem():
+    from covenant_evals.corpus.sections import explain_no_sections, pattern_census
+
+    crammed = pattern_census(US_DOC.replace("\n\n", "\n"))
+    assert "normalisation problem" in explain_no_sections(crammed)
+
+
+def test_explains_a_document_that_is_not_an_agreement():
+    # The live case: only lettered paragraphs, no article or section skeleton at all.
+    from covenant_evals.corpus.sections import explain_no_sections, pattern_census
+
+    supplement = "CREDIT AGREEMENT SUPPLEMENT\n\nRECITALS:\n\n(i) first;\n\n(ii) second;\n"
+    assert "supplement, amendment" in explain_no_sections(pattern_census(supplement))
+
+
+def test_explains_nothing_matching_at_all():
+    from covenant_evals.corpus.sections import explain_no_sections, pattern_census
+
+    prose = pattern_census("Plain prose with no structure whatsoever.\n" * 40)
+    assert "nothing matched" in explain_no_sections(prose)

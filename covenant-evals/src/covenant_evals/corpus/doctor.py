@@ -25,7 +25,7 @@ from .edgar import (
     parse_search_response,
 )
 from .normalise import normalise_html
-from .sections import pattern_census, segment
+from .sections import explain_no_sections, pattern_census, segment
 
 #: What parse_search_response reads out of each hit, as EDGAR actually names them —
 #: confirmed against a live response on 2026-09-03. Documentation implied `root_form`;
@@ -40,6 +40,19 @@ FORM_KEYS = ("root_forms", "form")
 #: document rather than whatever happened to sort first.
 CREDIT_EXHIBIT_HINTS = ("ex-10", "ex-4")
 CREDIT_NAME_HINTS = ("credit", "loan", "facility", "financing")
+
+#: Documents that mention credit agreements without being one. The first live run picked
+#: an amendment, and the second a supplement — both correctly segmented to nothing.
+NOT_AN_AGREEMENT_HINTS = (
+    "amend",
+    "supplement",
+    "waiver",
+    "consent",
+    "joinder",
+    "notice",
+    "assignment",
+    "guarant",
+)
 
 
 @dataclass
@@ -212,8 +225,12 @@ def run(client: EdgarClient, *, query: str = '"credit agreement"') -> Report:
     )
     report.observed["section_labels"] = [s.label for s in top[:8]]
     report.observed["segmentation_warnings"] = segmentation.warnings
+
     if not top:
-        report.observed["census"] = pattern_census(text)
+        census = pattern_census(text)
+        report.observed["census"] = census
+        report.observed["diagnosis"] = explain_no_sections(census)
+        report.steps[-1].detail += f"\n       diagnosis: {explain_no_sections(census)}"
 
     return report
 
@@ -230,8 +247,10 @@ def _pick_sample(hits: list) -> object:
         exhibit = 1 if any(h in hit.file_type.lower() for h in CREDIT_EXHIBIT_HINTS) else 0
         name = f"{hit.filename} {hit.description}".lower()
         named = 1 if any(h in name for h in CREDIT_NAME_HINTS) else 0
-        amendment = -1 if "amend" in name else 0
-        return (exhibit + named + amendment, -len(hit.filename))
+        # Two points off, so a supplement never outranks a plain agreement even when the
+        # supplement has the better filename.
+        derivative = -2 if any(h in name for h in NOT_AN_AGREEMENT_HINTS) else 0
+        return (exhibit + named + derivative, -len(hit.filename))
 
     return max(hits, key=score)
 

@@ -64,6 +64,18 @@ _DECIMAL = re.compile(r"^(\d{1,2}\.\d{1,3})\s+([A-Z][^;,]{0,110})$")
 
 #: A single letter or a roman numeral, nothing else. "(as defined below)" at the start of
 #: a wrapped line would otherwise parse as paragraph "(as)".
+#: "SECTION 1. Amendments." — amendments, supplements and waivers number themselves with
+#: a single integer rather than a decimal. Confirmed against a live filing: a Credit
+#: Agreement Supplement matched none of the patterns above, and week 20 needs amendments
+#: segmented so that supersession items can cite a clause in them.
+#: The (?!\.\d) is load-bearing. Without it this pattern happily matches the *prefix* of a
+#: decimal reference: "Section 7.01(b) of the Credit Agreement is amended by..." parsed as
+#: section "7" titled "01(b) of the Credit Agreement is amended by...", swallowing the rest
+#: of the amendment. Caught by a test within minutes of the pattern being added.
+_SINGLE_SECTION = re.compile(
+    r"^SECTION\s+(\d{1,2})(?!\.\d)(?=[\s.:\-–—]|$)\s*[.:\-–—]?\s*(.*)$", re.IGNORECASE
+)
+
 _PARENTHESISED = re.compile(r"^\(([A-Za-z]|[ivxlcdm]{2,5}|[IVXLCDM]{2,5})\)\s*(.*)$")
 
 _ROMAN = re.compile(r"^[ivxlcdm]+$")
@@ -251,6 +263,9 @@ def _scan_headings(document: str, *, require_blank_line: bool = True) -> list[_R
             label, title, level = match.group(1), match.group(2), LEVEL_ARTICLE
             previous_paragraph_label = None
         elif set_off and (match := _DECIMAL.match(stripped)):
+            label, title, level = match.group(1), match.group(2), LEVEL_SECTION
+            previous_paragraph_label = None
+        elif set_off and (match := _SINGLE_SECTION.match(stripped)):
             label, title, level = match.group(1), match.group(2), LEVEL_SECTION
             previous_paragraph_label = None
         elif match := _PARENTHESISED.match(stripped):
@@ -542,6 +557,7 @@ def pattern_census(document: str) -> dict[str, object]:
     patterns = {
         "article": _ARTICLE,
         "us_section": _US_SECTION,
+        "single_section": _SINGLE_SECTION,
         "lma_clause": _LMA_CLAUSE,
         "decimal": _DECIMAL,
         "parenthesised": _PARENTHESISED,
@@ -582,3 +598,34 @@ def pattern_census(document: str) -> dict[str, object]:
         "samples": samples,
         "first_lines": [ln.strip()[:90] for ln in lines[:20] if ln.strip()][:8],
     }
+
+
+#: Patterns that indicate an agreement's skeleton, as opposed to paragraph lettering.
+STRUCTURAL_PATTERNS = ("article", "us_section", "single_section", "lma_clause", "decimal")
+
+
+def explain_no_sections(census: dict[str, object]) -> str:
+    """Read a census and say, in one sentence, why nothing was found.
+
+    Three causes look identical from outside, and the fix for each is completely
+    different: fix the normaliser, add a pattern, or accept that the document is not an
+    agreement.
+    """
+    counts = census["counts"]  # type: ignore[index]
+    matched = sum(counts[name]["matched"] for name in STRUCTURAL_PATTERNS)
+    set_off = sum(counts[name]["set_off"] for name in STRUCTURAL_PATTERNS)
+
+    if matched and not set_off:
+        return (
+            "headings were matched but every one was rejected for not being set off by a "
+            "blank line — this is a normalisation problem, not a pattern problem"
+        )
+    if matched:
+        return f"{matched} structural headings matched but the tree came out empty"
+    if counts["parenthesised"]["matched"]:
+        return (
+            "no article or section headings at all, only lettered paragraphs — this is "
+            "almost certainly a supplement, amendment, waiver or notice rather than a "
+            "credit agreement"
+        )
+    return "nothing matched any heading pattern"

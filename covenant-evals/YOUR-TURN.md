@@ -109,32 +109,22 @@ runs your User-Agent through the same validation EDGAR would, and confirms `.env
 gitignored so your email is never committed. Your address is masked in the output, so the
 result is safe to paste anywhere.
 
-### 2. Confirm the EDGAR pipeline actually works — 30 seconds
+### 2. Confirm the EDGAR pipeline still works — 30 seconds ✅ done once
 
-```bash
-covenant-evals corpus doctor
+```powershell
+py -m covenant_evals.cli corpus doctor
 ```
 
-**This is the one thing I could not do for you.** sec.gov is unreachable from the machine
-this was built on, so every endpoint shape in `corpus/edgar.py` came from EDGAR's
-documentation rather than from a live response.
+**This has now been run against the live SEC and passes.** It found two real bugs the test
+suite could not: EDGAR returns `root_forms`, not `root_form`, so the parser was silently
+recording an empty form for every hit; and the doctor was sampling whatever document sorted
+first, which turned out to be an amendment and then a supplement — neither of which has the
+structure of an agreement.
 
-The doctor makes four requests and checks one assumption at a time: the search endpoint
-answers, the envelope is `hits.hits`, `_id` is `accession:filename`, `_source` carries the
-five fields the parser reads, the parser produces usable hits, the filing index lists
-documents, one document downloads, and the segmenter finds sections in it.
-
-On any mismatch it prints **what it actually found** — "missing ['adsh']; present:
-['accession', 'ciks']" — and which function to change. If something differs:
-
-```bash
-covenant-evals corpus doctor --paste
-```
-
-and send me the block it prints. It contains field names and one accession number, no
-document text.
-
-When it passes, delete this section: the caveat is discharged.
+Re-run it whenever something stops working, or before trusting a long fetch. On a failure,
+`--paste` prints a structure-only block, and where segmentation finds nothing it attaches a
+census that says which of the three causes it is: headings not matched, headings matched but
+rejected, or the document simply is not an agreement.
 
 ### 3. Build the corpus — 25 documents, a few hours spread over a week
 
