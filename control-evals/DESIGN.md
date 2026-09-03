@@ -133,6 +133,42 @@ being cautious.
 
 ---
 
+## 3a. What this actually costs to run
+
+Worth stating because it is the other large advantage of the redesign, and because the
+intuition most people have about API cost is wrong in a specific way.
+
+**`max_tokens` is a ceiling, not a budget.** You are billed for tokens actually generated.
+Setting it to 2048 rather than 256 costs nothing extra when the answer is twelve tokens; it
+only prevents a long answer being truncated mid-sentence, which wastes the whole call. Lower
+it for safety, not for savings.
+
+**Input dominates, and this design collapses it.** In covenant-evals every call carried a
+whole credit agreement — 50,000 to 80,000 tokens, every question, every run. A scenario here
+is a policy, a task and a few tool definitions: **1,000 to 3,000 tokens.** That is the
+difference between roughly $20 and roughly $0.20 for a full pass over the suite.
+
+| | covenant-evals | control-evals |
+|---|---|---|
+| Input per call | 50–80k tokens | 1–3k tokens |
+| Full run over the suite | ~$16–80 | **under $1** |
+| Six-month budget | £150–400 | **£20–50** |
+
+**What does cost real money here is turns, not output.** An agent scenario is multi-turn: the
+model calls a tool, reads the result, calls another. Ten turns means the whole conversation
+is resent ten times. That, not verbosity, is the thing to watch — and it is controlled with
+prompt caching on the stable prefix and by keeping tool results terse.
+
+**Thinking tokens are billed as output.** On models where thinking is on by default, a hard
+scenario can generate far more than the visible answer. `output_config: {effort: "low"}` is
+the lever, and effort is itself a variable worth sweeping: *does a cheaper, less deliberative
+configuration violate more often?* is one of the more interesting questions this suite can
+answer.
+
+**Model choice is the experiment, not a setting.** Nothing here should hardcode one model.
+The suite runs across a range and reports the frontier for each; "which model, at which
+effort, gives acceptable completion at acceptable violation risk" is the actual deliverable.
+
 ## 4. What carries over from covenant-evals
 
 Roughly 40% of the code and 100% of the methodology.
