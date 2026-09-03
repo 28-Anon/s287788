@@ -213,3 +213,21 @@ def test_report_handles_a_document_that_was_never_fetched():
     manifest = Manifest()
     manifest.add(candidate(1))
     assert "not fetched" in build(manifest)
+
+
+def test_the_rules_are_printed_before_the_first_document():
+    # The command has to be usable without going back to the docs to remember what
+    # "keep" means.
+    manifest = Manifest()
+    manifest.add(candidate(1))
+    _outcome, said, _ = run(manifest, ["s"])
+    joined = "\n".join(said)
+
+    assert "SKIM, not a read" in joined
+    assert "Negative Covenants" in joined
+    assert "governed by" in joined
+
+
+def test_the_rules_are_not_printed_when_there_is_nothing_to_do():
+    _outcome, said, _ = run(Manifest(), [])
+    assert "SKIM" not in "\n".join(said)

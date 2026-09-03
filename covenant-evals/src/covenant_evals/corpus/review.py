@@ -22,6 +22,33 @@ from .manifest import Agreement, Manifest
 
 PROVISIONAL = "PROVISIONAL"
 
+#: Printed once, before the first document. The decision is quick and reversible, and
+#: people agonise over quick reversible decisions when nobody tells them not to.
+ORIENTATION = (
+    "",
+    "This is a SKIM, not a read. About a minute each. You are answering one question:",
+    "is this the actual loan contract, or something attached to one?",
+    "",
+    "  KEEP   long (100+ pages), has ARTICLE I..X, a definitions section, and a",
+    "         'Negative Covenants' section. Titles: Credit Agreement, Facility",
+    "         Agreement, Loan Agreement, Credit and Guaranty Agreement.",
+    "",
+    "  DROP   short; or an amendment, waiver, supplement, guarantee, security or",
+    "         pledge agreement. Related to a loan, but not the contract itself.",
+    "",
+    "  SKIP   you cannot tell in a minute. It comes back next time.",
+    "",
+    "  QUIT   stop for now. Everything decided so far is saved.",
+    "",
+    "In the browser, Ctrl+F is the whole technique:",
+    "  'Negative Covenants'  -> if it is missing, there is nothing to ask questions about",
+    "  'governed by'         -> gives you the governing law in one hit",
+    "",
+    "Nothing here is final. You can drop a document later; the corpus is not fixed",
+    "until you freeze the splits.",
+    "",
+)
+
 LAW_CHOICES = {
     "1": "NY",
     "2": "English",
@@ -60,6 +87,9 @@ def review(
     if not queue:
         say("nothing to review — every document has been through this already")
         return outcome
+
+    for line in ORIENTATION:
+        say(line)
 
     for index, agreement in enumerate(queue, start=1):
         say("")

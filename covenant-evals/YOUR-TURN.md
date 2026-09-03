@@ -155,6 +155,32 @@ plain-English diagnosis for anything the segmenter could not read. Twenty-five d
 with section trees is not something to read down a terminal. It is a local file and nothing
 leaves your machine.
 
+#### What you are deciding in `review`
+
+A **skim, about a minute each.** One question: is this the actual loan contract, or
+something attached to one? You are not reading it properly — that comes in weeks 4–7.
+
+| | |
+|---|---|
+| **keep** `k` | It is the loan contract. 100+ pages, ARTICLE I through X, a definitions section, and a section called **Negative Covenants** |
+| **drop** `d` | Short. Or an amendment, waiver, supplement, guarantee, security agreement, pledge or intercreditor agreement — related to a loan, but not the contract |
+| **skip** `s` | You cannot tell in a minute. It comes back next time |
+| **quit** `q` | Stop. Everything decided so far is saved |
+
+**Ctrl+F is the whole technique.** Two searches settle almost every document:
+
+- **"Negative Covenants"** — if it is not there, there is nothing to ask questions about, so
+  drop it. This single check is the best keep/drop signal there is.
+- **"governed by"** — lands you on the governing law clause, near the end. "the State of
+  New York" → `1`. "England and Wales" → `2`.
+
+The note it asks for is one line for your own benefit later: *"US leveraged loan,
+sponsor-backed, full covenant package"* or *"English law LMA senior facilities"*.
+
+**Do not agonise.** Nothing here is final — you can drop a document later, and the corpus is
+not fixed until you freeze the splits in week 5. A wrong keep costs you one skim; a wrong
+drop costs you nothing at all, because bootstrap will find more.
+
 The mix to end up with:
 
 - **25 documents**, at least **5 English-law**
