@@ -118,6 +118,14 @@ All rates are reported with bootstrap 95% confidence intervals. With n=140, an i
 roughly ±8 percentage points — publishing a bare "84.2%" without that is a leaderboard, not
 an evaluation.
 
+**Bootstrap by resampling documents, not items.** Items from one agreement are not
+independent: they share a text, a drafting style, a definitions section and one author's
+habits. Resampling items treats twelve questions about document 4 as twelve observations
+when they are closer to one, which produces intervals that are far too narrow. For any
+claim about credit agreements rather than about these particular ones, the effective sample
+size is nearer the document count than the item count. See
+[CORPUS-DESIGN.md](CORPUS-DESIGN.md) §6.
+
 ## The judge
 
 <!-- Week 15. Fill in with per-answer-type Cohen's kappa between the judge and hand-scoring

@@ -146,6 +146,10 @@ It stops before `review`, which is where judgement starts:
 py -m covenant_evals.cli corpus review
 ```
 
+**Read [docs/CORPUS-DESIGN.md](docs/CORPUS-DESIGN.md) before reviewing** — what the corpus
+is for, the eight slots the opening corpus should fill, and why at least two documents are
+needed for anything you want to claim.
+
 **Start at 8 documents, not 25.** Eight is enough for your first 25 items, and you will
 choose better on the second pass because you will know what a good document looks like —
 which you only learn by labelling a few. `corpus build --count 25` later tops it up, and
