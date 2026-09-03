@@ -67,6 +67,12 @@ class Agreement:
     def is_fetched(self) -> bool:
         return bool(self.text_sha256)
 
+    def url(self) -> str:
+        """Where this document lives on EDGAR — the readable version, with its tables."""
+        from .edgar import document_url
+
+        return document_url(self.cik, self.accession, self.filename)
+
     def cache_path(self, cache_dir: Path = DEFAULT_CACHE) -> Path:
         return cache_dir / self.accession / self.filename
 

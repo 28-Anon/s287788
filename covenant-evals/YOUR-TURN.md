@@ -129,40 +129,38 @@ rejected, or the document simply is not an agreement.
 ### 3. Build the corpus — two commands, then your judgement
 
 ```powershell
-py -m covenant_evals.cli corpus bootstrap --start 2018-01-01 --dry-run
 py -m covenant_evals.cli corpus bootstrap --start 2018-01-01
+py -m covenant_evals.cli corpus review
 py -m covenant_evals.cli corpus fetch
-py -m covenant_evals.cli corpus sections --check
+py -m covenant_evals.cli corpus report
 ```
 
-`bootstrap` runs five searches, discards amendments and waivers, ranks what is left,
-interleaves the results so no single phrase dominates, and writes up to 25 candidates to the
-manifest. It replaces about thirty `corpus add` calls and the accession-copying mistakes
-that come with them.
+**`bootstrap`** runs five searches, discards amendments and waivers, and writes up to 25
+candidates to the manifest. It replaces about thirty `corpus add` calls.
 
-**What it deliberately does not do is decide your corpus.** Everything it adds is marked
-PROVISIONAL, and `governing_law` is left empty even though the query that found a document
-hints at it — a guess stored in the same field as a checked fact is indistinguishable from
-one six weeks later, and the US/English comparison is a headline result.
+**`corpus review` is where you actually decide.** It walks the candidates one at a time,
+**opens each filing in your browser** — where a contract is properly readable, with its
+tables and formatting — and asks four things in the terminal: keep, drop or skip; which law
+governs it; and why it is in your corpus. It saves after every decision, so quitting halfway
+keeps what you have done. Answer `q` whenever you want to stop.
 
-So after bootstrap, before fetching:
+That is the judgement task. Everything bootstrap adds is marked PROVISIONAL and its
+`governing_law` is left empty on purpose — a guess stored in the field a checked fact goes
+in is indistinguishable from a fact six weeks later, and the US/English comparison is a
+headline result.
 
-- **delete anything that is not a real credit agreement** — open a few and look
-- **set `--governing-law`** once you have read enough of each to actually know
-- **replace the provisional note** with why that document is in your corpus
-
-Corpus selection is the largest single source of bias in your results — `docs/LIMITATIONS.md`
-says so in writing — and it is the part that has to be yours.
+**`corpus report`** writes `runs/corpus.html` and opens it: every document, how it
+segmented, what is unreviewed, which law, which split, a link to each filing, and a
+plain-English diagnosis for anything the segmenter could not read. Twenty-five documents
+with section trees is not something to read down a terminal. It is a local file and nothing
+leaves your machine.
 
 The mix to end up with:
 
 - **25 documents**, at least **5 English-law**
-- **3 or 4 amendments**, added deliberately with `corpus search --all`, tagged in the note.
-  Week 20 needs them for the amendment_supersession trap
+- **3 or 4 amendments** added deliberately with `corpus search --all` and tagged in the
+  note; week 20 needs them for the amendment_supersession trap
 - **two you find genuinely confusing** — they produce the best items
-
-Read every warning `corpus sections --check` prints. If it finds nothing in a document,
-`corpus doctor --paste` names which of the three causes it is.
 
 ### 4. Write the items — this is the project
 

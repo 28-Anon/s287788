@@ -66,6 +66,17 @@ second time, and a document whose text no longer matches its recorded hash is re
 **conflict** rather than silently overwritten — because any item labelled against it is then
 broken and you need to know.
 
+### Reviewing the corpus
+
+```bash
+covenant-evals corpus review     # one document at a time, each opened in your browser
+covenant-evals corpus report     # runs/corpus.html — the whole corpus at a glance
+```
+
+`review` is the judgement pass: keep, drop, record the governing law, say why the document
+is in the corpus. It saves after every decision. `report` renders a local HTML page showing
+how each document segmented and what still needs attention.
+
 ### Finding your way around a document
 
 ```bash

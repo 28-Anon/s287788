@@ -27,11 +27,13 @@ from .corpus import (
     find_spans,
     segment,
 )
+from .corpus import report as corpus_report
 from .corpus.bootstrap import bootstrap
 from .corpus.doctor import format_report
 from .corpus.doctor import run as run_doctor
 from .corpus.edgar import is_derivative, looks_like_agreement, validate_user_agent
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
+from .corpus.review import review, summarise
 from .items import (
     cross_validate,
     export,
@@ -404,6 +406,33 @@ def cmd_corpus_doctor(args: argparse.Namespace) -> int:
     report = run_doctor(client, query=args.query)
     print(format_report(report, paste=args.paste))
     return 0 if report.ok else 1
+
+
+def cmd_corpus_review(args: argparse.Namespace) -> int:
+    """Walk the candidates one at a time, with each filing open in the browser."""
+    import webbrowser
+
+    manifest = Manifest.load()
+    opener = None if args.no_browser else (lambda url: webbrowser.open(url))
+
+    outcome = review(manifest, open_url=opener, save=manifest.save)
+    manifest.save()
+    print(summarise(outcome, manifest))
+    return 0
+
+
+def cmd_corpus_report(args: argparse.Namespace) -> int:
+    """Write a browsable HTML view of the corpus and, by default, open it."""
+    manifest = Manifest.load()
+    path = corpus_report.write(manifest, Path(args.out))
+    print(f"wrote {path}")
+
+    if not args.no_browser:
+        import webbrowser
+
+        webbrowser.open(path.resolve().as_uri())
+        print("opened in your browser")
+    return 0
 
 
 def cmd_corpus_status() -> int:
@@ -1018,6 +1047,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--paste", action="store_true", help="also print a structure-only block, safe to share"
     )
 
+    review_cmd = corpus_sub.add_parser(
+        "review", help="decide what stays, one document at a time, in your browser"
+    )
+    review_cmd.add_argument("--no-browser", action="store_true")
+
+    report_cmd = corpus_sub.add_parser("report", help="write a browsable HTML view of the corpus")
+    report_cmd.add_argument("--out", default="runs/corpus.html")
+    report_cmd.add_argument("--no-browser", action="store_true")
+
     corpus_sub.add_parser("status", help="what state the corpus is in")
 
     return parser
@@ -1071,6 +1109,10 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_corpus_locate(args)
             if args.corpus_command == "doctor":
                 return cmd_corpus_doctor(args)
+            if args.corpus_command == "review":
+                return cmd_corpus_review(args)
+            if args.corpus_command == "report":
+                return cmd_corpus_report(args)
             if args.corpus_command == "status":
                 return cmd_corpus_status()
     except EdgarError as exc:
