@@ -128,6 +128,19 @@ rejected, or the document simply is not an agreement.
 
 ### 3. Build the corpus — two commands, then your judgement
 
+> **Start with eight, not twenty-five.** Reviewing 25 documents before writing a single
+> item front-loads all the tedium and none of the value. Eight documents is enough to write
+> your first 25 items, and the corpus can grow later: `corpus bootstrap` tops up to whatever
+> count you ask for, and `splits assign-new` places documents added after the freeze without
+> disturbing anything already assigned. Get to the labelling, which is the actual project,
+> and come back for the rest when you know what a good document looks like — which you will
+> only know after labelling a few.
+>
+> ```
+> py -m covenant_evals.cli corpus bootstrap --count 8 --start 2018-01-01
+> ```
+
+
 ```powershell
 py -m covenant_evals.cli corpus bootstrap --start 2018-01-01
 py -m covenant_evals.cli corpus review
