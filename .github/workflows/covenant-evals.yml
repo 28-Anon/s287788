@@ -1,0 +1,41 @@
+name: covenant-evals
+
+# Must live at the repository root: GitHub Actions only reads .github/workflows/ from
+# there, so the copy that previously sat inside covenant-evals/ never ran once.
+# If covenant-evals is later split into its own repository, move this file back into it
+# and drop the working-directory default.
+
+on:
+  push:
+    paths:
+      - "covenant-evals/**"
+      - ".github/workflows/covenant-evals.yml"
+  pull_request:
+    paths:
+      - "covenant-evals/**"
+      - ".github/workflows/covenant-evals.yml"
+
+defaults:
+  run:
+    working-directory: covenant-evals
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check src tests
+      - name: Format
+        run: ruff format --check src tests
+      - name: Test
+        run: pytest -q
+      - name: Validate every item against the schema
+        # Schema only: the document cache is gitignored, so the corpus-level checks
+        # (hash, section, citation offsets) run locally via `covenant-evals items check`.
+        run: python -m covenant_evals.cli items check --schema-only

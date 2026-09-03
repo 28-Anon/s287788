@@ -10,21 +10,61 @@ corpus yet — the repository has zero documents in it.
 
 ## Blocking, in order
 
-### 1. Set your EDGAR identity — 2 minutes
+### 0. Get it running — 10 minutes, Windows
 
-```bash
-cp .env.example .env
+You are on Windows PowerShell, where `make` does not exist. It is a Unix shortcut, not part
+of the project — **every `make X` in these docs has an exact equivalent: `covenant-evals X`.**
+
+```powershell
+# Python 3.11+ — check you have it
+py --version
+
+# Clone somewhere you keep code, not your home folder
+cd $HOME\Documents
+git clone https://github.com/28-Anon/s287788.git
+cd s287788
+git checkout claude/career-niche-evaluation-qyxusw
+cd covenant-evals
+
+# Install the project and its tools. The -e means edits take effect immediately.
+py -m pip install -e ".[dev]"
+
+# Prove it works
+covenant-evals --help
+pytest -q
 ```
 
-Then edit `.env` and set `EDGAR_USER_AGENT` to **your real name and a real email**:
+`pytest -q` should report **192 passed**. If it does, the project is running on your machine.
+
+| Docs say | On Windows type |
+|---|---|
+| `make test` | `pytest -q` |
+| `make corpus-doctor` | `covenant-evals corpus doctor` |
+| `make corpus-status` | `covenant-evals corpus status` |
+| `make items-check` | `covenant-evals items check` |
+| `make items-stats` | `covenant-evals items stats` |
+| `make splits-freeze` | `covenant-evals splits freeze` |
+| `make corpus-search Q='"credit agreement"'` | `covenant-evals corpus search --query '"credit agreement"'` |
+
+### 1. Set your EDGAR identity — 2 minutes
+
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
+
+Set `EDGAR_USER_AGENT` to **your real name and a real email**:
 
 ```
 EDGAR_USER_AGENT="Salah Missana your.email@example.com"
 ```
 
+⚠️ **Notepad will try to save it as `.env.txt`.** In the Save dialog set "Save as type" to
+"All Files", or run `Get-ChildItem -Force` afterwards and confirm the file is called exactly
+`.env`. A file named `.env.txt` is silently ignored and you will get a confusing 403.
+
 The SEC requires this header. A missing or generic one returns 403 and blocks your IP for
-about ten minutes. The code refuses to make a request without a plausible one, so this is
-the first hard gate.
+about ten minutes, so the code refuses to make a request without a plausible one.
 
 ### 2. Confirm the EDGAR pipeline actually works — 30 seconds
 

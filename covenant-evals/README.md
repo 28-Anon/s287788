@@ -14,11 +14,14 @@ deliberately.
 ## Quick start
 
 ```bash
-uv sync                      # or: pip install -e ".[dev]"
-make test                    # run the test suite
-make validate                # validate every item file against the schema
-make budget                  # what this project has cost so far
+pip install -e ".[dev]"      # puts a `covenant-evals` command on PATH
+pytest -q
+covenant-evals --help
 ```
+
+Every `make X` below is a shortcut for `covenant-evals X`. The Makefile is a convenience on
+Unix; **on Windows use the `covenant-evals` command directly** — there is no `make` there
+and nothing in the project needs it.
 
 ## The headline metric
 

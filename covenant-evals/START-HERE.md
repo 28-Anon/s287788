@@ -109,12 +109,16 @@ Nothing that does any AI yet. Deliberately. This week is just the foundations:
 
 ```bash
 cd covenant-evals
-make test         # 28 tests should pass in under a second
-make validate     # "0 items — nothing to validate yet"
-make budget       # "$0.0"
+pip install -e ".[dev]"
+pytest -q                        # the test suite
+covenant-evals items check       # "0 items — nothing to check yet"
+covenant-evals budget            # "$0.0"
 ```
 
-If those three work, week 1 is done. That's genuinely the whole goal for this week: a project
+On Mac or Linux there is a `make` shortcut for each of these. On Windows there is no `make`
+— use the `covenant-evals` command, which does exactly the same thing.
+
+If those work, the project is running. That's genuinely the whole goal for this week: a project
 that runs, tests that pass, and somewhere for everything else to go.
 
 ## 9. Week 2 is done — here's what it added, plainly
