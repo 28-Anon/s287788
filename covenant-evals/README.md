@@ -53,6 +53,14 @@ LLM judge is used.
 ## Building the corpus
 
 ```bash
+covenant-evals corpus build --count 8    # search, fetch, hash, segment, report
+covenant-evals corpus review             # keep, drop, governing law, why
+```
+
+`build` is the whole mechanical half in one command. `review` is the judgement half.
+
+
+```bash
 cp .env.example .env          # then set EDGAR_USER_AGENT to your name and real email
 covenant-evals corpus search --query '"Majority Lenders"'
 covenant-evals corpus add 0000950170-24-012345:ex101.htm --cik 320123 --governing-law English

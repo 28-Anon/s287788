@@ -413,6 +413,80 @@ def cmd_corpus_doctor(args: argparse.Namespace) -> int:
     return 0 if report.ok else 1
 
 
+def cmd_corpus_build(args: argparse.Namespace) -> int:
+    """bootstrap, fetch and report in one command.
+
+    Everything here is mechanical — searching, downloading, hashing, segmenting. None of it
+    needs a person, and it only needs one because this project's author cannot reach
+    sec.gov from where it was written. So it is one command and one output, rather than
+    three commands and three outputs to relay back.
+
+    Deliberately stops before `review`. That step is judgement and belongs to whoever is
+    accountable for the corpus.
+    """
+    client = make_client()
+    manifest = Manifest.load()
+
+    start, end = args.start, args.end
+    if start and not end:
+        end = date.today().isoformat()
+
+    print("finding candidates...")
+    added, already = bootstrap(
+        client,
+        manifest,
+        count=args.count,
+        forms=args.forms.split(",") if args.forms else None,
+        start_date=start,
+        end_date=end,
+    )
+    manifest.save()
+    print(f"  {len(added)} added; the manifest holds {len(manifest.agreements)}")
+
+    pending = manifest.pending()
+    if pending:
+        print(f"\ndownloading {len(pending)}...")
+        results = fetch_all(client, manifest)
+        manifest.save()
+
+        counts: dict[str, int] = {}
+        for result in results:
+            counts[result.status] = counts.get(result.status, 0) + 1
+            if result.status in {"failed", "conflict"}:
+                print(f"  {result.status.upper()}  {result.ref}: {result.detail}")
+        print("  " + "  ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
+
+    unreadable = []
+    for agreement in manifest.agreements:
+        if not agreement.is_fetched:
+            continue
+        try:
+            text = load_text(agreement)
+        except FileNotFoundError:
+            continue
+        if not [s for s in segment(text) if s.level <= 1]:
+            unreadable.append(agreement.ref)
+
+    if unreadable:
+        print(f"\n{len(unreadable)} document(s) segmented to nothing — likely not agreements:")
+        for ref in unreadable[:5]:
+            print(f"  {ref}")
+
+    path = corpus_report.write(manifest, Path(args.out))
+    print(f"\nwrote {path}")
+    if not args.no_browser:
+        import webbrowser
+
+        webbrowser.open(path.resolve().as_uri())
+        print("opened in your browser")
+
+    print(
+        "\nThat is the whole mechanical part done.\n"
+        "Next is the judgement: covenant-evals corpus review"
+    )
+    return 0
+
+
 def cmd_corpus_review(args: argparse.Namespace) -> int:
     """Walk the candidates one at a time, with each filing open in the browser."""
     import webbrowser
@@ -1052,6 +1126,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--paste", action="store_true", help="also print a structure-only block, safe to share"
     )
 
+    build_cmd = corpus_sub.add_parser(
+        "build", help="bootstrap + fetch + report in one command — the whole mechanical part"
+    )
+    build_cmd.add_argument("--count", type=int, default=8)
+    build_cmd.add_argument("--forms", default="8-K")
+    build_cmd.add_argument("--start", default="2018-01-01")
+    build_cmd.add_argument("--end")
+    build_cmd.add_argument("--out", default="runs/corpus.html")
+    build_cmd.add_argument("--no-browser", action="store_true")
+
     review_cmd = corpus_sub.add_parser(
         "review", help="decide what stays, one document at a time, in your browser"
     )
@@ -1114,6 +1198,8 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_corpus_locate(args)
             if args.corpus_command == "doctor":
                 return cmd_corpus_doctor(args)
+            if args.corpus_command == "build":
+                return cmd_corpus_build(args)
             if args.corpus_command == "review":
                 return cmd_corpus_review(args)
             if args.corpus_command == "report":

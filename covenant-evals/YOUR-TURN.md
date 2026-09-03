@@ -126,47 +126,31 @@ Re-run it whenever something stops working, or before trusting a long fetch. On 
 census that says which of the three causes it is: headings not matched, headings matched but
 rejected, or the document simply is not an agreement.
 
-### 3. Build the corpus — two commands, then your judgement
-
-> **Start with eight, not twenty-five.** Reviewing 25 documents before writing a single
-> item front-loads all the tedium and none of the value. Eight documents is enough to write
-> your first 25 items, and the corpus can grow later: `corpus bootstrap` tops up to whatever
-> count you ask for, and `splits assign-new` places documents added after the freeze without
-> disturbing anything already assigned. Get to the labelling, which is the actual project,
-> and come back for the rest when you know what a good document looks like — which you will
-> only know after labelling a few.
->
-> ```
-> py -m covenant_evals.cli corpus bootstrap --count 8 --start 2018-01-01
-> ```
-
+### 3. Build the corpus — one command, then your judgement
 
 ```powershell
-py -m covenant_evals.cli corpus bootstrap --start 2018-01-01
-py -m covenant_evals.cli corpus review
-py -m covenant_evals.cli corpus fetch
-py -m covenant_evals.cli corpus report
+py -m covenant_evals.cli corpus build --count 8
 ```
 
-**`bootstrap`** runs five searches, discards amendments and waivers, and writes up to 25
-candidates to the manifest. It replaces about thirty `corpus add` calls.
+That is **the entire mechanical part**: five searches, derivatives discarded, candidates
+ranked and capped, everything downloaded, normalised, hashed and segmented, and an HTML
+report opened in your browser. One command, one output.
 
-**`corpus review` is where you actually decide.** It walks the candidates one at a time,
-**opens each filing in your browser** — where a contract is properly readable, with its
-tables and formatting — and asks four things in the terminal: keep, drop or skip; which law
-governs it; and why it is in your corpus. It saves after every decision, so quitting halfway
-keeps what you have done. Answer `q` whenever you want to stop.
+None of it needs a person. It needs one only because this was built somewhere that cannot
+reach sec.gov — a plumbing limitation, not a principle. If that changes, this step
+disappears entirely.
 
-That is the judgement task. Everything bootstrap adds is marked PROVISIONAL and its
-`governing_law` is left empty on purpose — a guess stored in the field a checked fact goes
-in is indistinguishable from a fact six weeks later, and the US/English comparison is a
-headline result.
+It stops before `review`, which is where judgement starts:
 
-**`corpus report`** writes `runs/corpus.html` and opens it: every document, how it
-segmented, what is unreviewed, which law, which split, a link to each filing, and a
-plain-English diagnosis for anything the segmenter could not read. Twenty-five documents
-with section trees is not something to read down a terminal. It is a local file and nothing
-leaves your machine.
+```powershell
+py -m covenant_evals.cli corpus review
+```
+
+**Start at 8 documents, not 25.** Eight is enough for your first 25 items, and you will
+choose better on the second pass because you will know what a good document looks like —
+which you only learn by labelling a few. `corpus build --count 25` later tops it up, and
+`splits assign-new` places anything added after the freeze without disturbing what is
+already assigned.
 
 #### What you are deciding in `review`
 
