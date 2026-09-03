@@ -1,4 +1,4 @@
-.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check items-check items-stats all
+.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check items-check items-stats splits-freeze splits-check splits-status all
 
 test:
 	pytest -q
@@ -17,6 +17,17 @@ items-check:
 
 items-stats:
 	python -m covenant_evals.cli items stats
+
+# Cut the dev/test/heldout split. Once. Commit data/splits.json immediately after.
+splits-freeze:
+	python -m covenant_evals.cli splits freeze
+
+splits-check:
+	python -m covenant_evals.cli splits check
+
+# Composition of each split, and whether heldout has ever been opened.
+splits-status:
+	python -m covenant_evals.cli splits status
 
 budget:
 	python -m covenant_evals.cli budget

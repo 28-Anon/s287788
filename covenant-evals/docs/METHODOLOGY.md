@@ -50,14 +50,52 @@ committing labels — `make items-check`.
 
 ## Splits
 
-Frozen in week 5, by **document** not by item — every item from one agreement lives in one
-split, or answers leak between splits.
+Frozen in week 5 and committed as `data/splits.json`. Assignment is **by document, never by
+item**: two questions about the same clause, one in dev and one in test, are not independent
+— tune against the first and you have tuned against the second.
 
-| Split | Target size | Use |
+| Split | Target share of text | Use |
 |---|---:|---|
-| `dev` | ~40 | Iterate freely. Look at individual items constantly |
-| `test` | ~140 | Graded runs. Look at aggregates only |
-| `heldout` | ~70 | Opened once, in week 22. Not before |
+| `dev` | 16% | Iterate freely. Look at individual items constantly |
+| `test` | 56% | Graded runs. Look at aggregates only |
+| `heldout` | 28% | Opened once, in week 22 |
+
+**Stratified by governing law.** If dev were all New York-law and heldout all English-law, a
+drop between them would be indistinguishable from the split simply being harder — and the
+English-law comparison is one of the results this project exists to produce.
+
+Assignment is greedy on `char_count` rather than item count, because at freeze time most
+documents have no items yet. It is deterministic given the seed, which is recorded, so the
+whole assignment can be reproduced from the manifest.
+
+**Adding is allowed; moving is not.** Documents fetched after the freeze are placed by
+`splits assign-new`, which never disturbs an existing assignment. `splits freeze` refuses to
+run a second time. `splits check` catches unassigned documents, documents that left the
+corpus, and the manifest disagreeing with `splits.json` (which is authoritative).
+
+### The heldout lock
+
+Discipline will not hold for seventeen weeks, so the lock is mechanical. Every read of the
+heldout split goes through `splits.require_open`, which:
+
+- passes `dev` and `test` through silently;
+- refuses `heldout` outright unless given a reason of at least ten characters — a
+  one-word reason is how a lock gets defeated by accident;
+- appends every access to `runs/heldout-access.log`, which is **committed**.
+
+That log is the artefact. When the results are published, it is the evidence that the
+heldout split was opened once, in week 22, deliberately. Nobody else publishes that, and it
+is worth more to a careful reader than a high score.
+
+The week 8 runner must call `require_open` before evaluating anything. It is already wired
+into `items export`, so it is live and tested rather than a promise.
+
+### Export never carries gold
+
+`items export` emits `id`, `doc`, `section`, `question`, `answer_type` — and nothing else.
+The system under test never receives the answer, the citation or the rationale, and the
+export path is structurally incapable of emitting them. Scoring reads the item files
+directly instead.
 
 ## Scoring
 

@@ -89,6 +89,22 @@ Useful searches for English-law documents: `"Majority Lenders"`, `"governed by E
 `"Facility Agreement"` — the LMA house style differs from US drafting in vocabulary
 (*Majority Lenders* vs *Required Lenders*), covenant architecture and definition layout.
 
+## Splits
+
+```bash
+make splits-freeze     # once, after the corpus is complete
+make splits-check
+make splits-status     # composition, and whether heldout has ever been opened
+```
+
+By document, never by item. Stratified by governing law so the US/English comparison is not
+confounded with split difficulty. Frozen and committed: adding a document later is allowed,
+moving one between splits is not.
+
+**Heldout is locked.** Reading it requires a written reason and appends to
+`runs/heldout-access.log`, which is committed. That log is the evidence that it was opened
+once, in week 22, on purpose.
+
 ## Labelling
 
 ```bash

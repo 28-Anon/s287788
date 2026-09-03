@@ -27,6 +27,7 @@ from .corpus.manifest import DEFAULT_CACHE, Agreement, Manifest
 from .corpus.normalise import sha256_text
 from .corpus.sections import segment, verify_span
 from .schema import Item, validate
+from .splits import Splits, require_open
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ITEMS_DIR = REPO_ROOT / "data" / "items"
@@ -292,3 +293,58 @@ def stats(items: list[Item]) -> dict[str, dict[str, int]]:
         for trap in item.traps:
             out["trap"][trap] = out["trap"].get(trap, 0) + 1
     return out
+
+
+# ---------------------------------------------------------------------------
+# Splits
+# ---------------------------------------------------------------------------
+
+
+def split_of(item: Item, manifest: Manifest, splits: Splits) -> str:
+    """Which split an item belongs to — inherited from its document, never set per item."""
+    agreement = find_agreement(manifest, item.doc)
+    return splits.of(agreement.ref) if agreement else ""
+
+
+def by_split(items: list[Item], manifest: Manifest, splits: Splits) -> dict[str, list[Item]]:
+    """Group items by the split of the document they cite."""
+    grouped: dict[str, list[Item]] = {}
+    for item in items:
+        grouped.setdefault(split_of(item, manifest, splits) or "unassigned", []).append(item)
+    return grouped
+
+
+def export(
+    items: list[Item],
+    split: str,
+    manifest: Manifest,
+    splits: Splits,
+    *,
+    reason: str = "",
+    log_path: Path | None = None,
+) -> list[dict[str, object]]:
+    """The questions in a split, ready to hand to a system under test.
+
+    **Gold answers are never exported.** The thing being measured must not receive the
+    answer, the citation, or the rationale — and the cheapest way to guarantee that is for
+    the export path to be structurally incapable of emitting them. Scoring reads the item
+    files directly instead.
+
+    Reading the heldout split goes through require_open, which demands a reason and writes
+    it to a committed log.
+    """
+    require_open(split, reason=reason, log_path=log_path)
+
+    selected = by_split(items, manifest, splits).get(split, [])
+    return [
+        {
+            "id": item.id,
+            "doc": item.doc,
+            "section": item.section,
+            "question": item.question,
+            "answer_type": item.answer_type,
+            **({"unit": item.unit} if item.unit else {}),
+            **({"enum_options": item.enum_options} if item.enum_options else {}),
+        }
+        for item in sorted(selected, key=lambda i: i.id)
+    ]

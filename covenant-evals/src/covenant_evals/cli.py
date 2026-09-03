@@ -11,6 +11,7 @@ python -m covenant_evals.cli corpus status     # what state the corpus is in
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from datetime import date
@@ -29,6 +30,7 @@ from .corpus import (
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
 from .items import (
     cross_validate,
+    export,
     item_to_yaml,
     load_all,
     next_item_id,
@@ -37,6 +39,19 @@ from .items import (
     write_item,
 )
 from .schema import ANSWER_TYPES, DIFFICULTIES, TRAPS, UNITS, Item, validate
+from .splits import (
+    SPLITS,
+    HeldoutLocked,
+    Splits,
+    access_history,
+    assign_new,
+    freeze,
+    shares,
+    sync_manifest,
+)
+from .splits import (
+    check as check_splits,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -563,6 +578,131 @@ def cmd_items_stats() -> int:
 
 
 # ---------------------------------------------------------------------------
+# splits
+# ---------------------------------------------------------------------------
+
+
+def _require_splits() -> Splits:
+    splits = Splits.load()
+    if splits is None:
+        raise SystemExit("no splits yet — run `covenant-evals splits freeze` first")
+    return splits
+
+
+def cmd_splits_freeze(args: argparse.Namespace) -> int:
+    existing = Splits.load()
+    if existing is not None and existing.is_frozen and not args.force:
+        raise SystemExit(
+            f"splits were frozen at {existing.frozen_at} and will not be re-cut.\n"
+            "A split you can silently redraw is not a split: every past result was "
+            "measured against this one.\n"
+            "To add documents fetched since the freeze, use `splits assign-new`."
+        )
+
+    manifest = Manifest.load()
+    splits = freeze(manifest, seed=args.seed)
+    sync_manifest(splits, manifest)
+    splits.save()
+    manifest.save()
+
+    print(f"frozen at {splits.frozen_at}")
+    print(f"seed {splits.seed}, assignment {splits.assignment_sha256[:12]}…\n")
+    _print_shares(splits, manifest)
+    print("\nCommit data/splits.json now. The heldout split is closed until week 22.")
+    return 0
+
+
+def cmd_splits_assign_new() -> int:
+    splits = _require_splits()
+    manifest = Manifest.load()
+    splits, added = assign_new(splits, manifest)
+
+    if not added:
+        print("no new documents to assign")
+        return 0
+
+    sync_manifest(splits, manifest)
+    splits.save()
+    manifest.save()
+
+    for ref in added:
+        print(f"{splits.of(ref):<8} {ref}")
+    print(f"\n{len(added)} document(s) assigned. Nothing already assigned was moved.")
+    return 0
+
+
+def _print_shares(splits: Splits, manifest: Manifest) -> None:
+    for split, data in shares(splits, manifest).items():
+        laws = ", ".join(f"{k}:{v}" for k, v in sorted(data["governing_law"].items()))
+        print(
+            f"  {split:<8} {data['documents']:>3} docs  {data['chars']:>9,} chars  "
+            f"{data['share']:>5.0%} (target {data['target']:.0%})  {laws}"
+        )
+
+
+def cmd_splits_status() -> int:
+    splits = Splits.load()
+    if splits is None:
+        print("splits not frozen yet")
+        return 0
+
+    manifest = Manifest.load()
+    print(f"frozen at {splits.frozen_at}")
+    print(f"seed {splits.seed}, assignment {splits.assignment_sha256[:12]}…\n")
+    _print_shares(splits, manifest)
+
+    history = access_history()
+    print()
+    if history:
+        print(f"HELDOUT HAS BEEN OPENED {len(history)} time(s):")
+        for entry in history:
+            print(f"  {entry['at']}  {entry['reason']}")
+    else:
+        print("heldout: never opened")
+    return 0
+
+
+def cmd_splits_check() -> int:
+    splits = _require_splits()
+    manifest = Manifest.load()
+    problems = check_splits(splits, manifest)
+
+    for problem in problems:
+        print(problem, file=sys.stderr)
+
+    if problems:
+        print(f"\n{len(problems)} problem(s)", file=sys.stderr)
+        return 1
+
+    print(f"{len(splits.assignment)} documents assigned, no problems")
+    return 0
+
+
+def cmd_splits_sync() -> int:
+    splits = _require_splits()
+    manifest = Manifest.load()
+    changed = sync_manifest(splits, manifest)
+    manifest.save()
+    print(f"{changed} manifest entries updated from splits.json")
+    return 0
+
+
+def cmd_items_export(args: argparse.Namespace) -> int:
+    """Emit the questions in a split, for handing to a system under test."""
+    splits = _require_splits()
+    manifest = Manifest.load()
+
+    try:
+        rows = export(load_all(), args.split, manifest, splits, reason=args.reason or "")
+    except HeldoutLocked as exc:
+        print(f"\n{exc}\n", file=sys.stderr)
+        return 1
+
+    print(json.dumps(rows, indent=2))
+    return 0
+
+
+# ---------------------------------------------------------------------------
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -595,6 +735,26 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     items_sub.add_parser("stats", help="counts by answer type, difficulty and trap")
+
+    export_cmd = items_sub.add_parser(
+        "export", help="questions in a split, for a system under test (never gold answers)"
+    )
+    export_cmd.add_argument("--split", required=True, choices=list(SPLITS))
+    export_cmd.add_argument("--reason", help="required for heldout; written to a committed log")
+
+    splits_cmd = sub.add_parser("splits", help="freeze and inspect the dev/test/heldout split")
+    splits_sub = splits_cmd.add_subparsers(dest="splits_command", required=True)
+
+    freeze_cmd = splits_sub.add_parser("freeze", help="cut the split, once")
+    freeze_cmd.add_argument("--seed", type=int, default=20261005)
+    freeze_cmd.add_argument(
+        "--force", action="store_true", help="re-cut an existing split (almost never right)"
+    )
+
+    splits_sub.add_parser("assign-new", help="place documents fetched since the freeze")
+    splits_sub.add_parser("status", help="composition, and whether heldout was ever opened")
+    splits_sub.add_parser("check", help="verify the split is sound")
+    splits_sub.add_parser("sync", help="copy splits.json into the manifest for display")
     sub.add_parser("budget", help="report API spend so far")
 
     corpus = sub.add_parser("corpus", help="build and inspect the document corpus")
@@ -657,6 +817,19 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_items_check(args)
             if args.items_command == "stats":
                 return cmd_items_stats()
+            if args.items_command == "export":
+                return cmd_items_export(args)
+        if args.command == "splits":
+            if args.splits_command == "freeze":
+                return cmd_splits_freeze(args)
+            if args.splits_command == "assign-new":
+                return cmd_splits_assign_new()
+            if args.splits_command == "status":
+                return cmd_splits_status()
+            if args.splits_command == "check":
+                return cmd_splits_check()
+            if args.splits_command == "sync":
+                return cmd_splits_sync()
         if args.command == "budget":
             return cmd_budget()
         if args.command == "corpus":

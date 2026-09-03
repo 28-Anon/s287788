@@ -300,12 +300,65 @@ anything. Then write three questions and answer them.
 Time yourself honestly. Multiply by 25. That number is your week 4, and knowing it now is
 worth more than any tool I could have built you.
 
-## 13. What happens next
+## 13. Week 5 — the three piles, and a lock on the third
 
-- **Weeks 5–7:** keep labelling to ~110 items, and freeze the three splits in week 5.
+Week 5 does two things: you get to 60 items, and the corpus gets cut into dev, test and
+heldout. The cutting is built; the items are still yours.
+
+**Split by document, not by question.** Two questions about the same clause — one in dev,
+one in test — are not independent. Tune against the first and you have tuned against the
+second without noticing. So every question about one agreement lives in one pile, always.
+
+**Balanced by governing law.** If dev were all US-law and heldout all English-law, a drop
+between them would be indistinguishable from "the English pile is just harder". Since
+comparing the two is one of your headline results, the split spreads them deliberately.
+
+**Frozen means frozen.** `splits freeze` refuses to run twice. Adding a document later is
+allowed; moving one between piles is not — every past result was measured against the old
+arrangement, so redrawing it silently rewrites history.
+
+### The interesting bit: making heldout genuinely hard to open
+
+You are meant not to look at the heldout pile until week 22. That's seventeen weeks. Nobody
+holds that on willpower.
+
+So it's mechanical. Any command that would read heldout **refuses** unless you give a
+written reason of at least ten characters — a one-word reason is exactly how a lock gets
+defeated by accident — and every single opening is appended to `runs/heldout-access.log`,
+which is committed to git.
+
+```
+$ covenant-evals items export --split heldout
+
+the heldout split is closed until week 22.
+Opening it early is the single easiest way to invalidate this whole project: any
+decision informed by heldout turns it into a second test split.
+If you genuinely mean to open it, pass a reason of at least ten characters. It is
+written to runs/heldout-access.log, which is committed.
+```
+
+**That log is the point.** When you publish, it is proof that you opened the heldout set
+once, in week 22, deliberately. Almost nobody can show that, and to a careful reader it is
+worth more than a high score — because it means the number is real.
+
+One more guard, small but important: **exporting questions never includes the answers.**
+The export path emits the question, the document and the section, and is structurally
+incapable of emitting the gold answer or the citation. Handing the answer to the thing you
+are testing is the dumbest available failure, so the code cannot do it.
+
+### Also: read YOUR-TURN.md
+
+You asked what's on you. It's now a file in the repo — `YOUR-TURN.md` — listing everything
+blocked on you, in order, with time estimates. Short version: set your EDGAR email, confirm
+the fetch pipeline against the live SEC (it has never run there), build 25 documents, then
+start labelling.
+
+## 14. What happens next
+
+- **Weeks 6–7:** keep labelling to ~110 items.
 - **Week 8+:** finally point an AI at your questions and see how badly it does.
 
-## 14. Things you don't need to understand yet
+## 15. Things you don't need to understand yet
 
 Genuinely fine to not know these in week 1. They arrive when you need them:
 
