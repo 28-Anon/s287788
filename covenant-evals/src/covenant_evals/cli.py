@@ -27,6 +27,7 @@ from .corpus import (
     find_spans,
     segment,
 )
+from .corpus.bootstrap import bootstrap
 from .corpus.doctor import format_report
 from .corpus.doctor import run as run_doctor
 from .corpus.edgar import is_derivative, looks_like_agreement, validate_user_agent
@@ -264,6 +265,57 @@ def cmd_corpus_search(args: argparse.Namespace) -> int:
         "\nAdd one with:\n"
         "  covenant-evals corpus add <accession:filename> --cik <cik> "
         "--governing-law NY --note 'why this one'"
+    )
+    return 0
+
+
+def cmd_corpus_bootstrap(args: argparse.Namespace) -> int:
+    """Assemble a candidate corpus in one command, instead of ~30."""
+    client = make_client()
+    manifest = Manifest.load()
+
+    start, end = args.start, args.end
+    if start and not end:
+        end = date.today().isoformat()
+    if end and not start:
+        start = "2001-01-01"
+
+    if args.dry_run:
+        from .corpus.bootstrap import gather, to_agreements
+
+        candidates = gather(
+            client,
+            forms=args.forms.split(",") if args.forms else None,
+            start_date=start,
+            end_date=end,
+        )
+        for agreement in to_agreements(candidates)[: args.count]:
+            print(f"{agreement.ref}\n    {agreement.company}  {agreement.filed}")
+            print(f"    {agreement.note}")
+        print(f"\n{min(len(candidates), args.count)} would be added. Nothing written.")
+        return 0
+
+    added, already = bootstrap(
+        client,
+        manifest,
+        count=args.count,
+        forms=args.forms.split(",") if args.forms else None,
+        start_date=start,
+        end_date=end,
+    )
+    manifest.save()
+
+    for agreement in added:
+        print(f"{agreement.ref}  {agreement.company}  {agreement.filed}")
+
+    print(f"\n{len(added)} added" + (f", {already} already in the manifest" if already else ""))
+    print(
+        "\nThese are CANDIDATES, not a corpus. Before fetching:\n"
+        "  - delete anything that is not a real credit agreement\n"
+        "  - set --governing-law once you have read enough of each to know\n"
+        "  - replace the provisional note with why that document is in your corpus\n"
+        "\nSelection is the largest source of bias in your results, and it is yours to make.\n"
+        "\nThen: covenant-evals corpus fetch"
     )
     return 0
 
@@ -917,6 +969,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="include amendments, waivers and supplements (hidden by default)",
     )
 
+    boot = corpus_sub.add_parser(
+        "bootstrap", help="assemble a candidate corpus in one command instead of ~30"
+    )
+    boot.add_argument("--count", type=int, default=25)
+    boot.add_argument("--forms", default="8-K")
+    boot.add_argument("--start", help="YYYY-MM-DD; 2018-01-01 or later is strongly advised")
+    boot.add_argument("--end", help="YYYY-MM-DD")
+    boot.add_argument("--dry-run", action="store_true", help="show what it would add")
+
     add = corpus_sub.add_parser("add", help="add one document to the manifest")
     add.add_argument("ref", help="accession:filename, as printed by `corpus search`")
     add.add_argument("--cik", required=True)
@@ -996,6 +1057,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "corpus":
             if args.corpus_command == "search":
                 return cmd_corpus_search(args)
+            if args.corpus_command == "bootstrap":
+                return cmd_corpus_bootstrap(args)
             if args.corpus_command == "add":
                 return cmd_corpus_add(args)
             if args.corpus_command == "fetch":

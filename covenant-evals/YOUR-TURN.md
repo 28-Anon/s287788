@@ -126,41 +126,43 @@ Re-run it whenever something stops working, or before trusting a long fetch. On 
 census that says which of the three causes it is: headings not matched, headings matched but
 rejected, or the document simply is not an agreement.
 
-### 3. Build the corpus — 25 documents, a few hours spread over a week
+### 3. Build the corpus — two commands, then your judgement
 
 ```powershell
-py -m covenant_evals.cli corpus search --query '"Majority Lenders"' --forms 8-K --start 2018-01-01
-py -m covenant_evals.cli corpus add <accession:filename> --cik <cik> --governing-law English --note 'LMA-style, sponsor-backed'
+py -m covenant_evals.cli corpus bootstrap --start 2018-01-01 --dry-run
+py -m covenant_evals.cli corpus bootstrap --start 2018-01-01
 py -m covenant_evals.cli corpus fetch
 py -m covenant_evals.cli corpus sections --check
 ```
 
-**Searching well matters more than it sounds.** Full-text search for a phrase that appears
-in credit agreements also returns every document that merely *references* one — amendments,
-waivers, DIP orders, payoff letters, notices. On a real search those outnumber the
-agreements. Search now hides them by default and shows EDGAR's own description of each
-exhibit so you can judge before downloading; `--all` includes them.
+`bootstrap` runs five searches, discards amendments and waivers, ranks what is left,
+interleaves the results so no single phrase dominates, and writes up to 25 candidates to the
+manifest. It replaces about thirty `corpus add` calls and the accession-copying mistakes
+that come with them.
 
-Two more things that improve the results sharply:
+**What it deliberately does not do is decide your corpus.** Everything it adds is marked
+PROVISIONAL, and `governing_law` is left empty even though the query that found a document
+hints at it — a guess stored in the same field as a checked fact is indistinguishable from
+one six weeks later, and the US/English comparison is a headline result.
 
-- **`--start 2018-01-01`.** Without a date filter the results skew to 2006–2013 and to
-  distressed shell companies. Recent filings are larger issuers with better-drafted, longer
-  agreements.
-- **Vary the query.** `"Majority Lenders"` finds English-law LMA-style documents;
-  `"Required Lenders"` is the US equivalent; `"Consolidated EBITDA"` and
-  `"Permitted Liens"` find agreements with real covenant machinery. A phrase that appears
-  in the *body* of an agreement beats one that appears in its title.
+So after bootstrap, before fetching:
 
-The mix that matters:
+- **delete anything that is not a real credit agreement** — open a few and look
+- **set `--governing-law`** once you have read enough of each to actually know
+- **replace the provisional note** with why that document is in your corpus
 
-- **25 documents** total
-- **at least 5 English-law** — these are what make the London story work
-- **3 or 4 amendments, kept deliberately** and tagged in `--note`; week 20 needs them for
-  the amendment_supersession trap. Add them with `--all`, since search hides them
-- include **two you find genuinely confusing**; they produce the best items
+Corpus selection is the largest single source of bias in your results — `docs/LIMITATIONS.md`
+says so in writing — and it is the part that has to be yours.
 
-Read every warning `corpus sections --check` prints. The segmenter is heuristic. If it finds
-nothing in a document, `corpus doctor --paste` will tell you which of the three causes it is.
+The mix to end up with:
+
+- **25 documents**, at least **5 English-law**
+- **3 or 4 amendments**, added deliberately with `corpus search --all`, tagged in the note.
+  Week 20 needs them for the amendment_supersession trap
+- **two you find genuinely confusing** — they produce the best items
+
+Read every warning `corpus sections --check` prints. If it finds nothing in a document,
+`corpus doctor --paste` names which of the three causes it is.
 
 ### 4. Write the items — this is the project
 
