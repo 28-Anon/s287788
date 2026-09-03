@@ -174,8 +174,33 @@ something attached to one? You are not reading it properly — that comes in wee
 - **"governed by"** — lands you on the governing law clause, near the end. "the State of
   New York" → `1`. "England and Wales" → `2`.
 
-The note it asks for is one line for your own benefit later: *"US leveraged loan,
-sponsor-backed, full covenant package"* or *"English law LMA senior facilities"*.
+#### The note
+
+One line, written for yourself in six weeks. It does three jobs: it tells you what is in a
+document when you come to pick one to label, it lets results be reported by deal type and
+legal tradition, and collectively the notes become the honest account of how the corpus was
+selected that `docs/LIMITATIONS.md` promises.
+
+Say **what kind of deal**, **which tradition**, and **anything notable**:
+
+```
+US leveraged loan, sponsor-backed, full covenant package
+English law LMA senior facilities, real estate borrower
+Investment-grade revolver, light covenants — useful as an easy contrast
+Asset-based revolver (ABL), borrowing base mechanics
+BDC fund-level facility, unusual asset coverage covenants
+REIT credit facility, heavy financial covenant section
+Reserve-based lending, mining borrower, commodity price definitions
+Amendment kept deliberately for the week 20 supersession trap
+Very heavily defined-term chained — expect this one to be hard
+```
+
+Two that are no use: *"credit agreement"* (says nothing you did not already know) and
+*"looks good"* (says nothing at all).
+
+Honest uncertainty is fine and better than a confident guess: *"probably US leveraged loan,
+did not read far enough to be sure"* is a perfectly good note. You can edit any of them
+later in `data/corpus/manifest.json`.
 
 **Do not agonise.** Nothing here is final — you can drop a document later, and the corpus is
 not fixed until you freeze the splits in week 5. A wrong keep costs you one skim; a wrong

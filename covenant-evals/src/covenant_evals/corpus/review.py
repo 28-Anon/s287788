@@ -129,6 +129,8 @@ def review(
         law = LAW_CHOICES.get(ask("  > ").strip(), "")
         agreement.governing_law = law
 
+        say("  one line, for yourself in six weeks. Deal type, tradition, anything notable.")
+        say("  e.g. 'US leveraged loan, sponsor-backed, full covenant package'")
         note = ask("  why is this document in the corpus? ").strip()
         # Never leave the provisional note in place on something marked as reviewed: it
         # would read six weeks later as though the law had been checked when it had not.
