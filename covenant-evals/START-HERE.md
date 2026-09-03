@@ -235,13 +235,77 @@ checking against reality. Both are now regression tests, and `make corpus-check`
 segmenter over every document at once so the next one gets found on 25 documents rather
 than in one broken label.
 
-## 12. What happens next
+## 12. Week 4 — the part I can't do for you, and everything around it that I can
 
-- **Week 4–7:** the real work — read contracts and hand-write ~110 questions with answers.
-  Slow, unglamorous, and where all the value is. Nobody else does it.
+Week 4's deliverable is **25 hand-labelled questions**. I have built everything except the
+25 questions, and that gap is deliberate, not laziness.
+
+### Why I didn't write the questions
+
+If a model writes the answers, you are testing a model against a model's opinion. Every
+number you compute from that is circular. That one is obvious.
+
+The less obvious one: **even letting a model write the *questions* poisons the set.** Models
+ask the questions models find natural — clean provisions, answer in one place, well
+signposted. The entire value of your dataset is the opposite: the questions where a
+confident-looking system quietly gets it wrong. Generate the questions and you
+systematically filter out the ones worth having, and the corpus still looks fine from the
+outside.
+
+So the questions are yours. What I built is everything that makes writing them fast and
+hard to get wrong.
+
+### What's new this week
+
+**The schema is frozen.** Three fields added first, each because the old schema couldn't
+express something real: `unit` (35000000 of *what* — dollars, percent, a ratio?),
+`enum_options` (an enum with no options is just free text), and `dispute_note` (a question
+that turns out to be arguable is a finding, so it's kept and excluded from scores rather
+than deleted). A test now fails if anyone changes the field list without following the
+protocol.
+
+**One command writes an item:**
+
+```bash
+covenant-evals items new --ref 0000950170-24-012345 --section '7.01(b)'   --question 'May the Borrower incur $50,000,000 of incremental term loans without lender consent?'   --type boolean --gold false   --quote 'not to exceed the greater of $35,000,000'   --rationale 'The basket caps incremental facilities below the requested figure.'   --traps basket_cap --difficulty hard
+```
+
+You paste a quote. It finds the offsets, pins the document's fingerprint, and writes the
+file. **You never count characters.**
+
+**And it argues with you.** All five of these are refusals, tested:
+
+| It says | What you actually did |
+|---|---|
+| *the quote is in section 7.02, not 7.01(b)* | Right sentence, wrong section |
+| *that quote appears 2 times* | Ambiguous citation — the offsets might be the wrong copy |
+| *that quote does not appear* | A smart quote, an en dash, or a word you retyped |
+| *section '9.99' does not resolve* | Typo, or you're in the wrong document |
+| *numeric answers need a unit* | 35 million what? |
+
+**`make items-check` re-checks everything, later.** For every item: is the document still
+the one you labelled, does the section still exist, is the quote still at those offsets, and
+**is the quote inside the section you cited**. That last one catches the item that looks
+perfect and teaches the wrong lesson.
+
+**`docs/LABELLING.md`** is the actual protocol — how to run an hour-long session, what
+separates a good item from a bad one with worked examples of both, and a bank of question
+shapes for each trap so you're not staring at section 7.02 wondering what to ask.
+
+### What to do now
+
+Open `docs/LABELLING.md`. Pick one section of one agreement. Read it once without writing
+anything. Then write three questions and answer them.
+
+Time yourself honestly. Multiply by 25. That number is your week 4, and knowing it now is
+worth more than any tool I could have built you.
+
+## 13. What happens next
+
+- **Weeks 5–7:** keep labelling to ~110 items, and freeze the three splits in week 5.
 - **Week 8+:** finally point an AI at your questions and see how badly it does.
 
-## 13. Things you don't need to understand yet
+## 14. Things you don't need to understand yet
 
 Genuinely fine to not know these in week 1. They arrive when you need them:
 

@@ -19,4 +19,6 @@ jobs:
       - name: Test
         run: pytest -q
       - name: Validate every item against the schema
-        run: python -m covenant_evals.cli validate
+        # Schema only: the document cache is gitignored, so the corpus-level checks
+        # (hash, section, citation offsets) run locally via `make items-check`.
+        run: python -m covenant_evals.cli items check --schema-only

@@ -1,5 +1,39 @@
 # Methodology
 
+## The schema
+
+**Frozen in week 4 at SCHEMA_VERSION 1.** The fields, their types and their rules are in
+`src/covenant_evals/schema.py`; `tests/test_schema.py::test_the_schema_is_frozen` fails on
+any silent change to the field set.
+
+Three fields were added at the freeze, each because the schema as drafted could not express
+something the corpus needs:
+
+- **`unit`**, required for numeric answers. "35000000" is unscoreable without knowing
+  whether it is dollars, a percentage of EBITDA, or a ratio.
+- **`enum_options`**, required for enum answers. Without a closed set to choose from, an
+  enum is free text with a label on it.
+- **`dispute_note`**, required when `review_status: disputed`. Disputed items are excluded
+  from headline scores rather than deleted, because a question that turned out to be
+  arguable is a finding about the document, not a mistake to hide.
+
+To change any of this, follow the protocol at the top of `schema.py`. It exists because a
+five-minute edit can otherwise cost weeks of labelling.
+
+### Two levels of checking
+
+`items check` runs both:
+
+1. **Schema** — the item against itself. Types match, vocabularies are respected, an
+   abstain item has nothing to cite.
+2. **Corpus** — the item against the document it cites. The hash still matches, the section
+   still resolves, the quote is verbatim at those offsets, and the quote sits **inside** the
+   section the item claims. That last one catches the perfect-looking item that quotes the
+   right sentence from the wrong clause.
+
+CI runs level 1 on every push. Level 2 needs the cache on disk, so run it locally before
+committing labels — `make items-check`.
+
 ## Labelling protocol
 
 1. Read the clause before writing the question. Questions invented without reading produce

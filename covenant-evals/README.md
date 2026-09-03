@@ -89,6 +89,23 @@ Useful searches for English-law documents: `"Majority Lenders"`, `"governed by E
 `"Facility Agreement"` — the LMA house style differs from US drafting in vocabulary
 (*Majority Lenders* vs *Required Lenders*), covenant architecture and definition layout.
 
+## Labelling
+
+```bash
+covenant-evals items new --ref ... --section '7.01(b)' --question '...' \
+    --type boolean --gold false --quote '...' --rationale '...' --traps basket_cap
+make items-check      # schema, plus every item against the document it cites
+make items-stats      # the mix: answer types, difficulty, traps, documents
+```
+
+You paste a quote; the tool finds the offsets, pins the document hash, and refuses the item
+if the quote is ambiguous, absent, or sitting in a different section from the one you cited.
+
+**The protocol is in [docs/LABELLING.md](docs/LABELLING.md)** — read it before the first
+session. The short version: label before you look at any system output, no section no item,
+one fact per question, and about one item in five should be a question the document does not
+answer.
+
 ## Data source
 
 Credit agreements are filed publicly as EX-10 exhibits on SEC EDGAR. This repository stores

@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from datetime import date
 from pathlib import Path
 
 from . import budget as budget_module
@@ -26,7 +27,16 @@ from .corpus import (
     segment,
 )
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
-from .items import load_all, validate_all
+from .items import (
+    cross_validate,
+    item_to_yaml,
+    load_all,
+    next_item_id,
+    stats,
+    validate_all,
+    write_item,
+)
+from .schema import ANSWER_TYPES, DIFFICULTIES, TRAPS, UNITS, Item, validate
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -228,8 +238,8 @@ def cmd_corpus_status() -> int:
     return 0
 
 
-def _load(ref: str) -> tuple[str, str]:
-    """Return (ref, normalised text) for a manifest entry, or raise SystemExit with help."""
+def _load(ref: str):
+    """Return (agreement, normalised text) for a manifest entry, or exit with help."""
     manifest = Manifest.load()
     agreement = manifest.get(ref)
 
@@ -246,7 +256,7 @@ def _load(ref: str) -> tuple[str, str]:
             raise SystemExit(f"{ref!r} is not in the manifest. Try `corpus status`.")
 
     try:
-        return agreement.ref, load_text(agreement)
+        return agreement, load_text(agreement)
     except FileNotFoundError as exc:
         raise SystemExit(str(exc)) from exc
 
@@ -256,7 +266,7 @@ def cmd_corpus_sections(args: argparse.Namespace) -> int:
     if args.check:
         return _check_all_segmentation()
 
-    ref, text = _load(args.ref)
+    agreement, text = _load(args.ref)
     result = segment(text)
 
     for section in result:
@@ -266,7 +276,7 @@ def cmd_corpus_sections(args: argparse.Namespace) -> int:
         if args.offsets:
             print(f"{indent}          [{section.start}, {section.end}]  {section.char_count:,} ch")
 
-    print(f"\n{ref}: {result.count} sections, {len(text):,} characters")
+    print(f"\n{agreement.ref}: {result.count} sections, {len(text):,} characters")
     if result.toc_entries_dropped:
         print(f"contents entries dropped: {result.toc_entries_dropped}")
     for warning in result.warnings:
@@ -308,14 +318,14 @@ def _check_all_segmentation() -> int:
 
 def cmd_corpus_section(args: argparse.Namespace) -> int:
     """Print one section, its offsets, and a gold_span line ready to paste into an item."""
-    ref, text = _load(args.ref)
+    agreement, text = _load(args.ref)
     result = segment(text)
     section = result.find(args.address)
 
     if section is None:
         available = [s.label for s in result if s.level <= 1][:20]
         print(
-            f"{args.address!r} not found in {ref}.\nSections available: "
+            f"{args.address!r} not found in {agreement.ref}.\nSections available: "
             f"{', '.join(available)}{'...' if len(available) == 20 else ''}",
             file=sys.stderr,
         )
@@ -324,7 +334,7 @@ def cmd_corpus_section(args: argparse.Namespace) -> int:
     body = section.body(text) if args.body else section.text(text)
     start = section.body_start if args.body else section.start
 
-    print(f"# {ref}  §{args.address}")
+    print(f"# {agreement.ref}  §{args.address}")
     print(f"# chars [{start}, {section.end}]  ({section.end - start:,})")
     print(f"gold_span: [{start}, {section.end}]")
     print()
@@ -338,7 +348,7 @@ def cmd_corpus_locate(args: argparse.Namespace) -> int:
     Reports every match, because a quote appearing more than once is a labelling hazard:
     the span you record may not be the passage you meant.
     """
-    ref, text = _load(args.ref)
+    agreement, text = _load(args.ref)
     spans = find_spans(text, args.quote)
 
     if not spans:
@@ -373,13 +383,218 @@ def cmd_corpus_locate(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# items
+# ---------------------------------------------------------------------------
+
+
+def _parse_gold(answer_type: str, raw: str | None):
+    """Turn the --gold string into the right Python type, or exit explaining why not."""
+    if answer_type == "abstain":
+        return None
+    if raw is None:
+        raise SystemExit("--gold is required unless --type abstain")
+
+    if answer_type == "boolean":
+        lowered = raw.strip().lower()
+        if lowered in {"true", "yes", "y"}:
+            return True
+        if lowered in {"false", "no", "n"}:
+            return False
+        raise SystemExit(f"--gold {raw!r} is not a boolean. Use true or false.")
+
+    if answer_type == "numeric":
+        cleaned = raw.replace(",", "").replace("$", "").replace("£", "").strip()
+        try:
+            return float(cleaned) if "." in cleaned else int(cleaned)
+        except ValueError as exc:
+            raise SystemExit(f"--gold {raw!r} is not a number") from exc
+
+    return raw
+
+
+def cmd_items_new(args: argparse.Namespace) -> int:
+    """Scaffold one item, filling in the hash, offsets and section from the document.
+
+    Everything this fills in automatically is something you would otherwise get wrong by
+    hand: the document hash, the character offsets, and whether your quote is actually in
+    the section you think it is.
+    """
+    agreement, text = _load(args.ref)
+    segmentation = segment(text)
+
+    section = segmentation.find(args.section)
+    if section is None:
+        available = [s.label for s in segmentation if s.level <= 1][:25]
+        raise SystemExit(
+            f"section {args.section!r} does not resolve in {agreement.ref}.\n"
+            f"Available: {', '.join(available)}"
+        )
+
+    gold_citation = None
+    gold_span = None
+
+    if args.type != "abstain":
+        if not args.quote:
+            raise SystemExit("--quote is required unless --type abstain")
+
+        spans = find_spans(text, args.quote)
+        if not spans:
+            raise SystemExit(
+                "that quote does not appear in the document. It must match verbatim "
+                "(whitespace aside) — check for a smart quote, an en dash, or a retyped word."
+            )
+        if len(spans) > 1:
+            raise SystemExit(
+                f"that quote appears {len(spans)} times, so the span would be ambiguous. "
+                "Quote more context until there is exactly one match."
+            )
+
+        start, end = spans[0]
+        if not (section.start <= start < section.end):
+            owner = next(
+                (
+                    s.label
+                    for s in sorted(segmentation, key=lambda s: -s.level)
+                    if s.start <= start < s.end
+                ),
+                "?",
+            )
+            raise SystemExit(
+                f"the quote is in section {owner}, not {args.section}. "
+                "Either the citation or the section is wrong — decide which before writing it."
+            )
+
+        gold_citation = text[start:end]
+        gold_span = [start, end]
+
+    item = Item(
+        id=next_item_id(),
+        doc=agreement.accession,
+        doc_sha256=agreement.text_sha256 or "",
+        section=args.section,
+        question=args.question,
+        answer_type=args.type,
+        gold=_parse_gold(args.type, args.gold),
+        gold_citation=gold_citation,
+        gold_span=gold_span,
+        rationale=args.rationale,
+        difficulty=args.difficulty,
+        labelled_by=args.by or os.environ.get("LABELLER", ""),
+        labelled_at=date.today(),
+        traps=[t.strip() for t in (args.traps or "").split(",") if t.strip()],
+        unit=args.unit or "",
+        enum_options=[o.strip() for o in (args.enum_options or "").split(",") if o.strip()],
+    )
+
+    errors = validate(item)
+    if errors:
+        for error in errors:
+            print(f"  {error}", file=sys.stderr)
+        raise SystemExit("item is not valid — nothing written")
+
+    if args.dry_run:
+        print(item_to_yaml(item))
+        return 0
+
+    path = write_item(item)
+    print(f"wrote {path.relative_to(REPO_ROOT)}")
+    print(
+        f"  section {args.section}, span [{gold_span[0]}, {gold_span[1]}]"
+        if gold_span
+        else f"  section {args.section}, abstain"
+    )
+    return 0
+
+
+def cmd_items_check(args: argparse.Namespace) -> int:
+    """Schema check, then check every item against the document it cites."""
+    items = load_all()
+    if not items:
+        print("0 items — nothing to check yet. That is expected until you start labelling.")
+        return 0
+
+    problems = validate_all(items)
+
+    if not args.schema_only:
+        for item_id, errors in cross_validate(items).items():
+            problems.setdefault(item_id, []).extend(errors)
+
+    for item_id in sorted(problems):
+        print(f"{item_id}:", file=sys.stderr)
+        for message in problems[item_id]:
+            print(f"  {message}", file=sys.stderr)
+
+    if problems:
+        print(f"\n{len(problems)} of {len(items)} items have problems", file=sys.stderr)
+        return 1
+
+    scope = "schema" if args.schema_only else "schema and documents"
+    print(f"{len(items)} items, all valid against {scope}")
+    return 0
+
+
+def cmd_items_stats() -> int:
+    items = load_all()
+    if not items:
+        print("0 items")
+        return 0
+
+    counts = stats(items)
+    print(f"{len(items)} items across {len(counts['document'])} documents\n")
+
+    for dimension in ("answer_type", "difficulty", "review_status", "trap"):
+        print(dimension)
+        for key, count in sorted(counts[dimension].items(), key=lambda kv: -kv[1]):
+            share = count / len(items)
+            print(f"  {key:<28} {count:>4}  {share:>5.0%}")
+        print()
+
+    abstain = counts["answer_type"].get("abstain", 0)
+    share = abstain / len(items)
+    print(f"abstain items: {abstain} ({share:.0%}) — target is about 20%")
+    if share < 0.15:
+        print("  under target. Questions the document does not answer are the ones that")
+        print("  catch confident invention, and they are the easiest to under-collect.")
+
+    thin = [t for t in sorted(TRAPS) if counts["trap"].get(t, 0) < 3]
+    if thin:
+        print(f"\ntraps with fewer than 3 items: {', '.join(thin)}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="covenant-evals")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("validate", help="check every item against the schema")
+    sub.add_parser("validate", help="check every item against the schema (alias of items check)")
+
+    items = sub.add_parser("items", help="create and check labelled items")
+    items_sub = items.add_subparsers(dest="items_command", required=True)
+
+    new = items_sub.add_parser("new", help="scaffold one item from a document and a quote")
+    new.add_argument("--ref", required=True, help="document: accession:filename, or part of it")
+    new.add_argument("--section", required=True, help="e.g. 7.02(b)")
+    new.add_argument("--question", required=True)
+    new.add_argument("--type", required=True, choices=sorted(ANSWER_TYPES))
+    new.add_argument("--gold", help="the answer; omit only for --type abstain")
+    new.add_argument("--quote", help="verbatim text that proves the answer")
+    new.add_argument("--rationale", required=True, help="why the answer follows from the quote")
+    new.add_argument("--difficulty", default="medium", choices=sorted(DIFFICULTIES))
+    new.add_argument("--traps", help="comma separated, from the vocabulary in schema.py")
+    new.add_argument("--unit", choices=sorted(UNITS), help="required for numeric answers")
+    new.add_argument("--enum-options", help="comma separated; required for enum answers")
+    new.add_argument("--by", help="labeller initials (or set LABELLER in .env)")
+    new.add_argument("--dry-run", action="store_true", help="print the item, write nothing")
+
+    check = items_sub.add_parser("check", help="validate items against the schema and the corpus")
+    check.add_argument(
+        "--schema-only", action="store_true", help="skip the checks that need the corpus on disk"
+    )
+
+    items_sub.add_parser("stats", help="counts by answer type, difficulty and trap")
     sub.add_parser("budget", help="report API spend so far")
 
     corpus = sub.add_parser("corpus", help="build and inspect the document corpus")
@@ -435,6 +650,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "validate":
             return cmd_validate()
+        if args.command == "items":
+            if args.items_command == "new":
+                return cmd_items_new(args)
+            if args.items_command == "check":
+                return cmd_items_check(args)
+            if args.items_command == "stats":
+                return cmd_items_stats()
         if args.command == "budget":
             return cmd_budget()
         if args.command == "corpus":

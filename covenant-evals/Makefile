@@ -1,4 +1,4 @@
-.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check all
+.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check items-check items-stats all
 
 test:
 	pytest -q
@@ -8,7 +8,15 @@ lint:
 	ruff format --check src tests
 
 validate:
-	python -m covenant_evals.cli validate
+	python -m covenant_evals.cli items check --schema-only
+
+# Full check: schema, plus every item against the document it cites. Needs the corpus
+# on disk, so this is the one to run before committing labels.
+items-check:
+	python -m covenant_evals.cli items check
+
+items-stats:
+	python -m covenant_evals.cli items stats
 
 budget:
 	python -m covenant_evals.cli budget
