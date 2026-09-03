@@ -26,26 +26,32 @@ The SEC requires this header. A missing or generic one returns 403 and blocks yo
 about ten minutes. The code refuses to make a request without a plausible one, so this is
 the first hard gate.
 
-### 2. Confirm the EDGAR pipeline actually works — 20 minutes
-
-**This has never been run against the live SEC.** Their servers are blocked from where I
-work, so every endpoint shape in `corpus/edgar.py` came from documentation, not observation.
-Three things to check on your first run:
-
-- The `_id` in search results really is `accession:filename`, and `_source` carries `adsh`,
-  `ciks`, `display_names`, `root_form`, `file_date`.
-- `https://efts.sec.gov/LATEST/search-index` works — uppercase `LATEST`; lowercase 404s.
-- How far back full-text search actually goes. There is a comment in the code saying to
-  verify this rather than trust it.
-
-Start small:
+### 2. Confirm the EDGAR pipeline actually works — 30 seconds
 
 ```bash
-make corpus-search Q='"credit agreement"' FORMS=8-K
+make corpus-doctor
 ```
 
-If the shapes differ from what the code expects, fix `parse_search_response` — that is the
-one function that would need changing.
+**This is the one thing I could not do for you.** sec.gov is unreachable from the machine
+this was built on, so every endpoint shape in `corpus/edgar.py` came from EDGAR's
+documentation rather than from a live response.
+
+The doctor makes four requests and checks one assumption at a time: the search endpoint
+answers, the envelope is `hits.hits`, `_id` is `accession:filename`, `_source` carries the
+five fields the parser reads, the parser produces usable hits, the filing index lists
+documents, one document downloads, and the segmenter finds sections in it.
+
+On any mismatch it prints **what it actually found** — "missing ['adsh']; present:
+['accession', 'ciks']" — and which function to change. If something differs:
+
+```bash
+make corpus-doctor PASTE=1
+```
+
+and send me the block it prints. It contains field names and one accession number, no
+document text.
+
+When it passes, delete this section: the caveat is discharged.
 
 ### 3. Build the corpus — 25 documents, a few hours spread over a week
 

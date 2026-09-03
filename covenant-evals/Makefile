@@ -1,4 +1,4 @@
-.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check items-check items-stats splits-freeze splits-check splits-status all
+.PHONY: test lint validate budget corpus-search corpus-add corpus-fetch corpus-status corpus-sections corpus-section corpus-locate corpus-check corpus-doctor items-check items-stats splits-freeze splits-check splits-status all
 
 test:
 	pytest -q
@@ -44,6 +44,12 @@ corpus-fetch:
 
 corpus-status:
 	python -m covenant_evals.cli corpus status
+
+# Prove the EDGAR pipeline works against the live SEC. Run this FIRST, before adding
+# any document: every endpoint shape in edgar.py came from documentation, not from a
+# live response. PASTE=1 adds a structure-only block that is safe to share.
+corpus-doctor:
+	python -m covenant_evals.cli corpus doctor $(if $(PASTE),--paste,)
 
 # REF is any unique part of an accession:filename, e.g. REF=0000950170-24-012345
 corpus-sections:

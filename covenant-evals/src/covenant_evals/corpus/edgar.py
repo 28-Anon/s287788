@@ -220,6 +220,24 @@ class EdgarClient:
 
     # -- search -------------------------------------------------------------------
 
+    def search_raw(
+        self,
+        query: str,
+        *,
+        forms: list[str] | None = None,
+        offset: int = 0,
+    ) -> bytes:
+        """The undecoded search response.
+
+        Exists so the doctor can inspect the envelope EDGAR actually returns rather than
+        only what the parser managed to make of it — the difference between "no results"
+        and "the field names changed" is the whole diagnosis.
+        """
+        params: dict[str, str] = {"q": query, "from": str(offset)}
+        if forms:
+            params["forms"] = ",".join(forms)
+        return self._get(f"{FULL_TEXT_SEARCH_URL}?{urllib.parse.urlencode(params)}")
+
     def search(
         self,
         query: str,

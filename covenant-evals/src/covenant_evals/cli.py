@@ -27,6 +27,8 @@ from .corpus import (
     find_spans,
     segment,
 )
+from .corpus.doctor import format_report
+from .corpus.doctor import run as run_doctor
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
 from .items import (
     cross_validate,
@@ -211,6 +213,19 @@ def cmd_corpus_fetch(args: argparse.Namespace) -> int:
 
     print("\n" + "  ".join(f"{status}: {n}" for status, n in sorted(counts.items())))
     return 1 if counts.get("failed") or counts.get("conflict") else 0
+
+
+def cmd_corpus_doctor(args: argparse.Namespace) -> int:
+    """Prove the EDGAR pipeline works against the live SEC, or say exactly what differs."""
+    try:
+        client = make_client()
+    except EdgarError as exc:
+        print(f"\n{exc}\n", file=sys.stderr)
+        return 1
+
+    report = run_doctor(client, query=args.query)
+    print(format_report(report, paste=args.paste))
+    return 0 if report.ok else 1
 
 
 def cmd_corpus_status() -> int:
@@ -799,6 +814,14 @@ def build_parser() -> argparse.ArgumentParser:
     locate.add_argument("ref")
     locate.add_argument("quote", help="the text you want to cite, in quotes")
 
+    doctor = corpus_sub.add_parser(
+        "doctor", help="check the EDGAR pipeline against the live SEC, one assumption at a time"
+    )
+    doctor.add_argument("--query", default='"credit agreement"')
+    doctor.add_argument(
+        "--paste", action="store_true", help="also print a structure-only block, safe to share"
+    )
+
     corpus_sub.add_parser("status", help="what state the corpus is in")
 
     return parser
@@ -845,6 +868,8 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_corpus_section(args)
             if args.corpus_command == "locate":
                 return cmd_corpus_locate(args)
+            if args.corpus_command == "doctor":
+                return cmd_corpus_doctor(args)
             if args.corpus_command == "status":
                 return cmd_corpus_status()
     except EdgarError as exc:
