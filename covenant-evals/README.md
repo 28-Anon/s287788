@@ -14,10 +14,14 @@ deliberately.
 ## Quick start
 
 ```bash
-pip install -e ".[dev]"      # puts a `covenant-evals` command on PATH
-pytest -q
-covenant-evals --help
+pip install -e ".[dev]"
+python -m pytest -q
+python -m covenant_evals.cli --help
 ```
+
+Installing also creates a `covenant-evals` command, but on Windows pip puts it in a
+`Scripts` folder that is not on PATH by default — so the docs use `python -m` (`py -m` in
+PowerShell), which never depends on PATH.
 
 Every `make X` below is a shortcut for `covenant-evals X`. The Makefile is a convenience on
 Unix; **on Windows use the `covenant-evals` command directly** — there is no `make` there

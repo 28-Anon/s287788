@@ -30,21 +30,49 @@ cd covenant-evals
 py -m pip install -e ".[dev]"
 
 # Prove it works
-covenant-evals --help
-pytest -q
+py -m pytest -q
+py -m covenant_evals.cli --help
 ```
 
-`pytest -q` should report **192 passed**. If it does, the project is running on your machine.
+`py -m pytest -q` should report **192 passed**. If it does, the project runs on your machine.
+
+### Why `py -m` and not just `pytest`
+
+pip installs `pytest.exe` and `covenant-evals.exe` into a `Scripts` folder that Windows does
+not put on PATH by default — it warns about this during install and it is easy to miss:
+
+```
+WARNING: The script covenant-evals.exe is installed in
+'C:\Users\...\Python\pythoncore-3.14-64\Scripts' which is not on PATH.
+```
+
+`py -m <module>` never depends on PATH, so **these docs use that form throughout.** It is
+the more reliable habit on Windows regardless.
+
+If you would rather type `covenant-evals` directly, add that folder to PATH — take the exact
+path out of the warning pip printed:
+
+```powershell
+# this session only
+$env:Path += ";C:\Users\salah\AppData\Local\Python\pythoncore-3.14-64\Scripts"
+
+# permanently, then restart the terminal
+$scripts = "C:\Users\salah\AppData\Local\Python\pythoncore-3.14-64\Scripts"
+[Environment]::SetEnvironmentVariable(
+    "Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";$scripts", "User")
+```
 
 | Docs say | On Windows type |
 |---|---|
-| `make test` | `pytest -q` |
-| `make corpus-doctor` | `covenant-evals corpus doctor` |
-| `make corpus-status` | `covenant-evals corpus status` |
-| `make items-check` | `covenant-evals items check` |
-| `make items-stats` | `covenant-evals items stats` |
-| `make splits-freeze` | `covenant-evals splits freeze` |
-| `make corpus-search Q='"credit agreement"'` | `covenant-evals corpus search --query '"credit agreement"'` |
+| `make test` | `py -m pytest -q` |
+| `make corpus-doctor` | `py -m covenant_evals.cli corpus doctor` |
+| `make corpus-status` | `py -m covenant_evals.cli corpus status` |
+| `make items-check` | `py -m covenant_evals.cli items check` |
+| `make items-stats` | `py -m covenant_evals.cli items stats` |
+| `make splits-freeze` | `py -m covenant_evals.cli splits freeze` |
+| `make corpus-search Q='"credit agreement"'` | `py -m covenant_evals.cli corpus search --query '"credit agreement"'` |
+
+With the Scripts folder on PATH, `py -m covenant_evals.cli` shortens to `covenant-evals`.
 
 ### 1. Set your EDGAR identity — 2 minutes
 

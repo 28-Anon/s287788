@@ -110,10 +110,14 @@ Nothing that does any AI yet. Deliberately. This week is just the foundations:
 ```bash
 cd covenant-evals
 pip install -e ".[dev]"
-pytest -q                        # the test suite
-covenant-evals items check       # "0 items — nothing to check yet"
-covenant-evals budget            # "$0.0"
+python -m pytest -q                          # the test suite
+python -m covenant_evals.cli items check     # "0 items — nothing to check yet"
+python -m covenant_evals.cli budget          # "$0.0"
 ```
+
+On Windows use `py` instead of `python`. The `python -m` form is deliberate: pip also
+installs a `covenant-evals` command, but Windows does not put its folder on PATH by
+default, and `-m` never depends on PATH.
 
 On Mac or Linux there is a `make` shortcut for each of these. On Windows there is no `make`
 — use the `covenant-evals` command, which does exactly the same thing.
