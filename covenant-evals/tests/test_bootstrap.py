@@ -15,13 +15,15 @@ from covenant_evals.corpus.manifest import Manifest
 GOOD_UA = "Ada Lovelace ada@analytical-engine.org"
 
 
-def hit_json(accession, filename, description="Credit Agreement", filed="2024-03-04"):
+def hit_json(accession, filename, description="Credit Agreement", filed="2024-03-04", cik=None):
+    """One search hit. By default every accession is a different company, since the caps
+    on documents-per-filing and per-company would otherwise dominate every test."""
     return {
         "_id": f"{accession}:{filename}",
         "_source": {
             "adsh": accession,
-            "ciks": ["0000320123"],
-            "display_names": ["Acme Corp (ACME)"],
+            "ciks": [cik or f"00003{accession[-5:]}"],
+            "display_names": [f"Company {accession[-3:]} (ACME)"],
             "root_forms": ["8-K"],
             "file_type": "EX-10.1",
             "file_description": description,
@@ -145,3 +147,99 @@ def test_bootstrap_is_idempotent():
     assert second == []
     assert already == 5
     assert len(manifest.agreements) == 5
+
+
+# -- caps, from a live run that returned three filings each for three companies ----
+
+
+def test_only_one_document_is_taken_from_a_single_filing():
+    # A live run took ex101 and ex102 from the same accession three separate times. Two
+    # exhibits in one filing are usually the agreement and something attached to it.
+    client, _ = client_returning(
+        {
+            "Required Lenders": [
+                hit_json("0001193125-23-232602", "d415166dex101.htm"),
+                hit_json("0001193125-23-232602", "d415166dex102.htm"),
+                hit_json("0001193125-24-268352", "d868176dex101.htm"),
+            ]
+        }
+    )
+    accessions = [c.hit.accession for c in gather(client)]
+    assert accessions.count("0001193125-23-232602") == 1
+    assert len(accessions) == 2
+
+
+def test_no_single_company_dominates_the_corpus():
+    # SEACOR, Bristow and Sequential Brands each appeared three times in twenty-five.
+    client, _ = client_returning(
+        {
+            "Required Lenders": [
+                hit_json(f"000119312{i}-23-000001", "ex101.htm", cik="0001690334") for i in range(5)
+            ]
+        }
+    )
+    assert len(gather(client)) == 2
+
+
+def test_the_cap_applies_across_queries_not_within_each():
+    # A company found under three different phrases is still one company.
+    same_company = [
+        hit_json(f"000119312{i}-23-000001", "ex101.htm", cik="0001690334") for i in range(3)
+    ]
+    client, _ = client_returning(
+        {
+            "Required Lenders": same_company,
+            "Majority Lenders": same_company,
+            "Finance Parties": same_company,
+        }
+    )
+    assert len(gather(client)) == 2
+
+
+# -- count means the size of the corpus, not how many to add now -------------------
+
+
+def test_running_bootstrap_twice_does_not_double_the_corpus():
+    # The live bug: two runs of "--count 25" produced fifty documents.
+    client, _ = client_returning(
+        {"Required Lenders": [hit_json(f"0000950170-24-{i:06d}", "ex101.htm") for i in range(40)]}
+    )
+    manifest = Manifest()
+    bootstrap(client, manifest, count=10)
+    bootstrap(client, manifest, count=10)
+
+    assert len(manifest.agreements) == 10
+
+
+def test_bootstrap_tops_up_a_partial_corpus():
+    client, _ = client_returning(
+        {"Required Lenders": [hit_json(f"0000950170-24-{i:06d}", "ex101.htm") for i in range(40)]}
+    )
+    manifest = Manifest()
+    bootstrap(client, manifest, count=4)
+    added, _ = bootstrap(client, manifest, count=10)
+
+    assert len(added) == 6
+    assert len(manifest.agreements) == 10
+
+
+def test_a_full_corpus_makes_no_requests_at_all():
+    client, calls = client_returning(
+        {"Required Lenders": [hit_json("0000950170-24-000001", "ex101.htm")]}
+    )
+    manifest = Manifest()
+    manifest.add(
+        __import__("covenant_evals.corpus.manifest", fromlist=["Agreement"]).Agreement(
+            accession="0000950170-24-000001",
+            filename="ex101.htm",
+            cik="320123",
+            company="Acme",
+            form="8-K",
+            filed="2024-03-04",
+        )
+    )
+    added, already = bootstrap(client, manifest, count=1)
+
+    assert added == []
+    assert already == 1
+    assert calls == [], "a full corpus should not hit EDGAR at all"

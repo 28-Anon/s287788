@@ -308,9 +308,14 @@ def cmd_corpus_bootstrap(args: argparse.Namespace) -> int:
     manifest.save()
 
     for agreement in added:
-        print(f"{agreement.ref}  {agreement.company}  {agreement.filed}")
+        print(f"{agreement.ref}")
+        print(f"    {agreement.company}  {agreement.filed}")
+        print(f"    {agreement.note}")
 
-    print(f"\n{len(added)} added" + (f", {already} already in the manifest" if already else ""))
+    total = len(manifest.agreements)
+    print(f"\n{len(added)} added; the manifest now holds {total} document(s)")
+    if already:
+        print(f"{already} candidate(s) were already in it")
     print(
         "\nThese are CANDIDATES, not a corpus. Before fetching:\n"
         "  - delete anything that is not a real credit agreement\n"

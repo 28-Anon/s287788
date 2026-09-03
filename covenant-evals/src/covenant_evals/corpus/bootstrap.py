@@ -50,6 +50,15 @@ class Candidate:
         )
 
 
+#: Two exhibits from one filing are usually the agreement and something attached to it —
+#: a guarantee, a security agreement, a second facility. They are not two data points.
+MAX_PER_FILING = 1
+
+#: One borrower's documents should not dominate. A live run returned three SEACOR filings,
+#: three Bristow and three Sequential Brands out of twenty-five.
+MAX_PER_COMPANY = 2
+
+
 def gather(
     client: EdgarClient,
     *,
@@ -90,11 +99,30 @@ def gather(
             unique.append(Candidate(hit=hit, query=query, law_hint=law_hint))
         by_query.append(unique)
 
+    # Caps are applied after interleaving, not inside each query, so a company that shows
+    # up under three different phrases is still capped once overall.
+
     interleaved: list[Candidate] = []
+    per_filing: dict[str, int] = {}
+    per_company: dict[str, int] = {}
+
     for index in range(max((len(group) for group in by_query), default=0)):
         for group in by_query:
-            if index < len(group):
-                interleaved.append(group[index])
+            if index >= len(group):
+                continue
+            candidate = group[index]
+
+            accession = candidate.hit.accession
+            company = candidate.hit.cik
+
+            if per_filing.get(accession, 0) >= MAX_PER_FILING:
+                continue
+            if per_company.get(company, 0) >= MAX_PER_COMPANY:
+                continue
+
+            per_filing[accession] = per_filing.get(accession, 0) + 1
+            per_company[company] = per_company.get(company, 0) + 1
+            interleaved.append(candidate)
 
     return interleaved
 
@@ -120,7 +148,18 @@ def bootstrap(
     start_date: str | None = None,
     end_date: str | None = None,
 ) -> tuple[list[Agreement], int]:
-    """Add up to `count` new candidates to the manifest. Returns (added, already_present)."""
+    """Bring the manifest up to `count` documents. Returns (added, already_present).
+
+    `count` is the size of the corpus you want, not the number to add this run. Running
+    bootstrap twice with the default gave fifty documents rather than twenty-five, which
+    is not what "--count 25" says and not what anyone would expect.
+    """
+    existing = len(manifest.agreements)
+    room = max(0, count - existing)
+
+    if room == 0:
+        return [], existing
+
     candidates = gather(
         client, queries=queries, forms=forms, start_date=start_date, end_date=end_date
     )
@@ -129,7 +168,7 @@ def bootstrap(
     already = 0
 
     for agreement in to_agreements(candidates):
-        if len(added) >= count:
+        if len(added) >= room:
             break
         if manifest.get(agreement.ref) is not None:
             already += 1
