@@ -94,6 +94,17 @@ EDGAR_USER_AGENT="Salah Missana your.email@example.com"
 The SEC requires this header. A missing or generic one returns 403 and blocks your IP for
 about ten minutes, so the code refuses to make a request without a plausible one.
 
+**Then check it, before touching the network:**
+
+```powershell
+py -m covenant_evals.cli config check
+```
+
+It makes no network calls. It confirms the file is found, catches a `.env.txt` next to it,
+runs your User-Agent through the same validation EDGAR would, and confirms `.env` is
+gitignored so your email is never committed. Your address is masked in the output, so the
+result is safe to paste anywhere.
+
 ### 2. Confirm the EDGAR pipeline actually works — 30 seconds
 
 ```bash

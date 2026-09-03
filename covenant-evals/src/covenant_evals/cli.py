@@ -29,6 +29,7 @@ from .corpus import (
 )
 from .corpus.doctor import format_report
 from .corpus.doctor import run as run_doctor
+from .corpus.edgar import validate_user_agent
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
 from .items import (
     cross_validate,
@@ -117,6 +118,93 @@ def cmd_budget() -> int:
     for model, bucket in sorted(totals["by_model"].items()):  # type: ignore[union-attr]
         print(f"  {model}: {bucket['calls']} calls, ${bucket['usd']}")
     return 0
+
+
+# ---------------------------------------------------------------------------
+# config
+# ---------------------------------------------------------------------------
+
+
+def mask_email(value: str) -> str:
+    """Show enough of an address to check it, not enough to be worth pasting anywhere.
+
+    "Salah Missana salah@example.com" -> "Salah Missana s****@example.com"
+    """
+    parts = value.split()
+    out = []
+    for part in parts:
+        if "@" in part and len(part.split("@")[0]) > 1:
+            local, _, domain = part.partition("@")
+            out.append(f"{local[0]}{'*' * (len(local) - 1)}@{domain}")
+        else:
+            out.append(part)
+    return " ".join(out)
+
+
+def cmd_config_check() -> int:
+    """Is this machine set up? Makes no network calls — run it before `corpus doctor`.
+
+    Exists because the failure it catches is genuinely confusing: a .env saved as .env.txt
+    is silently ignored, and the resulting 403 from EDGAR looks like an SEC problem rather
+    than a filename problem.
+    """
+    ok = True
+    env_path = REPO_ROOT / ".env"
+
+    if env_path.exists():
+        print(f"[PASS] .env found at {env_path}")
+    else:
+        ok = False
+        print(f"[FAIL] no .env at {env_path}")
+        print("       fix: copy .env.example to .env and fill it in")
+
+    # The trap: Notepad appends .txt unless you set "Save as type" to All Files.
+    strays = [
+        candidate
+        for candidate in (".env.txt", ".env.env", "env", ".env.example.txt")
+        if (REPO_ROOT / candidate).exists()
+    ]
+    if strays:
+        ok = False
+        print(f"[FAIL] found {strays} next to it — a mis-saved .env is ignored silently")
+        print("       fix: rename it to exactly .env  (PowerShell: Rename-Item .env.txt .env)")
+
+    load_dotenv()
+    user_agent = os.environ.get("EDGAR_USER_AGENT", "")
+
+    if not user_agent:
+        ok = False
+        print("[FAIL] EDGAR_USER_AGENT is not set")
+        print('       fix: add it to .env, e.g. EDGAR_USER_AGENT="Ada Lovelace ada@site.org"')
+    else:
+        try:
+            validate_user_agent(user_agent)
+            print(f"[PASS] EDGAR_USER_AGENT reads as: {mask_email(user_agent)}")
+            print("       (masked here so the output is safe to paste; the file has it in full)")
+        except EdgarError as exc:
+            ok = False
+            print(f"[FAIL] EDGAR_USER_AGENT is set but will be rejected: {mask_email(user_agent)}")
+            print(f"       {str(exc).splitlines()[0]}")
+
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        print("[PASS] ANTHROPIC_API_KEY is set (not needed until week 8)")
+    else:
+        print("[ ok ] ANTHROPIC_API_KEY not set — fine, nothing needs it until week 8")
+
+    gitignore = REPO_ROOT / ".gitignore"
+    if gitignore.exists() and ".env" in gitignore.read_text(encoding="utf-8").split():
+        print("[PASS] .env is gitignored — your email will not be committed")
+    else:
+        ok = False
+        print("[FAIL] .env is NOT gitignored. Add it before committing anything.")
+
+    print()
+    print(
+        "Ready. Next: covenant-evals corpus doctor"
+        if ok
+        else "Fix the FAILs above, then run this again."
+    )
+    return 0 if ok else 1
 
 
 # ---------------------------------------------------------------------------
@@ -772,6 +860,10 @@ def build_parser() -> argparse.ArgumentParser:
     splits_sub.add_parser("sync", help="copy splits.json into the manifest for display")
     sub.add_parser("budget", help="report API spend so far")
 
+    config = sub.add_parser("config", help="check this machine is set up")
+    config_sub = config.add_subparsers(dest="config_command", required=True)
+    config_sub.add_parser("check", help="verify .env and EDGAR identity, no network calls")
+
     corpus = sub.add_parser("corpus", help="build and inspect the document corpus")
     corpus_sub = corpus.add_subparsers(dest="corpus_command", required=True)
 
@@ -855,6 +947,9 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_splits_sync()
         if args.command == "budget":
             return cmd_budget()
+        if args.command == "config":
+            if args.config_command == "check":
+                return cmd_config_check()
         if args.command == "corpus":
             if args.corpus_command == "search":
                 return cmd_corpus_search(args)
