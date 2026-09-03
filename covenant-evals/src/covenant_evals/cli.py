@@ -267,6 +267,8 @@ def cmd_corpus_add(args: argparse.Namespace) -> int:
         company=args.company or "",
         form=str(entry.get("type", "")),
         filed=args.filed or "",
+        file_type=str(entry.get("type", "")),
+        description=str(entry.get("description", "")),
     )
     manifest.add(
         agreement_from_hit(hit, note=args.note or "", governing_law=args.governing_law or "")

@@ -517,3 +517,68 @@ def verify_span(document: str, span: tuple[int, int], quote: str) -> bool:
     if not (0 <= start < end <= len(document)):
         return False
     return " ".join(document[start:end].split()) == " ".join(quote.split())
+
+
+# ---------------------------------------------------------------------------
+# Diagnosing a document the segmenter cannot read
+# ---------------------------------------------------------------------------
+
+
+def pattern_census(document: str) -> dict[str, object]:
+    """Count how many lines match each heading pattern, and how many are set off.
+
+    This is the diagnostic for "the segmenter found nothing", and it separates the two
+    causes that look identical from the outside:
+
+    - `matched` high but `set_off` near zero -> the document has no blank lines, so the
+      strict rule rejects every real heading. A normalisation problem.
+    - `matched` zero                         -> the headings do not look like any known
+      style. A pattern problem, and the samples show what to add.
+
+    Filings are public documents, so the samples are shareable — but they are truncated
+    regardless, because a diagnostic should carry the shape of the text and not its
+    substance.
+    """
+    patterns = {
+        "article": _ARTICLE,
+        "us_section": _US_SECTION,
+        "lma_clause": _LMA_CLAUSE,
+        "decimal": _DECIMAL,
+        "parenthesised": _PARENTHESISED,
+    }
+
+    counts = {name: {"matched": 0, "set_off": 0} for name in patterns}
+    samples: dict[str, list[str]] = {name: [] for name in patterns}
+
+    lines = document.splitlines()
+    blank = 0
+    previous_blank = True
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            blank += 1
+            previous_blank = True
+            continue
+
+        for name, pattern in patterns.items():
+            if pattern.match(stripped):
+                counts[name]["matched"] += 1
+                if previous_blank:
+                    counts[name]["set_off"] += 1
+                if len(samples[name]) < 3:
+                    samples[name].append(stripped[:90])
+                break
+
+        previous_blank = False
+
+    non_blank = len(lines) - blank
+    return {
+        "lines": len(lines),
+        "blank_lines": blank,
+        "blank_line_ratio": round(blank / len(lines), 3) if lines else 0.0,
+        "mean_line_length": round(len(document) / non_blank, 1) if non_blank else 0.0,
+        "counts": counts,
+        "samples": samples,
+        "first_lines": [ln.strip()[:90] for ln in lines[:20] if ln.strip()][:8],
+    }

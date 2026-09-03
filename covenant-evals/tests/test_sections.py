@@ -361,3 +361,36 @@ def test_a_short_but_well_formed_document_does_not_trigger_the_fallback():
     # Three real sections is a short document, not a failed parse. Falling back here would
     # trade correct output for false positives.
     assert not any("relaxed rules" in w for w in segment(US_DOC).warnings)
+
+
+# -- the census, which is how a segmentation failure gets diagnosed remotely -------
+
+
+def test_census_separates_not_matched_from_matched_but_rejected():
+    from covenant_evals.corpus.sections import pattern_census
+
+    # Headings present and set off by blank lines: matched and accepted.
+    spaced = pattern_census(US_DOC)
+    assert spaced["counts"]["us_section"]["matched"] >= 3
+    assert spaced["counts"]["us_section"]["set_off"] >= 3
+
+    # The same headings with no blank lines anywhere: matched, but all rejected. This is
+    # the case that looks identical to "no headings found" from the outside.
+    crammed = pattern_census(US_DOC.replace("\n\n", "\n"))
+    assert crammed["counts"]["us_section"]["matched"] >= 3
+    assert crammed["counts"]["us_section"]["set_off"] == 0
+
+
+def test_census_reports_nothing_matched_when_there_are_no_headings():
+    from covenant_evals.corpus.sections import pattern_census
+
+    census = pattern_census("Plain prose with no headings at all.\n" * 50)
+    assert all(c["matched"] == 0 for c in census["counts"].values())
+
+
+def test_census_samples_are_truncated():
+    from covenant_evals.corpus.sections import pattern_census
+
+    long_heading = "SECTION 7.01. " + "x" * 500
+    census = pattern_census(f"{long_heading}\n\nbody text\n")
+    assert all(len(sample) <= 90 for samples in census["samples"].values() for sample in samples)

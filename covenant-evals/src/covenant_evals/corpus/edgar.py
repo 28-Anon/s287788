@@ -51,14 +51,21 @@ class EdgarError(RuntimeError):
 
 @dataclass(frozen=True)
 class Hit:
-    """One document returned by full-text search."""
+    """One document returned by full-text search.
+
+    The field names below are what EDGAR actually returns, confirmed against a live
+    response on 2026-09-03 — not what its documentation implies. The two differ: there is
+    no `root_form`, only `root_forms` (a list) and `form`.
+    """
 
     accession: str  # with dashes, e.g. "0000950170-24-012345"
     filename: str  # e.g. "ex101creditagreement.htm"
     cik: str  # numeric, no leading zeros, e.g. "320193"
     company: str
-    form: str
+    form: str  # the filing: "8-K", "10-Q"
     filed: str  # ISO date as EDGAR reports it
+    file_type: str = ""  # the exhibit within it: "EX-10.1". This is the useful one
+    description: str = ""  # EDGAR's own description of the exhibit
 
     @property
     def ref(self) -> str:
@@ -328,14 +335,22 @@ def parse_search_response(body: bytes) -> list[Hit]:
 
         display_names = source.get("display_names") or [""]
 
+        # EDGAR returns `root_forms` (a list) and `form` (a string). An earlier version of
+        # this code read `root_form`, which does not exist, and silently recorded "" as the
+        # form for every hit — the kind of bug that only appears against the real service.
+        root_forms = source.get("root_forms") or []
+        form = root_forms[0] if root_forms else source.get("form", "")
+
         parsed.append(
             Hit(
                 accession=source.get("adsh", accession),
                 filename=filename,
                 cik=_cik_numeric(ciks[0]),
                 company=display_names[0],
-                form=source.get("root_form", ""),
+                form=form,
                 filed=source.get("file_date", ""),
+                file_type=source.get("file_type", ""),
+                description=source.get("file_description", ""),
             )
         )
 

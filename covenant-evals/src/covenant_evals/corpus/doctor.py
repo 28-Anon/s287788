@@ -25,11 +25,21 @@ from .edgar import (
     parse_search_response,
 )
 from .normalise import normalise_html
-from .sections import segment
+from .sections import pattern_census, segment
 
-#: What parse_search_response reads out of each hit. If EDGAR renames any of these, the
-#: parser silently produces nothing useful, so they are checked individually.
-EXPECTED_SOURCE_KEYS = ("adsh", "ciks", "display_names", "root_form", "file_date")
+#: What parse_search_response reads out of each hit, as EDGAR actually names them —
+#: confirmed against a live response on 2026-09-03. Documentation implied `root_form`;
+#: the service returns `root_forms`, and reading the wrong one silently recorded an empty
+#: form for every hit rather than failing.
+EXPECTED_SOURCE_KEYS = ("adsh", "ciks", "display_names", "file_date")
+
+#: The form lives under one of these. Either is fine; neither is not.
+FORM_KEYS = ("root_forms", "form")
+
+#: Exhibit types that are plausibly a credit agreement. Used to pick a sensible sample
+#: document rather than whatever happened to sort first.
+CREDIT_EXHIBIT_HINTS = ("ex-10", "ex-4")
+CREDIT_NAME_HINTS = ("credit", "loan", "facility", "financing")
 
 
 @dataclass
@@ -38,6 +48,10 @@ class Step:
     ok: bool
     detail: str = ""
     fix: str = ""
+    #: "fail" stops the verdict; "warn" is reported but does not mean the pipeline is
+    #: broken. One oddly-shaped document is not a broken pipeline, and conflating the two
+    #: teaches you to ignore the output.
+    level: str = "fail"
 
 
 @dataclass
@@ -45,13 +59,19 @@ class Report:
     steps: list[Step] = field(default_factory=list)
     observed: dict[str, Any] = field(default_factory=dict)
 
-    def add(self, name: str, ok: bool, detail: str = "", fix: str = "") -> bool:
-        self.steps.append(Step(name, ok, detail, fix))
+    def add(
+        self, name: str, ok: bool, detail: str = "", fix: str = "", level: str = "fail"
+    ) -> bool:
+        self.steps.append(Step(name, ok, detail, fix, level))
         return ok
 
     @property
     def ok(self) -> bool:
-        return all(step.ok for step in self.steps)
+        return all(step.ok or step.level == "warn" for step in self.steps)
+
+    @property
+    def warnings(self) -> list[Step]:
+        return [s for s in self.steps if not s.ok and s.level == "warn"]
 
 
 def run(client: EdgarClient, *, query: str = '"credit agreement"') -> Report:
@@ -107,6 +127,10 @@ def run(client: EdgarClient, *, query: str = '"credit agreement"') -> Report:
 
     source = first.get("_source", {})
     missing = [key for key in EXPECTED_SOURCE_KEYS if key not in source]
+    has_form = any(key in source for key in FORM_KEYS)
+    if not has_form:
+        missing = [*missing, f"one of {list(FORM_KEYS)}"]
+
     report.add(
         "_source carries the expected fields",
         not missing,
@@ -124,8 +148,15 @@ def run(client: EdgarClient, *, query: str = '"credit agreement"') -> Report:
     ):
         return report
 
-    hit = parsed[0]
+    hit = _pick_sample(parsed)
     report.observed["sample_url"] = hit.url
+    report.observed["sample_file_type"] = hit.file_type
+    report.add(
+        "sample document chosen",
+        True,
+        f"{hit.filename} ({hit.file_type or 'type unknown'}) from {hit.form or '?'} "
+        f"filed {hit.filed}",
+    )
 
     # 5 -- filing index ----------------------------------------------------------------
     try:
@@ -167,25 +198,49 @@ def run(client: EdgarClient, *, query: str = '"credit agreement"') -> Report:
     top = [s for s in segmentation if s.level <= 1]
     detail = f"{len(top)} top-level sections, {segmentation.count} total"
     if segmentation.warnings:
-        detail += f", {len(segmentation.warnings)} warning(s)"
+        detail += f" — {segmentation.warnings[0]}"
+
     report.add(
         "segmenter finds sections",
         bool(top),
         detail,
-        "This one document may simply be an odd shape — check a few before changing "
-        "patterns. `corpus sections --check` runs the whole corpus at once.",
+        "One document is not a verdict on the segmenter — amendments, term sheets and "
+        "notices are not shaped like an agreement. Re-run with --paste and send the "
+        "census: it says whether the headings were not matched at all, or were matched "
+        "but rejected for not being set off by a blank line.",
+        level="warn",
     )
     report.observed["section_labels"] = [s.label for s in top[:8]]
     report.observed["segmentation_warnings"] = segmentation.warnings
+    if not top:
+        report.observed["census"] = pattern_census(text)
 
     return report
+
+
+def _pick_sample(hits: list) -> object:
+    """Choose a hit that is plausibly a credit agreement.
+
+    The first version took hits[0], which on a real search was a second amendment — a
+    document with none of the structure the segmenter looks for. Diagnosing the pipeline
+    with an unrepresentative sample tells you very little.
+    """
+
+    def score(hit) -> tuple[int, int]:
+        exhibit = 1 if any(h in hit.file_type.lower() for h in CREDIT_EXHIBIT_HINTS) else 0
+        name = f"{hit.filename} {hit.description}".lower()
+        named = 1 if any(h in name for h in CREDIT_NAME_HINTS) else 0
+        amendment = -1 if "amend" in name else 0
+        return (exhibit + named + amendment, -len(hit.filename))
+
+    return max(hits, key=score)
 
 
 def format_report(report: Report, *, paste: bool = False) -> str:
     """Human-readable result, with an optional structure-only block to send on."""
     lines = []
     for step in report.steps:
-        mark = "PASS" if step.ok else "FAIL"
+        mark = "PASS" if step.ok else ("WARN" if step.level == "warn" else "FAIL")
         lines.append(f"[{mark}] {step.name}")
         if step.detail:
             lines.append(f"       {step.detail}")
@@ -198,6 +253,11 @@ def format_report(report: Report, *, paste: bool = False) -> str:
             "The pipeline works against the live SEC. The 'never run for real' caveat in "
             "YOUR-TURN.md is now discharged — delete it."
         )
+        if report.warnings:
+            lines.append(
+                f"{len(report.warnings)} warning(s) above: worth a look, but they do not "
+                "mean anything is broken."
+            )
     else:
         lines.append(
             "Something differs from what the code expects. Re-run with --paste and send "

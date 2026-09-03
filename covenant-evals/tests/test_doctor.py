@@ -21,11 +21,17 @@ DOC_HTML = b"""<html><body>
 
 
 def search_body(**source_overrides) -> bytes:
+    # These are EDGAR's real field names, taken from a live response on 2026-09-03.
+    # The earlier fixture used "root_form", which the service does not return — which is
+    # exactly why the mistake survived until someone ran it for real.
     source = {
         "adsh": "0000950170-24-012345",
         "ciks": ["0000320123"],
         "display_names": ["Acme Corp (ACME)"],
-        "root_form": "8-K",
+        "root_forms": ["8-K"],
+        "form": "8-K",
+        "file_type": "EX-10.1",
+        "file_description": "Credit Agreement",
         "file_date": "2024-03-04",
     }
     source.update(source_overrides)
@@ -84,6 +90,7 @@ def test_a_working_pipeline_passes_every_step():
         "_id is accession:filename",
         "_source carries the expected fields",
         "parser produces hits",
+        "sample document chosen",
         "filing index lists documents",
         "document downloads",
         "segmenter finds sections",
@@ -172,3 +179,59 @@ def test_the_paste_block_carries_structure_not_content():
 
 def test_a_clean_run_says_the_caveat_is_discharged():
     assert "caveat" in format_report(run(healthy()))
+
+
+# -- sample selection ------------------------------------------------------------
+
+
+def test_the_sample_prefers_an_agreement_over_an_amendment():
+    # The first live run picked a second amendment, which has none of the structure the
+    # segmenter looks for — and then reported the segmenter as broken.
+    from covenant_evals.corpus.doctor import _pick_sample
+    from covenant_evals.corpus.edgar import Hit
+
+    amendment = Hit(
+        accession="0001005229-20-000280",
+        filename="cm-2ndamendmentexecuted.htm",
+        cik="320123",
+        company="Acme",
+        form="8-K",
+        filed="2020-01-01",
+        file_type="EX-10.1",
+        description="Second Amendment to Credit Agreement",
+    )
+    agreement = Hit(
+        accession="0000950170-24-012345",
+        filename="ex101creditagreement.htm",
+        cik="320123",
+        company="Acme",
+        form="8-K",
+        filed="2024-03-04",
+        file_type="EX-10.1",
+        description="Credit Agreement",
+    )
+
+    assert _pick_sample([amendment, agreement]) is agreement
+    assert _pick_sample([agreement, amendment]) is agreement
+
+
+def test_an_unreadable_document_is_a_warning_not_a_failure():
+    # Structure that the segmenter cannot read is a fact about one document, not a broken
+    # pipeline. Conflating the two teaches you to ignore the output.
+    prose = (
+        b"<html><body><p>" + b"Plain prose with no headings at all. " * 200 + b"</p></body></html>"
+    )
+    report = run(
+        client_for(
+            {
+                "search-index": Response(200, search_body()),
+                "index.json": Response(200, INDEX_BODY),
+                "ex101.htm": Response(200, prose),
+            }
+        )
+    )
+    step = steps(report)["segmenter finds sections"]
+    assert not step.ok
+    assert step.level == "warn"
+    assert report.ok, "warnings must not fail the run"
+    assert "census" in report.observed, "an unreadable document must attach the diagnosis"
