@@ -54,10 +54,10 @@ LLM judge is used.
 
 ```bash
 cp .env.example .env          # then set EDGAR_USER_AGENT to your name and real email
-make corpus-search Q='"Majority Lenders"'
-make corpus-add REF=0000950170-24-012345:ex101.htm CIK=320123 LAW=English
-make corpus-fetch
-make corpus-status
+covenant-evals corpus search --query '"Majority Lenders"'
+covenant-evals corpus add 0000950170-24-012345:ex101.htm --cik 320123 --governing-law English
+covenant-evals corpus fetch
+covenant-evals corpus status
 ```
 
 `search` finds candidates and downloads nothing. `add` records one document in the manifest.
@@ -69,10 +69,10 @@ broken and you need to know.
 ### Finding your way around a document
 
 ```bash
-make corpus-sections REF=0000950170-24-012345 OFFSETS=1   # the section tree
+covenant-evals corpus sections 0000950170-24-012345 --offsets   # the section tree
 make corpus-section  REF=0000950170-24-012345 ADDR='7.02(b)'
 make corpus-locate   REF=0000950170-24-012345 Q='not to exceed the greater of'
-make corpus-check                                          # segment everything, report problems
+covenant-evals corpus sections --check                                          # segment everything, report problems
 ```
 
 `section` and `locate` both print a `gold_span: [start, end]` line ready to paste straight
@@ -82,7 +82,7 @@ ambiguous and the span you record may not be the passage you meant.
 
 Segmentation is heuristic and handles both US (`ARTICLE VII` / `SECTION 7.02`) and English
 LMA (`23. NEGATIVE COVENANTS` / `23.1`) numbering. It emits warnings rather than guessing
-quietly; `make corpus-check` runs it across the whole corpus at once.
+quietly; `covenant-evals corpus sections --check` runs it across the whole corpus at once.
 
 ### Jurisdiction
 
@@ -99,9 +99,9 @@ Useful searches for English-law documents: `"Majority Lenders"`, `"governed by E
 ## Splits
 
 ```bash
-make splits-freeze     # once, after the corpus is complete
-make splits-check
-make splits-status     # composition, and whether heldout has ever been opened
+covenant-evals splits freeze     # once, after the corpus is complete
+covenant-evals splits check
+covenant-evals splits status     # composition, and whether heldout has ever been opened
 ```
 
 By document, never by item. Stratified by governing law so the US/English comparison is not
@@ -117,8 +117,8 @@ once, in week 22, on purpose.
 ```bash
 covenant-evals items new --ref ... --section '7.01(b)' --question '...' \
     --type boolean --gold false --quote '...' --rationale '...' --traps basket_cap
-make items-check      # schema, plus every item against the document it cites
-make items-stats      # the mix: answer types, difficulty, traps, documents
+covenant-evals items check      # schema, plus every item against the document it cites
+covenant-evals items stats      # the mix: answer types, difficulty, traps, documents
 ```
 
 You paste a quote; the tool finds the offsets, pins the document hash, and refuses the item

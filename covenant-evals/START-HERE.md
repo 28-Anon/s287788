@@ -99,7 +99,7 @@ Nothing that does any AI yet. Deliberately. This week is just the foundations:
 | `src/covenant_evals/items.py` | Reads your question files off disk and checks them all |
 | `src/covenant_evals/budget.py` | Tracks what you're spending on API calls, so month 4 has no nasty surprise |
 | `src/covenant_evals/cli.py` | Two commands: check my questions, show my spending |
-| `tests/` | 28 small tests proving the above actually works. Run `make test` |
+| `tests/` | 28 small tests proving the above actually works. Run `python -m pytest -q` |
 | `docs/LIMITATIONS.md` | An honest list of what this project *can't* tell you. Written now, before any results exist, because it's much harder to be honest once you've got a number you're proud of |
 | `docs/METHODOLOGY.md` | The rules you're promising to follow. Mostly blanks to fill in as you go |
 | `docs/TAXONOMY.md` | Empty. This becomes the catalogue of *ways the AI fails* — the most valuable thing you'll produce |
@@ -131,10 +131,10 @@ Code that goes and gets the contracts for you.
 
 | Command | What it does |
 |---|---|
-| `make corpus-search Q='"Majority Lenders"'` | Searches every SEC filing for that phrase. Downloads nothing — just shows you what exists |
-| `make corpus-add REF=... CIK=... LAW=English` | "Yes, I want that one." Writes it into the manifest |
-| `make corpus-fetch` | Downloads them, strips the HTML down to plain text, and fingerprints the result |
-| `make corpus-status` | How many you have, how many still to get |
+| `covenant-evals corpus search --query '"Majority Lenders"'` | Searches every SEC filing for that phrase. Downloads nothing — just shows you what exists |
+| `covenant-evals corpus add ... --cik ... --governing-law English` | "Yes, I want that one." Writes it into the manifest |
+| `covenant-evals corpus fetch` | Downloads them, strips the HTML down to plain text, and fingerprints the result |
+| `covenant-evals corpus status` | How many you have, how many still to get |
 
 Three ideas in there are worth understanding, because they come up again and again:
 
@@ -195,8 +195,8 @@ them.
 Two commands, and the second is the one you'll live in from week 4:
 
 ```bash
-make corpus-section REF=0000950170-24-012345 ADDR='7.02(b)'
-make corpus-locate  REF=0000950170-24-012345 Q='not to exceed the greater of $35,000,000'
+covenant-evals corpus section 0000950170-24-012345 '7.02(b)'
+covenant-evals corpus locate 0000950170-24-012345 'not to exceed the greater of $35,000,000'
 ```
 
 `section` shows you a clause. `locate` takes a sentence you want to quote and tells you
@@ -239,7 +239,7 @@ corrupted a chunk of your labels months later.
 
 **That is the entire thesis of this project, happening to you on week 3.** A system can be
 confidently, silently wrong, and the only thing that catches it is someone deliberately
-checking against reality. Both are now regression tests, and `make corpus-check` runs the
+checking against reality. Both are now regression tests, and `covenant-evals corpus sections --check` runs the
 segmenter over every document at once so the next one gets found on 25 documents rather
 than in one broken label.
 
@@ -291,7 +291,7 @@ file. **You never count characters.**
 | *section '9.99' does not resolve* | Typo, or you're in the wrong document |
 | *numeric answers need a unit* | 35 million what? |
 
-**`make items-check` re-checks everything, later.** For every item: is the document still
+**`covenant-evals items check` re-checks everything, later.** For every item: is the document still
 the one you labelled, does the section still exist, is the quote still at those offsets, and
 **is the quote inside the section you cited**. That last one catches the item that looks
 perfect and teaches the wrong lesson.

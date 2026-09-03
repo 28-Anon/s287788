@@ -12,8 +12,12 @@ corpus yet — the repository has zero documents in it.
 
 ### 0. Get it running — 10 minutes, Windows
 
-You are on Windows PowerShell, where `make` does not exist. It is a Unix shortcut, not part
-of the project — **every `make X` in these docs has an exact equivalent: `covenant-evals X`.**
+You are on Windows PowerShell. **These docs no longer use `make` anywhere** — it is a Unix
+tool that does not exist on Windows and nothing in this project needs it. The Makefile is
+still there as a shortcut for Unix users; ignore it.
+
+Wherever you see `covenant-evals X`, type **`py -m covenant_evals.cli X`** — identical, and
+it does not depend on PATH. Or use the wrapper: **`.\dev.ps1 X`**.
 
 ```powershell
 # Python 3.11+ — check you have it
@@ -64,13 +68,13 @@ $scripts = "C:\Users\salah\AppData\Local\Python\pythoncore-3.14-64\Scripts"
 
 | Docs say | On Windows type |
 |---|---|
-| `make test` | `py -m pytest -q` |
-| `make corpus-doctor` | `py -m covenant_evals.cli corpus doctor` |
-| `make corpus-status` | `py -m covenant_evals.cli corpus status` |
-| `make items-check` | `py -m covenant_evals.cli items check` |
-| `make items-stats` | `py -m covenant_evals.cli items stats` |
-| `make splits-freeze` | `py -m covenant_evals.cli splits freeze` |
-| `make corpus-search Q='"credit agreement"'` | `py -m covenant_evals.cli corpus search --query '"credit agreement"'` |
+| `python -m pytest -q` | `py -m pytest -q` |
+| `covenant-evals corpus doctor` | `py -m covenant_evals.cli corpus doctor` |
+| `covenant-evals corpus status` | `py -m covenant_evals.cli corpus status` |
+| `covenant-evals items check` | `py -m covenant_evals.cli items check` |
+| `covenant-evals items stats` | `py -m covenant_evals.cli items stats` |
+| `covenant-evals splits freeze` | `py -m covenant_evals.cli splits freeze` |
+| `covenant-evals corpus search --query '"credit agreement"'` | `py -m covenant_evals.cli corpus search --query '"credit agreement"'` |
 
 With the Scripts folder on PATH, `py -m covenant_evals.cli` shortens to `covenant-evals`.
 
@@ -108,7 +112,7 @@ result is safe to paste anywhere.
 ### 2. Confirm the EDGAR pipeline actually works — 30 seconds
 
 ```bash
-make corpus-doctor
+covenant-evals corpus doctor
 ```
 
 **This is the one thing I could not do for you.** sec.gov is unreachable from the machine
@@ -124,7 +128,7 @@ On any mismatch it prints **what it actually found** — "missing ['adsh']; pres
 ['accession', 'ciks']" — and which function to change. If something differs:
 
 ```bash
-make corpus-doctor PASTE=1
+covenant-evals corpus doctor --paste
 ```
 
 and send me the block it prints. It contains field names and one accession number, no
@@ -135,9 +139,9 @@ When it passes, delete this section: the caveat is discharged.
 ### 3. Build the corpus — 25 documents, a few hours spread over a week
 
 ```bash
-make corpus-add REF=<accession:filename> CIK=<cik> LAW=NY NOTE='sponsor-backed leveraged loan'
-make corpus-fetch
-make corpus-check      # segment everything, read the warnings
+covenant-evals corpus add <accession:filename> --cik <cik> --governing-law NY --note 'sponsor-backed leveraged loan'
+covenant-evals corpus fetch
+covenant-evals corpus sections --check      # segment everything, read the warnings
 ```
 
 The mix that matters:
@@ -170,8 +174,8 @@ while the corpus still looks fine from outside.
 ```bash
 covenant-evals items new --ref ... --section '7.01(b)' --question '...' \
   --type boolean --gold false --quote '...' --rationale '...' --traps basket_cap
-make items-check     # before every commit
-make items-stats     # is the mix right?
+covenant-evals items check     # before every commit
+covenant-evals items stats     # is the mix right?
 ```
 
 ### 5. Freeze the splits — 5 minutes, once, in week 5
@@ -179,7 +183,7 @@ make items-stats     # is the mix right?
 Do this **after** the corpus is complete and **before** you have run anything against it.
 
 ```bash
-make splits-freeze
+covenant-evals splits freeze
 git add data/splits.json && git commit -m "Freeze dev/test/heldout split"
 ```
 
@@ -190,12 +194,12 @@ stop yourself on purpose.
 
 ## Standing rules
 
-- **`make items-check` before every commit.** It re-verifies every item against its
+- **`covenant-evals items check` before every commit.** It re-verifies every item against its
   document — hash, section, citation offsets, and whether the quote is in the section you
   cited.
 - **Every four weeks, relabel 30 items blind.** Your self-agreement is the ceiling on every
   number this project will report. Put it in the README.
-- **Track spend from the start.** `make budget`. The dev loop belongs on Haiku; Opus is for
+- **Track spend from the start.** `covenant-evals budget`. The dev loop belongs on Haiku; Opus is for
   graded runs only.
 - **Never label an item after seeing a system's answer to it.** One contaminated item is a
   footnote. The habit invalidates the set.
