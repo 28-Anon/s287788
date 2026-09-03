@@ -167,6 +167,9 @@ borrower may do?** You are not reading it properly — that comes in weeks 4–7
 | **skip** `s` | You cannot tell in a minute. It comes back next time |
 | **quit** `q` | Stop. Everything decided so far is saved |
 
+**Full reference: [docs/DOCUMENT-TYPES.md](docs/DOCUMENT-TYPES.md)** — every title you will
+meet on EDGAR, with keep or drop and why. Worth one read before you start.
+
 **Ctrl+F is the whole technique.** Two searches settle almost every document:
 
 - **"Negative Covenants"** — or `"shall not incur"`, or `"Restricted Payments"`. If none of

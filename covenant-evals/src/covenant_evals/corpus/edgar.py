@@ -382,7 +382,19 @@ DERIVATIVE_HINTS = (
 
 AGREEMENT_HINTS = ("credit", "loan", "facility", "financing", "indenture")
 
+#: "Amended and Restated Credit Agreement" is a complete, self-contained, current
+#: agreement — among the best documents this corpus can have. It is not an amendment, and
+#: the "amend" hint above was silently discarding every one of them.
+#:
+#: "Amendment No. 1 to the Amended and Restated Credit Agreement" *is* an amendment, and
+#: contains both phrases, which is why the exemption also requires "amendment" to be absent.
+RESTATEMENT_MARKERS = ("amended and restated", "amended & restated")
+
 CREDIT_EXHIBIT_HINTS = ("ex-10", "ex-4")
+
+
+def _is_restatement(haystack: str) -> bool:
+    return any(m in haystack for m in RESTATEMENT_MARKERS) and "amendment" not in haystack
 
 
 def looks_like_agreement(hit: Hit) -> int:
@@ -399,7 +411,7 @@ def looks_like_agreement(hit: Hit) -> int:
         score += 1
     if any(hint in haystack for hint in AGREEMENT_HINTS):
         score += 1
-    if any(hint in haystack for hint in DERIVATIVE_HINTS):
+    if not _is_restatement(haystack) and any(hint in haystack for hint in DERIVATIVE_HINTS):
         # Enough to outweigh both positive signals: a document that says "Amendment to
         # Credit Agreement" scores every agreement marker and is still not one, so it must
         # rank below an exhibit we know nothing about rather than level with it.
@@ -409,6 +421,12 @@ def looks_like_agreement(hit: Hit) -> int:
 
 
 def is_derivative(hit: Hit) -> bool:
-    """True for a document that amends, waives or supplements an agreement."""
+    """True for a document that amends, waives or supplements an agreement.
+
+    An amended and restated agreement is not one of those: it replaces what came before
+    and stands on its own.
+    """
     haystack = f"{hit.filename} {hit.description}".lower()
+    if _is_restatement(haystack):
+        return False
     return any(hint in haystack for hint in DERIVATIVE_HINTS)

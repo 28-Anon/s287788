@@ -315,3 +315,42 @@ def test_an_unrelated_exhibit_scores_between_the_two():
     unclear = looks_like_agreement(make_hit(filename="ex991.htm", file_type="EX-99.1"))
     assert unclear < looks_like_agreement(make_hit(description="Credit Agreement"))
     assert unclear > looks_like_agreement(make_hit(description="Amendment to Credit Agreement"))
+
+
+# -- amended and restated agreements are agreements ------------------------------
+#
+# The "amend" hint was discarding every one of them. An amended and restated credit
+# agreement is complete, self-contained and current — among the best documents this
+# corpus can hold — and none were reaching the manifest.
+
+
+@pytest.mark.parametrize(
+    "description",
+    [
+        "Amended and Restated Credit Agreement",
+        "Second Amended and Restated Credit Agreement",
+        "Third Amended & Restated Loan and Security Agreement",
+    ],
+)
+def test_a_restatement_is_kept(description):
+    from covenant_evals.corpus.edgar import is_derivative, looks_like_agreement
+
+    hit = make_hit(description=description)
+    assert not is_derivative(hit)
+    assert looks_like_agreement(hit) == looks_like_agreement(
+        make_hit(description="Credit Agreement")
+    )
+
+
+@pytest.mark.parametrize(
+    "description",
+    [
+        "Amendment No. 1 to Amended and Restated Credit Agreement",
+        "First Amendment to the Second Amended and Restated Credit Agreement",
+    ],
+)
+def test_an_amendment_to_a_restatement_is_still_an_amendment(description):
+    # Both phrases are present, so the exemption has to require "amendment" to be absent.
+    from covenant_evals.corpus.edgar import is_derivative
+
+    assert is_derivative(make_hit(description=description))
