@@ -13,6 +13,7 @@ from covenant_evals.corpus.edgar import (
     PAGE_SIZE,
     EdgarClient,
     EdgarError,
+    Hit,
     RateLimiter,
     Response,
     document_url,
@@ -249,3 +250,68 @@ def test_a_full_page_is_followed_by_a_second_request():
     assert len(hits) == PAGE_SIZE
     assert len(calls) == 2, "should ask for a second page, then stop on the empty one"
     assert "from=100" in calls[1]
+
+
+# -- telling an agreement from everything that merely mentions one ----------------
+#
+# A live search for "Majority Lenders" returned twenty hits of which most were DIP
+# amendments, waivers and notices. Those are structurally different documents and they do
+# not produce good items, so search hides them by default.
+
+
+def make_hit(filename="ex101.htm", description="", file_type="EX-10.1", filed="2024-03-04"):
+    return Hit(
+        accession="0000950170-24-012345",
+        filename=filename,
+        cik="320123",
+        company="Acme Corp",
+        form="8-K",
+        filed=filed,
+        file_type=file_type,
+        description=description,
+    )
+
+
+def test_a_plain_credit_agreement_scores_highest():
+    from covenant_evals.corpus.edgar import looks_like_agreement
+
+    assert looks_like_agreement(make_hit(description="Credit Agreement")) == 2
+
+
+@pytest.mark.parametrize(
+    "description",
+    [
+        "Second Amendment to Credit Agreement",
+        "Credit Agreement Supplement",
+        "Waiver and Consent under Credit Agreement",
+        "Joinder to Credit Agreement",
+        "Notice of Termination",
+        "Payoff Letter",
+        "Forbearance Agreement",
+    ],
+)
+def test_derivative_documents_are_recognised(description):
+    from covenant_evals.corpus.edgar import is_derivative, looks_like_agreement
+
+    hit = make_hit(description=description)
+    assert is_derivative(hit)
+    assert looks_like_agreement(hit) < looks_like_agreement(
+        make_hit(description="Credit Agreement")
+    )
+
+
+def test_a_derivative_is_recognised_from_its_filename_alone():
+    # EDGAR descriptions are frequently empty; the filename is often all there is.
+    from covenant_evals.corpus.edgar import is_derivative
+
+    assert is_derivative(make_hit(filename="exh102-dipamendment1.htm"))
+    assert is_derivative(make_hit(filename="cm-2ndamendmentexecuted.htm"))
+    assert not is_derivative(make_hit(filename="ex101creditagreement.htm"))
+
+
+def test_an_unrelated_exhibit_scores_between_the_two():
+    from covenant_evals.corpus.edgar import looks_like_agreement
+
+    unclear = looks_like_agreement(make_hit(filename="ex991.htm", file_type="EX-99.1"))
+    assert unclear < looks_like_agreement(make_hit(description="Credit Agreement"))
+    assert unclear > looks_like_agreement(make_hit(description="Amendment to Credit Agreement"))

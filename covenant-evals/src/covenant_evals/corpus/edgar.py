@@ -355,3 +355,60 @@ def parse_search_response(body: bytes) -> list[Hit]:
         )
 
     return parsed
+
+
+# ---------------------------------------------------------------------------
+# Telling an agreement from everything that merely mentions one
+# ---------------------------------------------------------------------------
+
+#: Full-text search for a phrase like "Majority Lenders" returns every document that
+#: *references* a facility — amendments, waivers, DIP orders, notices — and those vastly
+#: outnumber the agreements themselves. They are structurally different documents and they
+#: do not produce good items.
+DERIVATIVE_HINTS = (
+    "amend",
+    "supplement",
+    "waiver",
+    "consent",
+    "joinder",
+    "notice",
+    "assignment",
+    "guarant",
+    "forbearance",
+    "termination",
+    "payoff",
+    "reaffirm",
+)
+
+AGREEMENT_HINTS = ("credit", "loan", "facility", "financing", "indenture")
+
+CREDIT_EXHIBIT_HINTS = ("ex-10", "ex-4")
+
+
+def looks_like_agreement(hit: Hit) -> int:
+    """Rough score: 2 a plain agreement, 0 unclear, negative a derivative document.
+
+    Deliberately crude. It orders a search result list and picks a sample; it does not
+    decide what goes in the corpus. That judgement is the labeller's, and it is the single
+    biggest source of bias in the results, so it stays manual.
+    """
+    haystack = f"{hit.filename} {hit.description}".lower()
+
+    score = 0
+    if any(hint in hit.file_type.lower() for hint in CREDIT_EXHIBIT_HINTS):
+        score += 1
+    if any(hint in haystack for hint in AGREEMENT_HINTS):
+        score += 1
+    if any(hint in haystack for hint in DERIVATIVE_HINTS):
+        # Enough to outweigh both positive signals: a document that says "Amendment to
+        # Credit Agreement" scores every agreement marker and is still not one, so it must
+        # rank below an exhibit we know nothing about rather than level with it.
+        score -= 3
+
+    return score
+
+
+def is_derivative(hit: Hit) -> bool:
+    """True for a document that amends, waives or supplements an agreement."""
+    haystack = f"{hit.filename} {hit.description}".lower()
+    return any(hint in haystack for hint in DERIVATIVE_HINTS)

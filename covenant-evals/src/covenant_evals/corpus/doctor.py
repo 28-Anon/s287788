@@ -22,6 +22,7 @@ from .edgar import (
     EdgarError,
     document_url,
     filing_index_url,
+    looks_like_agreement,
     parse_search_response,
 )
 from .normalise import normalise_html
@@ -35,24 +36,6 @@ EXPECTED_SOURCE_KEYS = ("adsh", "ciks", "display_names", "file_date")
 
 #: The form lives under one of these. Either is fine; neither is not.
 FORM_KEYS = ("root_forms", "form")
-
-#: Exhibit types that are plausibly a credit agreement. Used to pick a sensible sample
-#: document rather than whatever happened to sort first.
-CREDIT_EXHIBIT_HINTS = ("ex-10", "ex-4")
-CREDIT_NAME_HINTS = ("credit", "loan", "facility", "financing")
-
-#: Documents that mention credit agreements without being one. The first live run picked
-#: an amendment, and the second a supplement — both correctly segmented to nothing.
-NOT_AN_AGREEMENT_HINTS = (
-    "amend",
-    "supplement",
-    "waiver",
-    "consent",
-    "joinder",
-    "notice",
-    "assignment",
-    "guarant",
-)
 
 
 @dataclass
@@ -244,13 +227,7 @@ def _pick_sample(hits: list) -> object:
     """
 
     def score(hit) -> tuple[int, int]:
-        exhibit = 1 if any(h in hit.file_type.lower() for h in CREDIT_EXHIBIT_HINTS) else 0
-        name = f"{hit.filename} {hit.description}".lower()
-        named = 1 if any(h in name for h in CREDIT_NAME_HINTS) else 0
-        # Two points off, so a supplement never outranks a plain agreement even when the
-        # supplement has the better filename.
-        derivative = -2 if any(h in name for h in NOT_AN_AGREEMENT_HINTS) else 0
-        return (exhibit + named + derivative, -len(hit.filename))
+        return (looks_like_agreement(hit), -len(hit.filename))
 
     return max(hits, key=score)
 

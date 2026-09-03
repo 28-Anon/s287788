@@ -128,22 +128,39 @@ rejected, or the document simply is not an agreement.
 
 ### 3. Build the corpus — 25 documents, a few hours spread over a week
 
-```bash
-covenant-evals corpus add <accession:filename> --cik <cik> --governing-law NY --note 'sponsor-backed leveraged loan'
-covenant-evals corpus fetch
-covenant-evals corpus sections --check      # segment everything, read the warnings
+```powershell
+py -m covenant_evals.cli corpus search --query '"Majority Lenders"' --forms 8-K --start 2018-01-01
+py -m covenant_evals.cli corpus add <accession:filename> --cik <cik> --governing-law English --note 'LMA-style, sponsor-backed'
+py -m covenant_evals.cli corpus fetch
+py -m covenant_evals.cli corpus sections --check
 ```
+
+**Searching well matters more than it sounds.** Full-text search for a phrase that appears
+in credit agreements also returns every document that merely *references* one — amendments,
+waivers, DIP orders, payoff letters, notices. On a real search those outnumber the
+agreements. Search now hides them by default and shows EDGAR's own description of each
+exhibit so you can judge before downloading; `--all` includes them.
+
+Two more things that improve the results sharply:
+
+- **`--start 2018-01-01`.** Without a date filter the results skew to 2006–2013 and to
+  distressed shell companies. Recent filings are larger issuers with better-drafted, longer
+  agreements.
+- **Vary the query.** `"Majority Lenders"` finds English-law LMA-style documents;
+  `"Required Lenders"` is the US equivalent; `"Consolidated EBITDA"` and
+  `"Permitted Liens"` find agreements with real covenant machinery. A phrase that appears
+  in the *body* of an agreement beats one that appears in its title.
 
 The mix that matters:
 
 - **25 documents** total
-- **at least 5 English-law** (search `"Majority Lenders"` or `"governed by English law"`) —
-  these are what make the London story work
-- at least **4 with later amendments** (needed for week 20)
+- **at least 5 English-law** — these are what make the London story work
+- **3 or 4 amendments, kept deliberately** and tagged in `--note`; week 20 needs them for
+  the amendment_supersession trap. Add them with `--all`, since search hides them
 - include **two you find genuinely confusing**; they produce the best items
 
-Read every warning `corpus-check` prints. The segmenter is heuristic and it will get some
-document wrong — better to find that now than in week 12.
+Read every warning `corpus sections --check` prints. The segmenter is heuristic. If it finds
+nothing in a document, `corpus doctor --paste` will tell you which of the three causes it is.
 
 ### 4. Write the items — this is the project
 

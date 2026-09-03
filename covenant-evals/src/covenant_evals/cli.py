@@ -29,7 +29,7 @@ from .corpus import (
 )
 from .corpus.doctor import format_report
 from .corpus.doctor import run as run_doctor
-from .corpus.edgar import validate_user_agent
+from .corpus.edgar import is_derivative, looks_like_agreement, validate_user_agent
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
 from .items import (
     cross_validate,
@@ -213,22 +213,58 @@ def cmd_config_check() -> int:
 
 
 def cmd_corpus_search(args: argparse.Namespace) -> int:
+    """Find candidate documents. Downloads nothing.
+
+    Full-text search for a phrase that appears in credit agreements also returns every
+    document that merely *references* one — amendments, waivers, DIP orders, payoff
+    letters. On a real search those outnumber the agreements several to one, so
+    derivatives are filtered out by default and the rest are ordered best-first.
+    """
     client = make_client()
+
+    start, end = args.start, args.end
+    if start and not end:
+        end = date.today().isoformat()
+    if end and not start:
+        start = "2001-01-01"
+
     hits = client.search(
         args.query,
         forms=args.forms.split(",") if args.forms else None,
-        start_date=args.start,
-        end_date=args.end,
-        limit=args.limit,
+        start_date=start,
+        end_date=end,
+        limit=args.limit if args.all else args.limit * 4,
     )
 
     if not hits:
         print("no hits. Try quoting the phrase: --query '\"credit agreement\"'")
         return 0
 
-    for hit in hits:
-        print(f"{hit.ref}\n    {hit.company}  {hit.form}  {hit.filed}\n    {hit.url}")
-    print(f"\n{len(hits)} hits. Add one with:  corpus add <accession:filename>")
+    total = len(hits)
+    kept = hits if args.all else [hit for hit in hits if not is_derivative(hit)]
+    hidden = total - len(kept)
+
+    # Two stable sorts, applied least-significant first: newest within each score band.
+    kept.sort(key=lambda hit: hit.filed, reverse=True)
+    kept.sort(key=looks_like_agreement, reverse=True)
+    shown = kept[: args.limit]
+
+    for hit in shown:
+        label = hit.description or hit.file_type or "no description"
+        print(f"{hit.ref}\n    {label}")
+        print(f"    {hit.company}  {hit.form}  {hit.filed}  [{hit.file_type}]")
+        print(f"    {hit.url}")
+
+    summary = f"\n{len(shown)} shown of {total} returned"
+    if hidden:
+        summary += f"; {hidden} derivative(s) hidden — pass --all to include them"
+    print(summary)
+
+    print(
+        "\nAdd one with:\n"
+        "  covenant-evals corpus add <accession:filename> --cik <cik> "
+        "--governing-law NY --note 'why this one'"
+    )
     return 0
 
 
@@ -875,6 +911,11 @@ def build_parser() -> argparse.ArgumentParser:
     search.add_argument("--start", help="YYYY-MM-DD (requires --end)")
     search.add_argument("--end", help="YYYY-MM-DD (requires --start)")
     search.add_argument("--limit", type=int, default=20)
+    search.add_argument(
+        "--all",
+        action="store_true",
+        help="include amendments, waivers and supplements (hidden by default)",
+    )
 
     add = corpus_sub.add_parser("add", help="add one document to the manifest")
     add.add_argument("ref", help="accession:filename, as printed by `corpus search`")
