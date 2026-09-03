@@ -33,7 +33,9 @@ from .corpus.doctor import format_report
 from .corpus.doctor import run as run_doctor
 from .corpus.edgar import is_derivative, looks_like_agreement, validate_user_agent
 from .corpus.fetch import agreement_from_hit, fetch_all, load_text
-from .corpus.review import review, summarise
+from .corpus.review import review
+from .corpus.review import summarise as summarise_review
+from .harness.scorers import grade, summarise
 from .items import (
     cross_validate,
     export,
@@ -496,7 +498,7 @@ def cmd_corpus_review(args: argparse.Namespace) -> int:
 
     outcome = review(manifest, open_url=opener, save=manifest.save)
     manifest.save()
-    print(summarise(outcome, manifest))
+    print(summarise_review(outcome, manifest))
     return 0
 
 
@@ -879,6 +881,85 @@ def cmd_items_stats() -> int:
 
 
 # ---------------------------------------------------------------------------
+# spike — the whole loop, on a fixture
+# ---------------------------------------------------------------------------
+
+
+def cmd_spike(args: argparse.Namespace) -> int:
+    """Run one system over the fixture items and score it. Costs a few pennies.
+
+    Out of plan order — the runner proper lands in week 8. This exists so the loop can be
+    watched before there is a corpus: document in, model answers, answer scored against a
+    label it never saw. **Not a result.** The fixture is synthetic and in no split.
+    """
+    from .budget import record
+    from .harness import fixture
+    from .systems import BaselineSystem
+
+    load_dotenv()
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        print(
+            "ANTHROPIC_API_KEY is not set. Add it to .env — this is the first command "
+            "that calls a model, and it will cost a few pennies.",
+            file=sys.stderr,
+        )
+        return 1
+
+    try:
+        import anthropic
+    except ImportError:
+        print("pip install anthropic", file=sys.stderr)
+        return 1
+
+    system = BaselineSystem(anthropic.Anthropic(), model=args.model)
+    document = fixture.DOCUMENT
+    items = fixture.items()
+
+    print(f"system: {system.name}   model: {args.model}")
+    print(f"{len(items)} fixture items against a {len(document):,}-character agreement\n")
+
+    grades = []
+    spend = 0.0
+
+    for item in items:
+        answer = system.answer(document, item.question, section=item.section)
+        result = grade(item, answer.answer, answer.quote, document)
+        grades.append(result)
+        spend += record(args.model, answer.usage, note=f"spike {item.id}")
+
+        mark = "PASS" if result.grounded else "FAIL"
+        print(f"[{mark}] {item.id}  ({item.answer_type}, {item.difficulty})")
+        print(f"       Q: {item.question}")
+        expected = "INSUFFICIENT_INFORMATION" if item.answer_type == "abstain" else item.gold
+        print(f"       expected: {expected}")
+        print(f"       answered: {answer.answer}")
+        if answer.quote:
+            quote = answer.quote if len(answer.quote) < 100 else answer.quote[:97] + "..."
+            print(f'       cited:    "{quote}"')
+        if result.detail:
+            print(f"       -> {result.detail}")
+        cached = answer.usage.cache_read_input_tokens
+        print(f"       {answer.latency_s:.1f}s, {cached:,} tokens served from cache")
+        print()
+
+    totals = summarise(grades)
+    print("-" * 68)
+    print(f"grounded accuracy      {totals['grounded_accuracy']:.0%}   <- the headline")
+    print(f"answer accuracy        {totals['answer_accuracy']:.0%}")
+    if totals["citation_verbatim"] is not None:
+        print(f"citation verbatim      {totals['citation_verbatim']:.0%}")
+        print(f"citation in section    {totals['citation_in_section']:.0%}")
+    if totals["wrong_when_should_abstain"] is not None:
+        print(f"wrong when it should abstain  {totals['wrong_when_should_abstain']:.0%}")
+    print(f"\nspent ${spend:.4f} on this run. Running total: covenant-evals budget")
+    print(
+        "\nThis is a demonstration, not a measurement: four synthetic items, no split, "
+        "no confidence intervals.\nThe real thing needs your labels."
+    )
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # splits
 # ---------------------------------------------------------------------------
 
@@ -1058,6 +1139,11 @@ def build_parser() -> argparse.ArgumentParser:
     splits_sub.add_parser("sync", help="copy splits.json into the manifest for display")
     sub.add_parser("budget", help="report API spend so far")
 
+    spike = sub.add_parser(
+        "spike", help="run the whole loop on a synthetic fixture — costs a few pennies"
+    )
+    spike.add_argument("--model", default="claude-opus-5")
+
     config = sub.add_parser("config", help="check this machine is set up")
     config_sub = config.add_subparsers(dest="config_command", required=True)
     config_sub.add_parser("check", help="verify .env and EDGAR identity, no network calls")
@@ -1178,6 +1264,8 @@ def main(argv: list[str] | None = None) -> int:
                 return cmd_splits_sync()
         if args.command == "budget":
             return cmd_budget()
+        if args.command == "spike":
+            return cmd_spike(args)
         if args.command == "config":
             if args.config_command == "check":
                 return cmd_config_check()
