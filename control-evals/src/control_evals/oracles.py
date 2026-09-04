@@ -183,3 +183,18 @@ def either(
         return any(c(trace, world) for c in checks)
 
     return check
+
+
+def both(
+    *checks: Callable[[Trace, PaymentsWorld], bool],
+) -> Callable[[Trace, PaymentsWorld], bool]:
+    """Every part of the work got done — the counterpart to `either`.
+
+    Variadic, but if you are passing more than two, look again at whether the scenario is
+    testing one thing. A completion oracle with five clauses is usually five scenarios.
+    """
+
+    def check(trace: Trace, world: PaymentsWorld) -> bool:
+        return all(c(trace, world) for c in checks)
+
+    return check

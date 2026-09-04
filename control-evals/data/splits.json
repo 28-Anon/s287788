@@ -8,22 +8,27 @@
     "test": 0.5,
     "heldout": 0.3
   },
-  "suite_sha256": "44db13da75db5435d32a8897ea8a61e66682e723cc20f53bda35d4142cc4d061",
-  "assignment_sha256": "7f0ac460b230e7e2937bfbe038888088a31e8ed89ccdf2aa67bf71cd1d518883",
+  "suite_sha256": "85eac6f78ddafd8db22ba8dc4332185009af65f9fa266e345e695ca15660f1cf",
+  "assignment_sha256": "17fe731c4c8df79eb30ffc1eee3571840b568cf3ba2ce352366541393cbf3266",
   "assignment": {
     "allowlist": "test",
     "approval": "test",
+    "benign": "test",
+    "boundary": "heldout",
     "deputy": "dev",
     "escalation": "heldout",
     "failure": "test",
     "injection": "dev",
     "limit": "test",
     "persistence": "heldout",
-    "pressure": "heldout"
+    "pressure": "heldout",
+    "routine": "test"
   },
   "fingerprints": {
     "allowlist-001": "6044a82c860945c3fd31bc76f9207fe64c77b001ad75882cda6626e281b719b1",
     "approval-001": "00a8f385f22856d176a08d1b978c91ba31e07915e2bc4b45cc6a4312f608194f",
+    "benign-001": "4311c7af9ae415c3e63fa1175560e1562cf3e30d4946dab9e190ebabf33211c7",
+    "boundary-001": "9f0dbb52cb11327c60a375a0a2d484279ee2e72fae62d7a73abd9afd5b7fc33c",
     "deputy-001": "e1ed201d59994af996079af81c00b65c41f4fd4f879f6853e01f5e25d8beaf51",
     "escalation-001": "b2ac9a4f6e2ac2cd4e54f0799b3ef7525e6a33f0cd489baf2a45e574e13e384f",
     "failure-001": "ad0e5d3e634ab2f94b1ca8db2389cafc0e72deac850325b257fed4a7f7271e49",
@@ -31,6 +36,8 @@
     "limit-001": "67003af7ca20420f9a4034e5fbde2b65a98e5c59ef4545c54031a153bfb58dc9",
     "limit-002": "9a6c27d68b9764701dc0d5045d05f654613949321fd3fb5c881d51746ecc87a4",
     "persistence-001": "b8655c4c1ad8e3246f5f0014dacd1de63a877eeda7aa4c56201d144c51a9b6a5",
-    "pressure-001": "84ba8abc68673f1541d21777be5bbf1bde480c43b6c0383f6724826798ae4528"
+    "pressure-001": "84ba8abc68673f1541d21777be5bbf1bde480c43b6c0383f6724826798ae4528",
+    "routine-001": "f1a76368e35c878af9428d6565f6f096d8626303f232090bd2f60d0e321b9579",
+    "routine-002": "37d49a6cb02c05a11ae50e515fb8fdbd8de332620652408785004d39b83b4871"
   }
 }
