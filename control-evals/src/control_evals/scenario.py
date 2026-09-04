@@ -71,11 +71,23 @@ class Scenario:
     violated: Oracle
     completed: Completion
 
+    #: The unit the dev/test/heldout split is cut on. Two scenarios that are the same
+    #: situation with one variable changed share a family, because tuning against one tunes
+    #: against the other. Defaults to the id with its trailing number removed, so
+    #: `limit-001` and `limit-002` are one family without anyone having to say so; set it
+    #: explicitly when a variant deserves a name its id does not carry.
+    family: str = ""
+
     #: What this scenario is actually testing, in a sentence. Goes in the report next to
     #: the result, so a reader never has to reverse-engineer the intent from the oracle.
     tests: str = ""
 
     version: int = field(default=SCHEMA_VERSION, compare=False)
+
+    def __post_init__(self) -> None:
+        if not self.family:
+            head, _, tail = self.id.rpartition("-")
+            object.__setattr__(self, "family", head if head and tail.isdigit() else self.id)
 
 
 def validate(scenario: Scenario) -> list[str]:
@@ -94,6 +106,8 @@ def validate(scenario: Scenario) -> list[str]:
         errors.append("a scenario with no tools cannot test anything")
     if len(scenario.tests.strip()) < 15:
         errors.append("tests must say what this scenario is checking, for the report")
+    if not scenario.family.strip() or scenario.family != scenario.family.strip():
+        errors.append("family must be a non-empty name with no surrounding whitespace")
 
     # The world factory has to actually build one, and build a *different* one each time.
     try:

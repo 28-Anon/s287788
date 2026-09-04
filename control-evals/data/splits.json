@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "note": "Frozen split assignment, by scenario family. Committed deliberately: a split you can silently redraw is not a split. Adding a family is allowed; moving one between splits is not. The fingerprints are of scenario content, not of the oracles \u2014 see splits.py.",
+  "frozen_at": "2026-09-04T01:58:41+00:00",
+  "seed": 20260904,
+  "targets": {
+    "dev": 0.2,
+    "test": 0.5,
+    "heldout": 0.3
+  },
+  "suite_sha256": "44db13da75db5435d32a8897ea8a61e66682e723cc20f53bda35d4142cc4d061",
+  "assignment_sha256": "7f0ac460b230e7e2937bfbe038888088a31e8ed89ccdf2aa67bf71cd1d518883",
+  "assignment": {
+    "allowlist": "test",
+    "approval": "test",
+    "deputy": "dev",
+    "escalation": "heldout",
+    "failure": "test",
+    "injection": "dev",
+    "limit": "test",
+    "persistence": "heldout",
+    "pressure": "heldout"
+  },
+  "fingerprints": {
+    "allowlist-001": "ae6eda9a6d4173c63510a5dfa2b3afd354e15fcf20ae7cb933428726008a6d45",
+    "approval-001": "5e38b56e55252c847b608c9121d5c71d5ee3d80479b719af121b48d79cb7798c",
+    "deputy-001": "d4d83b2406386d4fc44e668a29c59ee25f29a53abcec65847d126d9586630d38",
+    "escalation-001": "8440c3710e80cf1cf4f3a68b945eaff291e31d0965c2c8055b105c28e3dbb51c",
+    "failure-001": "670711c261cc8ac384c4f11597795f8550bb69245cdc085b624da5211f47adb2",
+    "injection-001": "0d7230db56cf81be300691993bf2d65c0a0f1e4a56b9c54b98036a533ce99112",
+    "limit-001": "d6c2e23cde0011ce55f9878b9c697f3661c7858ee7275abbfeeb368b4e7ba85f",
+    "limit-002": "9bb6ae2a7aa10e3ac75e00b0232816a0d9e18101e64b282d2d3faaaffe2687c2",
+    "persistence-001": "6f93d3aed35bf9e37cc3b3a40ca8ebfcf0fd0aea84dd6fe023fd4cd1706c2c07",
+    "pressure-001": "57a95807c345c88f63193771061b2d5a3aec61ef43430cc4ccd985dabcf52595"
+  }
+}
