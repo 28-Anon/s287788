@@ -1,5 +1,8 @@
 """Command line entry points.
 
+    py -m control_evals.cli run --split dev        # run an agent against a split
+    py -m control_evals.cli run --dry-run          # exercise it all, spending nothing
+    py -m control_evals.cli budget                 # what this project has cost so far
     py -m control_evals.cli scenarios              # what is in the suite
     py -m control_evals.cli splits freeze          # cut dev/test/heldout, once
     py -m control_evals.cli splits status          # the assignment, and the heldout log
@@ -15,12 +18,20 @@ not depend on pip's Scripts folder being on PATH, which on Windows it usually is
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+from pathlib import Path
 
+from . import budget as budget_module
+from .agent import DEFAULT_MAX_TURNS, DEFAULT_MODEL, PaymentsAgent
+from .fixture import DecliningClient
+from .metrics import by_category, format_frontier, summarise
+from .runner import run_split
 from .scenario import validate_all
 from .scenarios import SUITE
 from .splits import (
     DEFAULT_SEED,
+    LOCK_MESSAGE,
     SPLITS,
     HeldoutLocked,
     Splits,
@@ -28,6 +39,7 @@ from .splits import (
     assign_new,
     families,
     freeze,
+    is_open,
     refresh_fingerprints,
     select,
     shares,
@@ -196,11 +208,163 @@ def cmd_splits_refingerprint(args: argparse.Namespace) -> int:
     return 0
 
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def load_dotenv(path: Path | None = None) -> None:
+    """Read KEY=value lines from .env into the environment.
+
+    Deliberately tiny and dependency-free. Existing environment variables always win, so
+    `$env:ANTHROPIC_API_KEY="..."` on the command line overrides the file.
+    """
+    target = path or REPO_ROOT / ".env"
+    if not target.exists():
+        return
+    for line in target.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, _, value = stripped.partition("=")
+        os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    splits = _require_splits()
+
+    problems = check_splits(splits, SUITE)
+    if problems and not args.force:
+        for problem in problems:
+            print(problem, file=sys.stderr)
+        print(
+            "\nRefusing to run against a suite that does not match the freeze — the numbers "
+            "would not mean what they say. Fix it, or pass --force and say so in the write-up.",
+            file=sys.stderr,
+        )
+        return 1
+
+    # Before anything else, including credentials: a locked split should say so rather than
+    # complain about an API key. is_open does not log, so the real opening below is the only
+    # line that reaches the access log.
+    if not is_open(args.split, args.reason):
+        print(LOCK_MESSAGE, file=sys.stderr)
+        return 1
+
+    if args.dry_run:
+        client: object = DecliningClient()
+    else:
+        load_dotenv()
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            print(
+                "no ANTHROPIC_API_KEY. Put it in control-evals/.env or set it in the "
+                "environment. Nothing has been spent.\n"
+                "To check the pipeline works without spending anything: --dry-run",
+                file=sys.stderr,
+            )
+            return 1
+
+        try:
+            import anthropic
+        except ImportError:
+            print(
+                "the anthropic package is not installed: py -m pip install -e .",
+                file=sys.stderr,
+            )
+            return 1
+        client = anthropic.Anthropic()
+
+    agent = PaymentsAgent(
+        client,
+        model=args.model,
+        effort=args.effort,
+        max_turns=args.max_turns,
+    )
+
+    def report(result) -> None:
+        mark = "VIOLATED" if result.violated else "ok      "
+        note = result.violation or result.error or ""
+        print(f"  {mark} {result.scenario_id:<16} {result.turns:>2} turns  {note}")
+
+    print(f"{args.model}{' effort=' + args.effort if args.effort else ''} on split {args.split}\n")
+
+    try:
+        run = run_split(
+            agent,
+            SUITE,
+            splits,
+            args.split,
+            reason=args.reason,
+            limit=args.limit,
+            on_result=report,
+        )
+    except HeldoutLocked as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    if not args.dry_run:
+        for result in run.results:
+            budget_module.record(
+                result.model, result.usage, note=f"{args.split}/{result.scenario_id}"
+            )
+
+    print()
+    print(format_frontier(summarise(run.results)))
+
+    print("\nby category:")
+    for category, frontier in by_category(run.results).items():
+        print(f"  {category:<20} violation {frontier.violation}  completion {frontier.completion}")
+
+    if args.dry_run:
+        print(
+            "\nDRY RUN — the agent declined everything without calling a tool. These are not "
+            "results, they are proof the pipeline runs. Note where a refuse-everything agent "
+            "sits on the frontier: no violations, and useless."
+        )
+        return 0
+
+    path = run.save()
+    print(f"\nwritten to {path.relative_to(REPO_ROOT)}")
+    print(
+        "The traces are in there. Read them before believing the rates — the failure "
+        "taxonomy is the deliverable, the numbers are the index to it."
+    )
+    return 0
+
+
+def cmd_budget() -> int:
+    totals = budget_module.summary()
+    print(f"{totals['calls']} calls, ${totals['total_usd']:.4f}")
+    for model, bucket in sorted(totals["by_model"].items()):
+        print(f"  {model:<22} {bucket['calls']:>5} calls  ${bucket['usd']:.4f}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="control-evals", description=__doc__)
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("scenarios", help="list the suite")
+    sub.add_parser("budget", help="what this project has cost so far")
+
+    run_parser = sub.add_parser("run", help="run an agent against a split")
+    run_parser.add_argument("--split", choices=SPLITS, default="dev")
+    run_parser.add_argument("--model", default=DEFAULT_MODEL)
+    run_parser.add_argument(
+        "--effort",
+        default="",
+        choices=["", "low", "medium", "high", "xhigh", "max"],
+        help="how much thinking. Sweeping this is one of the experiments.",
+    )
+    run_parser.add_argument("--max-turns", type=int, default=DEFAULT_MAX_TURNS)
+    run_parser.add_argument("--limit", type=int, default=0, help="run only the first N")
+    run_parser.add_argument("--reason", default="", help="required for heldout, and logged")
+    run_parser.add_argument(
+        "--force", action="store_true", help="run even if the suite has drifted from the freeze"
+    )
+    run_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="exercise the whole pipeline with a canned declining agent. No API key, no cost.",
+    )
 
     splits_parser = sub.add_parser("splits", help="dev/test/heldout assignment")
     splits_sub = splits_parser.add_subparsers(dest="splits_command")
@@ -231,6 +395,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "scenarios":
         return cmd_scenarios()
+
+    if args.command == "budget":
+        return cmd_budget()
+
+    if args.command == "run":
+        return cmd_run(args)
 
     if args.command == "splits":
         if args.splits_command == "freeze":
