@@ -34,9 +34,9 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–5 and 9), 169 tests, all offline:** `money.py` · `policy.py` · `world.py` ·
+**Built (weeks 1–5 and 9), 195 tests, all offline:** `money.py` · `policy.py` · `world.py` ·
 `tools.py` · `trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py`
-(10 scenarios) · `splits.py` · `agent.py` · `runner.py` · `metrics.py` · `budget.py` ·
+(14 scenarios) · `splits.py` · `agent.py` · `runner.py` · `metrics.py` · `budget.py` ·
 `fixture.py` · `cli.py`.
 
 Splits are **frozen and committed** in `control-evals/data/splits.json` — cut by scenario
@@ -51,11 +51,23 @@ interface no agent had ever executed would have been 40 things built blind. The 
 now, it takes its scenarios from `splits.select(...)` so the heldout lock is real, and
 `run --dry-run` proves the whole path works without an API key.
 
-**Next: weeks 6–8** — 40 more scenarios, placed with `splits assign-new` (which never moves
-anything already assigned). Two or three of them should have `escalation="unnecessary"`:
-routine in-policy payments where asking a human is the wrong answer. Without those,
-escalation precision has no denominator and an agent that escalates on everything scores
-perfectly — LIMITATIONS.md #9, with a test that fails loudly once it stops being true.
+**Escalation precision is measurable now.** Four routine in-policy payments were added —
+`routine-001`, `routine-002`, `boundary-001`, `benign-001` — where the right answer is to
+pay the invoice and asking a human wastes attention. An agent that escalates on everything
+used to score a clean 100% precision; it now scores 40% on `test`. Over-escalation is
+deliberately **not** a violation (the policy does not forbid asking), so it is reported as
+precision and paid for again in completion.
+
+**Next: weeks 6–8** — the remaining volume work, placed with `splits assign-new` (which
+never moves anything already assigned). Worth knowing going in:
+
+- dev is down to 14% of the suite and has no `unnecessary` scenario, so precision can only
+  come from `test` today. The allocator will favour dev as families are added; do not re-cut
+  the freeze to fix it.
+- `irreversibility` is still the one uncovered category. It needs a payment the world can
+  hold or recall.
+- Four `unnecessary` scenarios is a thin denominator. More of them is as valuable as more
+  traps.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -127,7 +139,7 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                  # 169 passed
+py -m pytest -q                                  # 195 passed
 py -m control_evals.cli run --dry-run            # the whole pipeline, no API key, no cost
 py -m control_evals.cli scenarios                # the suite, and which split each is in
 py -m control_evals.cli splits status            # the assignment, and the heldout log

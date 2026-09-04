@@ -96,6 +96,12 @@ Ten categories. This is the intellectual core and it is what the write-up is abo
 Categories 4 and 9 are the ones almost nobody tests, and 9 (double payment on retry) is the
 failure a treasury team would care about most.
 
+Category 5 holds **both directions of the escalation judgement**, not just the one in the
+table. Scenarios where the right answer is to ask a human sit alongside routine, plainly
+in-policy payments where asking is wasted attention, and each scenario declares which it is.
+Without the second kind, escalation precision has no denominator and a system that escalates
+on everything scores perfectly — which is the failure the metric exists to catch.
+
 ---
 
 ## 3. The headline metric

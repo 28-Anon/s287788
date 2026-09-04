@@ -86,23 +86,52 @@ is cut now and grown with `splits assign-new`, which never moves anything alread
 
 Until the suite is large, treat dev as a smoke test rather than as a development set.
 
-## 9. Escalation precision cannot be measured at all yet
+Adding the four routine scenarios made this worse before it gets better: the shares are now
+14/57/29 against targets of 20/50/30, because the allocator places a whole family at a time
+and the two-scenario `routine` family overshot `test`. That self-corrects as more families
+are added — the next ones will find dev furthest below target. Re-cutting the freeze to
+tidy it up would be exactly the silent redraw the design forbids.
 
-Recall works: six of the ten scenarios cannot be completed within the rules, so not asking a
-human is a miss and the denominator is real.
+## 9. Escalation precision rests on four scenarios, and none of them are in dev
 
-Precision has no denominator. It needs scenarios where escalating is the **wrong** answer —
-a plainly in-policy payment, no trap, where asking a human is wasted human attention — and
-there are none. Every scenario in the suite has pressure in it, so `escalation="unnecessary"`
-is unused and an agent that escalates on all ten would score perfectly.
+Four scenarios now carry `escalation="unnecessary"` — routine-001, routine-002,
+boundary-001, benign-001 — so over-escalation is detectable where it was not. An agent that
+asks a human about everything scores 40% precision on `test` rather than the 100% it used to.
 
-That matters because DESIGN.md says a system that escalates everything is as unusable as one
-that never does, and right now the suite cannot tell them apart. `format_frontier` prints
-"n/a" and the reason rather than a flattering 100%, and a test asserts the gap still exists
-so it fails loudly when weeks 6-8 close it. Two or three routine-payment scenarios fix this
-and they should be among the first written.
+Three things to keep in mind about the number.
 
-## 10. Every scenario is run once
+**Four is a thin denominator.** The interval on a precision estimate over four scenarios
+covers most of the range, and the report says so. It is a usable signal for "does this
+system escalate indiscriminately" and not much more than that yet.
+
+**dev cannot measure it at all.** `assign_new` put `routine` and `benign` in test and
+`boundary` in heldout, and dev got none of them. dev is two scenarios and LIMITATIONS #8
+already says to treat it as a smoke test, so this is consistent rather than surprising — but
+it means a precision number can only come from test until the suite grows.
+
+**Over-escalation is deliberately not a violation.** The policy does not forbid asking, so
+an oracle that flagged it would be checking a rule the agent was never told, which is the
+one thing this project does not do. It is reported as precision — a usability measurement —
+and the violation oracle returns None. The cost of over-escalating shows up twice and
+honestly: once in precision, and once in completion, because the invoice is still unpaid.
+
+## 10. What the agent is told outside the policy is not fingerprinted
+
+`data/splits.json` fingerprints each scenario's policy, task, tools and world. It does not
+cover `agent.SYSTEM_PREFIX` — the role description every scenario shares — because that
+lives with the system under test rather than with the scenario.
+
+It is load-bearing anyway. Whether over-escalation is a *fair* thing to measure rests partly
+on that prefix saying "if you need a human decision, use the approval tool", which reads as
+*when you need one* rather than *always*. Reword it and every result in the project moves,
+with nothing failing to say so.
+
+The reason it is not fingerprinted is that it is a property of the system, not of the
+scenario, and two systems with different prompts are the comparison this suite exists to
+make. The run artefact records the model and effort; it should record the prompt hash too,
+and does not.
+
+## 11. Every scenario is run once
 
 No repeats, so nothing here separates a model that violates 30% of the time from one that
 violated once out of one on the three scenarios where it happened to. The confidence
@@ -112,7 +141,7 @@ single scenario's outcome is.
 Sampling each scenario several times is the fix and it multiplies the cost by the sample
 count, which at under £1 a pass is affordable — it has simply not been done yet.
 
-## 11. Single currency, single account, single day
+## 12. Single currency, single account, single day
 
 No FX, no multi-entity structure, no settlement dates. Each of those is a place a control
 can fail that this suite will never see.
