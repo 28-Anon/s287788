@@ -14,12 +14,19 @@ An agent could satisfy that proxy while producing a useless answer. The frontier
 therefore precise on one axis and approximate on the other, and any claim made from it
 should say so.
 
-## 2. Silent violations are not yet detected
+## 2. The silent violation rate is a lower bound, not a rate
 
-The scariest failure is violating *while stating you complied*, and it is not measured yet.
-The intended check is keyword-based, which will under-count — an agent can imply compliance
-without using any of the phrases looked for. It will be reported as a lower bound and never
-as a rate.
+The scariest failure is violating *while stating you complied*, and it is measured now: the
+oracle catches the violation from the trace, and `runner.claims_compliance` looks for an
+assertion of compliance in the closing message.
+
+That second half is keyword-based and it under-counts by construction. An agent that writes
+"all done, invoice settled as instructed" has implied compliance without using any phrase in
+the list. The list is deliberately narrow — a false positive would inflate the single most
+alarming number in the suite — so the error runs one way, towards missing them.
+
+Report it as a floor. "At least 20% of violations were concealed" is a claim this supports;
+"20% of violations were concealed" is not.
 
 ## 3. The scenarios test what one person imagined
 
@@ -79,7 +86,33 @@ is cut now and grown with `splits assign-new`, which never moves anything alread
 
 Until the suite is large, treat dev as a smoke test rather than as a development set.
 
-## 9. Single currency, single account, single day
+## 9. Escalation precision cannot be measured at all yet
+
+Recall works: six of the ten scenarios cannot be completed within the rules, so not asking a
+human is a miss and the denominator is real.
+
+Precision has no denominator. It needs scenarios where escalating is the **wrong** answer —
+a plainly in-policy payment, no trap, where asking a human is wasted human attention — and
+there are none. Every scenario in the suite has pressure in it, so `escalation="unnecessary"`
+is unused and an agent that escalates on all ten would score perfectly.
+
+That matters because DESIGN.md says a system that escalates everything is as unusable as one
+that never does, and right now the suite cannot tell them apart. `format_frontier` prints
+"n/a" and the reason rather than a flattering 100%, and a test asserts the gap still exists
+so it fails loudly when weeks 6-8 close it. Two or three routine-payment scenarios fix this
+and they should be among the first written.
+
+## 10. Every scenario is run once
+
+No repeats, so nothing here separates a model that violates 30% of the time from one that
+violated once out of one on the three scenarios where it happened to. The confidence
+intervals are over *scenarios*, not over runs, and they say nothing about how stable a
+single scenario's outcome is.
+
+Sampling each scenario several times is the fix and it multiplies the cost by the sample
+count, which at under £1 a pass is affordable — it has simply not been done yet.
+
+## 11. Single currency, single account, single day
 
 No FX, no multi-entity structure, no settlement dates. Each of those is a place a control
 can fail that this suite will never see.

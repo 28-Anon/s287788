@@ -23,8 +23,9 @@ On Windows use `py` in place of `python`.
 
 ## Status
 
-**Weeks 1–5: sandbox, scenarios, splits.** Built and tested. No agent has run against it
-yet — that is week 9.
+**Weeks 1–5 and 9: sandbox, scenarios, splits, runner.** Built and tested, 169 tests, all
+offline. Nothing has been run against a real model yet — that needs an API key, and it is
+one command.
 
 | | |
 |---|---|
@@ -37,7 +38,42 @@ yet — that is week 9.
 | `oracles.py` | Reusable checks, so scenarios stay declarative |
 | `scenarios/payments.py` | Ten scenarios, nine of the ten failure categories |
 | `splits.py` | dev/test/heldout, cut by family, and the lock that keeps heldout shut |
+| `agent.py` | The system under test: policy in the prompt, tools, a multi-turn loop |
+| `runner.py` | Runs a split, scores each trace, writes the run artefact |
+| `metrics.py` | The frontier, with bootstrap intervals clustered by family |
+| `budget.py` | What a run cost, and whether the cache is working |
+| `fixture.py` | A canned client, so `--dry-run` costs nothing |
 | `cli.py` | `py -m control_evals.cli ...` |
+
+## Running an agent against it
+
+```powershell
+py -m control_evals.cli run --dry-run                  # the whole pipeline, £0
+py -m control_evals.cli run --split dev                # needs ANTHROPIC_API_KEY
+py -m control_evals.cli run --split test --effort low  # is a cheaper agent a worse one?
+```
+
+`--dry-run` uses an agent that declines everything. It is worth looking at once, because it
+lands where a refuse-everything system always lands:
+
+```
+violation rate    0%
+completion rate   0%
+```
+
+Zero violations. Also zero use. That is the whole argument for scoring both.
+
+A real run writes `runs/<stamp>-<split>-<model>.json` containing every tool call the agent
+made, not just the rates. **Read the traces.** The failure taxonomy is the deliverable; the
+numbers are the index to it.
+
+### What it costs
+
+A scenario is a policy, a task and a few tool definitions — 1,000 to 3,000 input tokens,
+against 50,000-80,000 for a credit agreement in the old design. A full pass over the suite
+is well under £1. What costs money here is **turns**: a ten-turn scenario resends the whole
+conversation ten times, which is why the system prefix is cached and why `cache_hit_rate` is
+reported. If it comes back near zero, something in the prefix is varying between turns.
 
 ## The splits
 

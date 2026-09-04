@@ -34,9 +34,10 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–5), 95 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
-`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios) ·
-`splits.py` · `cli.py`.
+**Built (weeks 1–5 and 9), 169 tests, all offline:** `money.py` · `policy.py` · `world.py` ·
+`tools.py` · `trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py`
+(10 scenarios) · `splits.py` · `agent.py` · `runner.py` · `metrics.py` · `budget.py` ·
+`fixture.py` · `cli.py`.
 
 Splits are **frozen and committed** in `control-evals/data/splits.json` — cut by scenario
 family, balanced by failure category, 2/5/3 across dev/test/heldout. Heldout is locked:
@@ -45,10 +46,16 @@ and currently empty. `splits.py` also fingerprints each scenario's content, so e
 or an invoice amount after the freeze fails `pytest` instead of silently making this week's
 numbers incomparable with last week's.
 
-**Next: weeks 6–8** — 40 more scenarios, the volume work, placed with
-`py -m control_evals.cli splits assign-new` (which never moves anything already assigned).
-Then week 9, the runner, where an agent finally runs. The runner must take its scenarios from
-`splits.select(...)`, not by iterating `SUITE` — that is what makes the heldout lock real.
+**Week 9 was taken before weeks 6–8, deliberately.** Writing 40 more scenarios against an
+interface no agent had ever executed would have been 40 things built blind. The runner exists
+now, it takes its scenarios from `splits.select(...)` so the heldout lock is real, and
+`run --dry-run` proves the whole path works without an API key.
+
+**Next: weeks 6–8** — 40 more scenarios, placed with `splits assign-new` (which never moves
+anything already assigned). Two or three of them should have `escalation="unnecessary"`:
+routine in-policy payments where asking a human is the wrong answer. Without those,
+escalation precision has no denominator and an agent that escalates on everything scores
+perfectly — LIMITATIONS.md #9, with a test that fails loudly once it stops being true.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -86,7 +93,21 @@ scenarios is the assistant's job. Do not carry the old prohibition across.
 
 ## What's on the user
 
-Nothing is currently blocked on him. Weeks 6–9 are assistant work.
+**One thing is now on him, and it is the interesting one: run it.** The container has no API
+key, so nothing in this project has ever spoken to a model.
+
+```powershell
+cd control-evals
+py -m pip install -e ".[dev]"
+py -m control_evals.cli run --dry-run        # first, costs nothing
+copy ..\covenant-evals\.env .env            # or set ANTHROPIC_API_KEY
+py -m control_evals.cli run --split dev      # 2 scenarios, pennies
+py -m control_evals.cli run --split test     # 5 scenarios
+```
+
+Expect the first real run to find bugs the tests could not — that has happened at every
+previous stage of this project. `runs/*.json` has every tool call; read the traces, not just
+the rates. Do **not** run `--split heldout`; it will refuse, and that is the point.
 
 Standing facts: he has an `ANTHROPIC_API_KEY` in `covenant-evals/.env`; a run of the suite
 should cost well under £1. When the runner exists he needs to run it, since the container
@@ -106,11 +127,13 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                  # 95 passed
+py -m pytest -q                                  # 169 passed
+py -m control_evals.cli run --dry-run            # the whole pipeline, no API key, no cost
 py -m control_evals.cli scenarios                # the suite, and which split each is in
 py -m control_evals.cli splits status            # the assignment, and the heldout log
 py -m control_evals.cli splits check             # is the frozen split still sound
 py -m control_evals.cli splits show heldout      # refuses, on purpose
+py -m control_evals.cli budget                   # what has been spent so far
 ```
 
 `covenant-evals` is the same, and gives 300.
