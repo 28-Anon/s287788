@@ -372,3 +372,33 @@ def test_select_heldout_with_a_reason_logs_it(suite, tmp_path):
     )
     assert chosen
     assert len(S.access_history(log)) == 1
+
+
+# -- is_open: the check that must not log ---------------------------------------
+
+
+def test_is_open_agrees_with_require_open(tmp_path):
+    log = tmp_path / "log"
+    assert S.is_open("dev")
+    assert S.is_open("test")
+    assert not S.is_open("heldout")
+    assert not S.is_open("heldout", "too short")
+    assert S.is_open("heldout", "Week 22 final evaluation for the write-up.")
+    assert not log.exists()
+
+
+def test_is_open_never_writes_to_the_access_log(tmp_path, monkeypatch):
+    """The runner checks this before it looks for an API key, so it runs on every `run`
+    invocation. If it logged, a mistyped command would consume an opening in the permanent
+    record — which is the one thing the record exists to be trusted about."""
+    log = tmp_path / "heldout-access.log"
+    monkeypatch.setattr(S, "DEFAULT_ACCESS_LOG", log)
+
+    for _ in range(5):
+        S.is_open("heldout", "A perfectly good reason that is long enough.")
+    assert not log.exists()
+
+
+def test_is_open_rejects_an_unknown_split():
+    with pytest.raises(ValueError):
+        S.is_open("develop")

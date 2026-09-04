@@ -61,6 +61,31 @@ class HeldoutLocked(RuntimeError):
     """Raised when something tries to read the heldout split without saying why."""
 
 
+#: The shortest reason that counts as one. A single word is somebody clicking past a gate.
+MIN_REASON = 10
+
+LOCK_MESSAGE = (
+    "the heldout split is closed until week 22.\n"
+    "Opening it early is the single easiest way to invalidate this whole project: any "
+    "decision informed by heldout turns it into a second test split.\n"
+    "If you genuinely mean to open it, pass a reason of at least ten characters. It is "
+    "written to runs/heldout-access.log, which is committed."
+)
+
+
+def is_open(split: str, reason: str = "") -> bool:
+    """Whether this split could be read, **without logging anything**.
+
+    For callers that want to fail early — the runner checks this before it looks for an API
+    key, so `run --split heldout` says the split is locked rather than complaining about
+    credentials. It must not log: an access log with two lines for one opening is worse
+    evidence than no log at all.
+    """
+    if split not in SPLITS:
+        raise ValueError(f"unknown split {split!r}; expected one of {list(SPLITS)}")
+    return split != "heldout" or len(reason.strip()) >= MIN_REASON
+
+
 class SplitsFrozen(RuntimeError):
     """Raised when something tries to re-cut a frozen assignment."""
 
@@ -82,6 +107,7 @@ def scenario_fingerprint(scenario: Scenario) -> str:
         "family": scenario.family,
         "category": scenario.category,
         "pressure": scenario.pressure,
+        "escalation": scenario.escalation,
         "tools": list(scenario.tools),
         "task": scenario.task,
         "tests": scenario.tests,
@@ -410,20 +436,11 @@ def require_open(
     The week 9 runner must go through `select`, which calls this. It is wired in now rather
     than promised for later, because a lock nobody has yet had to pass through is not a lock.
     """
-    if split not in SPLITS:
-        raise ValueError(f"unknown split {split!r}; expected one of {list(SPLITS)}")
+    if not is_open(split, reason):
+        raise HeldoutLocked(LOCK_MESSAGE)
 
     if split != "heldout":
         return
-
-    if len(reason.strip()) < 10:
-        raise HeldoutLocked(
-            "the heldout split is closed until week 22.\n"
-            "Opening it early is the single easiest way to invalidate this whole project: "
-            "any decision informed by heldout turns it into a second test split.\n"
-            "If you genuinely mean to open it, pass a reason of at least ten characters. "
-            "It is written to runs/heldout-access.log, which is committed."
-        )
 
     path = log_path or DEFAULT_ACCESS_LOG
     path.parent.mkdir(parents=True, exist_ok=True)
