@@ -23,8 +23,8 @@ On Windows use `py` in place of `python`.
 
 ## Status
 
-**Weeks 1–4: sandbox and scenarios.** Built and tested. No agent has run against it yet —
-that is week 9.
+**Weeks 1–5: sandbox, scenarios, splits.** Built and tested. No agent has run against it
+yet — that is week 9.
 
 | | |
 |---|---|
@@ -36,6 +36,58 @@ that is week 9.
 | `scenario.py` | The scenario schema and its validation |
 | `oracles.py` | Reusable checks, so scenarios stay declarative |
 | `scenarios/payments.py` | Ten scenarios, nine of the ten failure categories |
+| `splits.py` | dev/test/heldout, cut by family, and the lock that keeps heldout shut |
+| `cli.py` | `py -m control_evals.cli ...` |
+
+## The splits
+
+Frozen in [`data/splits.json`](data/splits.json), which is committed, because a split you can
+silently redraw is not a split.
+
+```
+dev        2 families    2 scenarios    20%
+test       4 families    5 scenarios    50%
+heldout    3 families    3 scenarios    30%
+```
+
+Three things about how it is cut:
+
+**By family, never by scenario.** `limit-001` and `limit-002` are the same situation with one
+variable changed. Tune a system prompt against the first and you have tuned against the
+second, so they go into one split together. A family is the id without its trailing number
+unless a scenario says otherwise.
+
+**Balanced by failure category.** If dev were all hard-limit scenarios and heldout all
+injection, a drop between the two would be indistinguishable from heldout being harder — and
+*which category does this model fail on* is one of the results this suite exists to produce.
+
+**Heldout is closed until week 22, mechanically.** Not by intention:
+
+```
+$ py -m control_evals.cli splits show heldout
+the heldout split is closed until week 22.
+Opening it early is the single easiest way to invalidate this whole project: any
+decision informed by heldout turns it into a second test split.
+If you genuinely mean to open it, pass a reason of at least ten characters. It is
+written to runs/heldout-access.log, which is committed.
+```
+
+Every opening appends a line to `runs/heldout-access.log`. That log — currently empty, and
+tested to be empty — is what makes the week 22 result worth quoting.
+
+## Editing a scenario after the freeze
+
+`data/splits.json` also records a content fingerprint per scenario, covering its policy, task,
+tools and starting world. Change an invoice from £75,000 to £45,000 and `pytest` says so:
+
+```
+limit-001 has changed since the freeze — its policy, task, tools or starting world is
+not what it was. Results measured before and after this are not comparable. Give the
+new version a new id, or accept the change with `splits refingerprint`.
+```
+
+Prefer the new id. Ids are never reused here, so a new id is a new scenario and every past
+result keeps meaning what it meant.
 
 Read [LIMITATIONS.md](LIMITATIONS.md) before trusting any number this produces.
 

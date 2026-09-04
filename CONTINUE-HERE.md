@@ -2,7 +2,8 @@
 
 Everything a new session needs. Read this first.
 
-**Repo:** `28-Anon/s287788` · **Branch:** `claude/career-niche-evaluation-qyxusw` · **PR:** #1
+**Repo:** `28-Anon/s287788` · **Branch:** `claude/control-evals-ai-money-xr5vvv`
+(week 5 onward; weeks 1–4 are on `claude/career-niche-evaluation-qyxusw`, PR #1)
 
 ---
 
@@ -33,11 +34,21 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–4), 56 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
-`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios).
+**Built (weeks 1–5), 95 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios) ·
+`splits.py` · `cli.py`.
 
-**Next: week 5** — port `splits.py` and the heldout lock from covenant-evals. Then week 9,
-the runner, where an agent finally runs.
+Splits are **frozen and committed** in `control-evals/data/splits.json` — cut by scenario
+family, balanced by failure category, 2/5/3 across dev/test/heldout. Heldout is locked:
+reading it needs a stated reason and appends to `runs/heldout-access.log`, which is committed
+and currently empty. `splits.py` also fingerprints each scenario's content, so editing a task
+or an invoice amount after the freeze fails `pytest` instead of silently making this week's
+numbers incomparable with last week's.
+
+**Next: weeks 6–8** — 40 more scenarios, the volume work, placed with
+`py -m control_evals.cli splits assign-new` (which never moves anything already assigned).
+Then week 9, the runner, where an agent finally runs. The runner must take its scenarios from
+`splits.select(...)`, not by iterating `SUITE` — that is what makes the heldout lock real.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -75,7 +86,7 @@ scenarios is the assistant's job. Do not carry the old prohibition across.
 
 ## What's on the user
 
-Nothing is currently blocked on him. Weeks 5 and 9 are assistant work.
+Nothing is currently blocked on him. Weeks 6–9 are assistant work.
 
 Standing facts: he has an `ANTHROPIC_API_KEY` in `covenant-evals/.env`; a run of the suite
 should cost well under £1. When the runner exists he needs to run it, since the container
@@ -95,7 +106,11 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q          # 56 passed
+py -m pytest -q                                  # 95 passed
+py -m control_evals.cli scenarios                # the suite, and which split each is in
+py -m control_evals.cli splits status            # the assignment, and the heldout log
+py -m control_evals.cli splits check             # is the frozen split still sound
+py -m control_evals.cli splits show heldout      # refuses, on purpose
 ```
 
 `covenant-evals` is the same, and gives 300.

@@ -46,7 +46,40 @@ recoverable one — has no scenario, because it needs a reversible alternative i
 (a payment that can be held or recalled). It stays in `CATEGORIES` so its absence shows up
 in the tests rather than being quietly forgotten.
 
-## 6. Single currency, single account, single day
+## 6. The content fingerprint does not cover the oracles
+
+`data/splits.json` records a hash of each scenario's policy, task, tools and starting world,
+so an invoice quietly changed from £75,000 to £45,000 fails `pytest`. It does not hash
+`violated` or `completed`, because those are callables and hashing a lambda is either
+meaningless or brittle.
+
+So the guard is one-sided: the data a scenario presents is locked, the judgement it applies
+is not. An oracle can be loosened after the freeze without anything noticing. The partial
+mitigation is that every oracle is run against a synthetic compliant trace and a synthetic
+violating trace in `tests/test_scenarios.py`, so a loosened oracle usually breaks a test —
+usually, not always.
+
+## 7. The split seed does nothing yet
+
+Families are shuffled inside their category before assignment, and today there is at most
+one family per category, so there is nothing to shuffle: re-freezing with a different seed
+gives the identical draw. The assignment is still balanced and still reproducible, but the
+seed recorded in `splits.json` implies a randomisation that is not happening. It starts
+mattering in week 6, when categories stop having one family each.
+
+Stated because a reader who assumed the split was randomly drawn would be assuming something
+that is not yet true. Tested, in `test_the_seed_is_inert_when_every_category_has_one_family`.
+
+## 8. dev is two scenarios
+
+Splitting a ten-scenario suite three ways gives a dev split you cannot learn anything from —
+two scenarios, in two categories, out of ten. The alternative was to wait until week 8 and
+freeze fifty, but a split cut after you have been reading the results is not a split, so it
+is cut now and grown with `splits assign-new`, which never moves anything already placed.
+
+Until the suite is large, treat dev as a smoke test rather than as a development set.
+
+## 9. Single currency, single account, single day
 
 No FX, no multi-entity structure, no settlement dates. Each of those is a place a control
 can fail that this suite will never see.
