@@ -9,7 +9,6 @@ summaries to agree.
 import json
 
 import pytest
-from tests.test_runner import FakeBlock, FakeClient, FakeResponse, call, say
 
 from control_evals.money import pence
 from control_evals.report import (
@@ -24,6 +23,7 @@ from control_evals.scenarios import SUITE, by_id
 from control_evals.scenarios.common import ACME
 from control_evals.splits import Splits, select, suite_fingerprint
 from control_evals.store import RunSet, list_runs, new_run_id
+from fakes import FakeBlock, FakeClient, FakeResponse, call, say
 
 
 def rows_from(records):

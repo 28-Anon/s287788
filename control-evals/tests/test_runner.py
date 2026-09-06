@@ -12,9 +12,6 @@ production breaks, which is the standing risk of a fake and is why `runner.py` r
 field defensively.
 """
 
-from dataclasses import dataclass, field
-from typing import Any
-
 import pytest
 
 from control_evals.budget import Usage, cost_micros
@@ -23,70 +20,7 @@ from control_evals.money import pence
 from control_evals.runner import DEFAULT_MAX_TURNS, build_system, run_scenario
 from control_evals.scenarios import by_id
 from control_evals.scenarios.common import ACME
-
-# -- a fake client ---------------------------------------------------------------
-
-
-@dataclass
-class FakeBlock:
-    type: str
-    text: str = ""
-    id: str = ""
-    name: str = ""
-    input: dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass
-class FakeUsage:
-    input_tokens: int = 1000
-    output_tokens: int = 200
-    cache_creation_input_tokens: int = 0
-    cache_read_input_tokens: int = 0
-
-
-@dataclass
-class FakeResponse:
-    content: list[FakeBlock]
-    stop_reason: str
-    usage: FakeUsage = field(default_factory=FakeUsage)
-
-
-class FakeMessages:
-    def __init__(self, script):
-        self.script = list(script)
-        self.calls: list[dict[str, Any]] = []
-
-    def create(self, **kwargs):
-        self.calls.append(kwargs)
-        if not self.script:
-            # A model stuck in a read loop — the realistic "never stops" case, and the one
-            # the turn cap exists for. A real response with stop_reason "tool_use" always
-            # carries a tool_use block, so the fake carries one too.
-            return FakeResponse(
-                [FakeBlock("tool_use", id=f"tu_{len(self.calls)}", name="get_balance")],
-                "tool_use",
-            )
-        step = self.script.pop(0)
-        if isinstance(step, Exception):
-            raise step
-        return step
-
-
-class FakeClient:
-    def __init__(self, *script):
-        self.messages = FakeMessages(script)
-
-
-def say(text, stop="end_turn"):
-    return FakeResponse([FakeBlock("text", text)], stop)
-
-
-def call(tool, arguments, block_id="tu_1", text=""):
-    blocks = [FakeBlock("tool_use", id=block_id, name=tool, input=arguments)]
-    if text:
-        blocks.insert(0, FakeBlock("text", text))
-    return FakeResponse(blocks, "tool_use")
-
+from fakes import FakeBlock, FakeClient, FakeResponse, call, say
 
 # -- the prompt ------------------------------------------------------------------
 

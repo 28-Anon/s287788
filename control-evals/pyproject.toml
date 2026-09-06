@@ -25,7 +25,11 @@ packages = ["src/control_evals"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+# "tests" is here so shared helpers (fakes.py) import the same way however pytest is
+# invoked. Without it, `python -m pytest` succeeds and bare `pytest` fails, because only
+# the former puts the working directory on sys.path — which is exactly how a green local
+# run and a red CI run diverged once.
+pythonpath = ["src", "tests"]
 
 [tool.ruff]
 line-length = 100
