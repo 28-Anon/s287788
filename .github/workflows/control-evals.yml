@@ -30,3 +30,7 @@ jobs:
         run: ruff format --check src tests
       - name: Test
         run: pytest -q
+      - name: Splits
+        # Fails if a scenario was added without `splits assign-new`, or if a family
+        # was moved between splits after the freeze.
+        run: python -m control_evals.cli splits check

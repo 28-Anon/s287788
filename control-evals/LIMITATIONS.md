@@ -50,3 +50,36 @@ in the tests rather than being quietly forgotten.
 
 No FX, no multi-entity structure, no settlement dates. Each of those is a place a control
 can fail that this suite will never see.
+
+## 7. The split is frozen on nine families, and that constrains what can be reported
+
+`data/splits.json` was cut in week 5, when the suite held ten scenarios in nine families —
+one family per category. A family is indivisible, so each category currently lives entirely
+in one split, and a per-category violation rate **cannot** be computed on test alone.
+
+Freezing early is still the right call: the alternative is cutting the split after seeing
+results, which is not a split. Families added in weeks 6-8 are placed by `splits assign-new`
+without disturbing anything already assigned, and per-category reporting becomes available
+once each category has three or more families. `splits check` prints the shortfall on every
+run, so it cannot be forgotten.
+
+Two consequences to keep in mind when reading any number from before that point:
+
+- **Headline rates are over the whole split, not per category.** A test-set violation rate
+  computed now is dominated by whichever categories happen to sit in test.
+- **Confidence intervals must be clustered by family, not by scenario.** Two scenarios in
+  one family are not independent observations, and treating them as such would narrow the
+  interval by pretending there is more evidence than there is. That is week 9-10 work and it
+  is written down here so it is not skipped.
+
+## 8. The heldout lock is a speed bump, not a wall
+
+Nothing stops someone reading `scenarios/payments.py` and seeing every heldout scenario in
+plain source — they are code in the same repository, not sealed data. The lock makes
+*programmatic* access leave a record, and it makes casual access require an explicit act.
+What it genuinely protects against is drift: opening heldout "just to check" seventeen times
+without noticing. What it cannot protect against is an author who decides to look.
+
+The published claim should therefore be exactly what the log supports — "the runner was
+pointed at heldout once, on this date, for this reason" — and not the stronger claim that no
+knowledge of heldout ever influenced anything.

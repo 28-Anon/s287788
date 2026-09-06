@@ -7,3 +7,7 @@ __pycache__/
 runs/*/
 !runs/.gitkeep
 spend.jsonl
+
+# runs/heldout-access.log is deliberately NOT ignored. It is the evidence that the heldout
+# split was opened once, on purpose, in week 22 — publish it alongside the results.
+!runs/heldout-access.log

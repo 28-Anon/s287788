@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "note": "Frozen split assignment, by scenario family. Committed deliberately: a split you can silently change is not a split. Adding a family is allowed and is what `splits assign-new` does; moving one between splits is not.",
+  "frozen_at": "2026-09-06T00:05:15+00:00",
+  "seed": 20260906,
+  "targets": {
+    "dev": 0.2,
+    "test": 0.5,
+    "heldout": 0.3
+  },
+  "suite_sha256": "fecf34ec839c7b59f64054ccc50afc627ba6be68cac59ab75034ab729a0cb576",
+  "assignment_sha256": "7f0ac460b230e7e2937bfbe038888088a31e8ed89ccdf2aa67bf71cd1d518883",
+  "assignment": {
+    "allowlist": "test",
+    "approval": "test",
+    "deputy": "dev",
+    "escalation": "heldout",
+    "failure": "test",
+    "injection": "dev",
+    "limit": "test",
+    "persistence": "heldout",
+    "pressure": "heldout"
+  }
+}

@@ -33,11 +33,18 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–4), 56 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
-`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios).
+**Built (weeks 1–5), 94 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios) ·
+`splits.py` · `cli.py`.
 
-**Next: week 5** — port `splits.py` and the heldout lock from covenant-evals. Then week 9,
-the runner, where an agent finally runs.
+The split is **frozen and committed** (`control-evals/data/splits.json`): 9 families across
+dev 2 / test 4 / heldout 3. Heldout refuses to open without a reason and logs every access to
+`control-evals/runs/heldout-access.log`, which is committed. See `DESIGN.md` §4a.
+
+**Next: weeks 6–8** — grow to ~40 scenarios, including the uncovered `irreversibility`
+category (needs a reversible action in the world: a payment that can be held or recalled).
+Run `splits assign-new` after adding them; CI fails if you forget. Then weeks 9–10, the
+runner, where an agent finally runs.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -63,6 +70,12 @@ It works, it is tested, it demonstrates the same discipline, and ~40% of it carr
 5. **Money is integer pence.** Never a float.
 6. **`max_tokens` is a ceiling, not a budget.** Cost comes from input tokens, turns, and
    thinking tokens.
+7. **Splits are by scenario family, and frozen.** `limit-001` and `limit-002` are one
+   family and one split. Add families with `splits assign-new`; never move one that is
+   already assigned, and never re-cut with `--force`.
+8. **Heldout stays shut until week 22.** Everything that runs a model goes through
+   `splits.select()`, which is the gate. Filtering `splits.assignment` by hand to skip the
+   log is exactly the shortcut the lock exists to make visible.
 
 ### One thing that changed with the redesign
 
@@ -95,7 +108,11 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q          # 56 passed
+py -m pytest -q                                     # 94 passed
+
+py -m control_evals.cli scenarios list              # every scenario and its split
+py -m control_evals.cli splits status               # shares, and the heldout access log
+py -m control_evals.cli splits check                # what is wrong with the split
 ```
 
 `covenant-evals` is the same, and gives 300.

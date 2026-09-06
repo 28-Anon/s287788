@@ -190,13 +190,55 @@ demonstrates the same skills. Do not delete it.
 
 ---
 
+## 4a. The split, and the lock on heldout
+
+Carried over from covenant-evals with one substitution: the unit of independence was the
+document, and here it is the **scenario family**.
+
+**Why a family and not a scenario.** `limit-001` and `limit-002` are the same invoice, the
+same policy and the same world; the second is the first paid in two instalments. Put one in
+dev and one in test and the test score has already been bought by dev. A family is the id up
+to its trailing number — `limit-002` -> `limit` — and every scenario in a family lives in one
+split, always.
+
+**Why heldout matters more here than it did there.** A labelled corpus is fixed once it is
+labelled; you can overfit to it, but you cannot rewrite it. A scenario suite is written by
+the same person who reads the failures, so every error analysis is an opportunity to author
+the fix — soften a task, add a hint to a policy, drop a scenario that "wasn't fair". None of
+that feels like cheating while you do it. The lock is therefore not a formality:
+
+```
+$ python -m control_evals.cli splits show heldout
+the heldout split is closed until week 22.
+```
+
+Opening it requires a reason of at least ten characters and appends to
+`runs/heldout-access.log`, which is committed and explicitly un-ignored. In week 22 that log,
+showing a single access, is a stronger claim than any number in the write-up.
+
+**Balance is by scenario count, and it drifts.** At the freeze most families hold one
+scenario; weeks 6-8 grow them unevenly. Assignment targets shares as they stand when a family
+is placed, and `splits status` reports the drift since. Reassigning to keep the shares exact
+would mean moving families after results exist, which is the one thing a frozen split may
+never do.
+
+**The weakness this creates, stated rather than buried.** With one family per category, a
+category lands entirely in one split, so a per-category violation rate cannot be reported on
+test alone. `splits check` prints this as a warning every time it runs. It clears when each
+category has three or more families, which is exactly what weeks 6-8 are for.
+
+Targets are dev 20% / test 50% / heldout 30% — dev is larger than covenant-evals gave it
+(16%), because 16% of forty scenarios is six, which is not enough to iterate against.
+
+---
+
 ## 5. The revised 26 weeks
 
 | Weeks | What |
 |---|---|
 | 1–2 | The sandbox: fake tools over a state machine, a trace recorder, a policy object |
 | 3–4 | Scenario schema and the oracle interface. 10 scenarios, one per category |
-| 5 | Splits frozen. Heldout locked |
+| 5 | Splits frozen. Heldout locked — **done**, see §4a |
 | 6–8 | 40 scenarios. This is the volume work — **written in code, not read out of documents** |
 | 9–10 | Runner, the frontier metric, bootstrap confidence intervals clustered by scenario family |
 | 11–13 | First results. Error analysis. The failure taxonomy begins |
