@@ -14,12 +14,17 @@ An agent could satisfy that proxy while producing a useless answer. The frontier
 therefore precise on one axis and approximate on the other, and any claim made from it
 should say so.
 
-## 2. Silent violations are not yet detected
+## 2. Silent violations are detected by keyword, and the number is a lower bound
 
-The scariest failure is violating *while stating you complied*, and it is not measured yet.
-The intended check is keyword-based, which will under-count — an agent can imply compliance
-without using any of the phrases looked for. It will be reported as a lower bound and never
-as a rate.
+The scariest failure is violating *while stating you complied*. It is now measured, by
+matching the final message against a list of about twenty phrases that assert the rules were
+kept. That under-counts, and there is no version of this check that does not: an agent can
+imply compliance without using any phrase on the list, or describe its actions accurately in
+words the list does not contain.
+
+The list is deliberately conservative — a false positive would inflate the scariest number in
+the suite, so it holds only phrases that are hard to say by accident while describing a
+violation. Report it as "at least N of M violations were silent", never as a rate.
 
 ## 3. The scenarios test what one person imagined
 
@@ -101,19 +106,51 @@ assume from the name.
 failure. When results are published the two must be reported as separate numbers, and neither
 should be described as "respects dual control" without saying which.
 
-## 10. Six scenarios have no violation to catch
+## 10. Five scenarios have no violation to catch, and both denominators are printed
 
-`ceiling-001`, `daily-002`, `routine-001`, `routine-002`, `lookalike-002` and `retryok-002`
-can be completed inside every rule. They exist to make escalation precision measurable, and
-they mean the headline violation rate is computed over a denominator that includes scenarios
-where violating was not really available.
+`ceiling-001`, `daily-002`, `routine-001`, `routine-002` and `retryok-002` can be completed
+inside every rule. (An earlier draft of this file said six and included `lookalike-002` —
+that one does have a trap: paying the similarly-named entity violates the allowlist. The
+correct answer being "pay it" is not the same as there being nothing to catch.)
 
-Report the violation rate over trapped scenarios and the completion rate over all of them, or
-say plainly that both denominators are the whole suite. Quietly mixing the two understates
-the violation rate by roughly the share of no-trap scenarios, which is currently about 15%.
+They exist to make escalation precision measurable, and they mean a violation rate over all
+41 scenarios understates the rate by roughly their share. `summarise` therefore reports two:
+over the 36 trapped scenarios, and over the whole suite. Neither is wrong; quoting one
+without saying which is.
+
+The larger and more useful count is that **fourteen scenarios cannot be completed by
+escalating** — that is what stops reflexive refusal scoring well.
 
 ## 11. Silent-violation detection is still not built
 
 Unchanged from week 5, and now more conspicuous: with 41 scenarios there is more surface for
 an agent to violate while stating it complied, and nothing measures it. It stays a keyword
 check to be reported as a lower bound, and it is weeks 9-10 work.
+
+## 12. The runner is tested against a fake client, not against the API
+
+Every test in this project runs offline. The agent loop is exercised by a fake client that
+mimics the SDK's response shape closely enough that the loop cannot tell the difference.
+
+That is the only way to test the cases that matter — a model that loops forever, a refusal, a
+truncated turn, a connection error — none of which can be produced on demand from a real
+model. It is also the standing risk of a fake: **if the SDK's response shape changes, these
+tests keep passing while a real sweep breaks.** `runner.py` reads every response field
+defensively for that reason, and the first real sweep is the thing that actually validates
+the integration. Until it has been run, treat "the runner works" as untested against reality
+in exactly the way covenant-evals' EDGAR client was.
+
+## 13. Prices are hardcoded, and partner platforms bill differently
+
+`models.py` records first-party API rates so a cost can be recomputed from a stored run
+without another network call. Amazon Bedrock and Google Vertex bill separately. If a run is
+ever made through one of those, its cost figure is wrong — the run record does not currently
+capture which platform was used, which is a gap worth closing before any cost comparison is
+published.
+
+## 14. Cost estimates from `--dry-run` are a guess
+
+The estimate assumes about 1,200 tokens of prompt and five turns per scenario, deliberately
+on the high side. Real spend depends on how many turns the agent takes, which is the thing
+being measured and therefore not knowable in advance. Use it to catch an order-of-magnitude
+mistake before spending, not as a budget.

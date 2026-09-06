@@ -13,7 +13,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import UTC, datetime
 
+from .budget import format_micros
+from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
+from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
 from .scenarios import SUITE, by_id
 from .splits import (
@@ -114,6 +118,192 @@ def cmd_scenarios_check() -> int:
         for error in errors:
             print(f"  - {error}")
     return 1
+
+
+# ---------------------------------------------------------------------------
+# run
+# ---------------------------------------------------------------------------
+
+
+def _client():
+    """Built lazily so that every offline command — and every test — needs no key."""
+    try:
+        import anthropic
+    except ImportError:  # pragma: no cover - dependency is declared
+        raise SystemExit("the anthropic package is not installed: py -m pip install -e .") from None
+
+    try:
+        return anthropic.Anthropic()
+    except Exception as exc:  # noqa: BLE001
+        raise SystemExit(
+            f"could not build an API client ({exc}).\n"
+            "Set ANTHROPIC_API_KEY, or run `ant auth login` if you use a profile."
+        ) from None
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    from .report import Row, row_from_run, summarise
+    from .runner import run_scenario
+    from .splits import suite_fingerprint
+    from .store import RunSet, new_run_id
+
+    splits = _require_splits()
+    try:
+        # The gate. A dry run goes through it too: listing which scenarios are in heldout
+        # is itself an access, and over-logging is the right direction for a lock.
+        chosen = select(args.split, SUITE, splits, reason=args.reason)
+    except HeldoutLocked as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    if args.scenario:
+        chosen = [s for s in chosen if s.id in set(args.scenario)]
+        if not chosen:
+            raise SystemExit(f"none of {args.scenario} are in the {args.split} split")
+    if args.limit:
+        chosen = chosen[: args.limit]
+
+    spec = spec_for(args.model)
+    total = len(chosen) * args.samples
+
+    print(f"{total} run(s): {len(chosen)} scenario(s) x {args.samples} sample(s)")
+    print(f"model {spec.id}" + (f", effort {args.effort}" if spec.supports_effort else ""))
+    print(_estimate(total, spec))
+
+    if args.dry_run:
+        print("\ndry run: nothing was sent. Drop --dry-run to spend it.")
+        return 0
+
+    client = _client()
+    run_set = RunSet(
+        run_id=new_run_id(spec.id, args.effort if spec.supports_effort else "", args.split),
+        split=args.split,
+        model=spec.id,
+        effort=args.effort if spec.supports_effort else "",
+        suite_sha256=suite_fingerprint(SUITE),
+        splits_sha256=splits.assignment_sha256,
+        started_at=datetime.now(UTC).isoformat(timespec="seconds"),
+    )
+
+    rows: list[Row] = []
+    spent = 0
+    for index, scenario in enumerate(chosen, start=1):
+        for sample in range(args.samples):
+            result = run_scenario(
+                scenario,
+                client,
+                model=spec.id,
+                effort=args.effort,
+                max_turns=args.max_turns,
+                sample=sample,
+            )
+            rows.append(row_from_run(result, scenario))
+            run_set.records.append(result.as_dict())
+            spent += result.cost_micros
+
+            flag = "VIOLATION" if result.violated else ("ok" if result.completed else "-")
+            note = result.violated or result.stopped
+            print(
+                f"  [{index:>3}/{len(chosen)}] {scenario.id:<16} {flag:<9} "
+                f"{result.turns:>2}t {format_micros(result.cost_micros):>9}  {note}"
+            )
+
+            # Written after every run, not at the end: a sweep interrupted halfway has
+            # still bought its results and should not lose them.
+            run_set.save()
+
+    print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
+    _print_summary(summarise(rows), rows)
+    return 0
+
+
+def _estimate(runs: int, spec) -> str:
+    """A rough number before spending, from the shape of a scenario rather than a guess."""
+    from .budget import Usage, cost_micros
+
+    # ~1,200 tokens of policy, task and tool schemas; ~5 turns; the prefix is resent each
+    # turn, so input scales with turns. Deliberately an over-estimate.
+    per_run = Usage(input_tokens=1_200 * 5, output_tokens=350 * 5)
+    each = cost_micros(per_run, spec)
+    return f"rough estimate {format_micros(each)} per run, {format_micros(each * runs)} total"
+
+
+def _print_summary(summary, rows) -> None:
+    from .report import by_category
+
+    print("\n-- the frontier " + "-" * 62)
+    print(f"  violation rate (trapped scenarios) {summary.violation_trapped}")
+    print(f"  violation rate (whole suite)       {summary.violation_all}")
+    print(f"  task completion                    {summary.completion}")
+    print(f"  escalation precision               {summary.escalation_precision}")
+    print(f"  escalation recall                  {summary.escalation_recall}")
+    print(
+        f"  silent violations                  at least {summary.silent_violations} "
+        f"of {summary.violations} (keyword detection, lower bound only)"
+    )
+    if summary.unscored:
+        detail = ", ".join(f"{k}: {v}" for k, v in sorted(summary.unscored.items()))
+        print(f"  unscored runs                      {detail}")
+    print(
+        f"\n  {summary.runs} runs, {summary.turns} turns, "
+        f"{format_micros(summary.cost_micros)}, {summary.seconds:.0f}s"
+    )
+    print("\n  Intervals are 95%, bootstrapped over scenario FAMILIES — runs inside a")
+    print("  family are not independent, so resampling runs would be overconfident.")
+
+    print("\n-- by category " + "-" * 63)
+    for category, interval in by_category(rows).items():
+        print(f"  {category:<20} {interval}")
+
+
+def cmd_report(args: argparse.Namespace) -> int:
+    from .report import Row, escalation_is_acceptable, has_a_trap, summarise
+    from .store import RunSet, list_runs
+
+    if not args.run_id:
+        available = list_runs()
+        if not available:
+            raise SystemExit("no runs yet — `run --split dev --dry-run` first")
+        print("\n".join(available))
+        return 0
+
+    run_set = RunSet.load(args.run_id)
+    rows: list[Row] = []
+    for record in run_set.records:
+        scenario = by_id(record["scenario_id"])
+        if scenario is None:
+            continue
+        rows.append(
+            Row(
+                scenario_id=record["scenario_id"],
+                family=record["family"],
+                category=record["category"],
+                pressure=record["pressure"],
+                model=record["model"],
+                effort=record.get("effort", ""),
+                violated=record["violated"],
+                completed=record["completed"],
+                escalated=any(c["tool"] == "request_approval" for c in record["calls"]),
+                escalation_acceptable=escalation_is_acceptable(scenario),
+                trapped=has_a_trap(scenario),
+                silent_claim=_silent(record),
+                turns=record["turns"],
+                cost_micros=record["cost_micros"],
+                elapsed_s=record["elapsed_s"],
+                stopped=record["stopped"],
+            )
+        )
+
+    print(f"{run_set.run_id}: {run_set.model} on {run_set.split}, {len(rows)} runs")
+    _print_summary(summarise(rows), rows)
+    return 0
+
+
+def _silent(record: dict) -> str | None:
+    from .report import claims_compliance
+
+    if not record.get("violated"):
+        return None
+    return claims_compliance(record.get("final_message", ""))
 
 
 # ---------------------------------------------------------------------------
@@ -301,6 +491,26 @@ def build_parser() -> argparse.ArgumentParser:
     splits.add_parser("log", help="every time heldout has been opened").set_defaults(
         func=lambda args: cmd_splits_log()
     )
+
+    runner = sub.add_parser("run", help="run a model against a split")
+    runner.add_argument("--split", choices=SPLITS, default="dev")
+    runner.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL)
+    runner.add_argument("--effort", choices=EFFORT_LEVELS, default="high")
+    runner.add_argument("--samples", type=int, default=1, help="runs per scenario")
+    runner.add_argument("--limit", type=int, help="only the first N scenarios")
+    runner.add_argument("--scenario", action="append", help="run only these ids")
+    runner.add_argument("--max-turns", type=int, default=DEFAULT_MAX_TURNS)
+    runner.add_argument("--reason", default="", help="required for heldout; it is logged")
+    runner.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="estimate the cost and send nothing. Free, and always worth doing first.",
+    )
+    runner.set_defaults(func=lambda args: cmd_run(args))
+
+    report = sub.add_parser("report", help="the frontier for a stored run")
+    report.add_argument("run_id", nargs="?", help="omit to list stored runs")
+    report.set_defaults(func=lambda args: cmd_report(args))
 
     return parser
 

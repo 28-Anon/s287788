@@ -33,19 +33,31 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–8), 244 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
-`trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `cli.py` · `scenarios/` —
-**41 scenarios in 32 families, all ten categories, at least three families each.**
+**Built (weeks 1–10), 292 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+`trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `models.py` · `budget.py` ·
+`runner.py` · `report.py` · `store.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
+families, all ten categories, at least three families each.**
 
 The split is **frozen and committed** (`control-evals/data/splits.json`): dev 6 families /
 test 17 / heldout 9. Nothing assigned in week 5 has moved. Heldout refuses to open without a
 reason and logs every access to `control-evals/runs/heldout-access.log`, which is committed.
 See `DESIGN.md` §4a and §4b.
 
-**Next: weeks 9–10** — the runner (an agent loop over the sandbox), the completion/violation
-frontier, bootstrap confidence intervals **clustered by family**, and silent-violation
-detection (keyword-based, report as a lower bound only). This is where a model finally runs,
-and the user has to run it — the container has no API key.
+The runner exists and is tested offline against a fake client. **No model has actually been
+called yet** — that needs the user's API key. See `DESIGN.md` §4c.
+
+**Next: the first real sweep**, which is on the user:
+
+```powershell
+py -m control_evals.cli run --split dev --dry-run   # free, prices it
+py -m control_evals.cli run --split dev             # ~$0.50, 8 scenarios
+py -m control_evals.cli report                      # then report <run-id>
+```
+
+Expect the integration to break on first contact in some small way — the runner has only ever
+talked to a fake. That is the covenant-evals `root_form` lesson repeating, and it is why
+`--dry-run` and an 8-scenario dev split come first. Then weeks 11–13: error analysis and the
+failure taxonomy.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -87,6 +99,17 @@ It works, it is tested, it demonstrates the same discipline, and ~40% of it carr
 11. **`Scenario.validate` checks the empty trace.** An oracle that fires when the agent did
    nothing is a bug, unless the scenario sets `inaction_is_a_violation` (only `recall-001`
    does). Keep that check.
+12. **The system prompt is the policy and one sentence of framing.** No "be careful with
+   money", no "when in doubt, ask". Advice in the prompt moves what is measured from the
+   model to the harness — the same mistake as a world that refuses violations.
+13. **Bootstrap intervals resample families, never runs.** Runs inside a family are
+   correlated; resampling runs returns an interval narrower than the evidence supports,
+   which is the error that looks like a result and publishes cleanly.
+14. **Both violation denominators get printed.** Five scenarios have no violation available,
+   so a rate over all 41 understates it. Never quote one without saying which.
+15. **`models.py` owns the per-model request shape.** Opus 4.8 does *not* think unless
+   `{"type": "adaptive"}` is set explicitly, and omitting it fails silently — a sweep would
+   report results for a configuration nobody intended to run.
 
 ### One thing that changed with the redesign
 
@@ -99,11 +122,12 @@ scenarios is the assistant's job. Do not carry the old prohibition across.
 
 ## What's on the user
 
-Nothing is currently blocked on him. Weeks 5 and 9 are assistant work.
+**The first real sweep.** Everything up to it is built and tested; the container has no API
+key, so he runs it. `--dry-run` first — it is free and prices the sweep.
 
-Standing facts: he has an `ANTHROPIC_API_KEY` in `covenant-evals/.env`; a run of the suite
-should cost well under £1. When the runner exists he needs to run it, since the container
-has no API key of its own.
+Standing facts: he has an `ANTHROPIC_API_KEY` in `covenant-evals/.env` (control-evals reads
+`ANTHROPIC_API_KEY` from the environment, or an `ant auth login` profile). A dev sweep is
+about $0.50; the whole suite well under £1.
 
 ---
 
@@ -119,13 +143,14 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 244 passed
+py -m pytest -q                                     # 292 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log
 py -m control_evals.cli splits check                # what is wrong with the split
 py -m control_evals.cli scenarios categories        # the taxonomy and its coverage
 py -m control_evals.cli scenarios show rewire-001   # one scenario in full
+py -m control_evals.cli run --split dev --dry-run   # price a sweep, send nothing
 ```
 
 `covenant-evals` is the same, and gives 300.

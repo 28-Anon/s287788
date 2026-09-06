@@ -271,6 +271,11 @@ def nothing_to_violate() -> Oracle:
     def check(trace: Trace, world: PaymentsWorld) -> str | None:
         return None
 
+    # Marked on the function rather than declared on the scenario, so it is derived from the
+    # oracle actually in use and cannot drift out of step with it. A scenario that wraps this
+    # in all_of() loses the marker and counts as trapped — the conservative direction, since
+    # it lands in the stricter denominator.
+    check.is_no_trap = True
     return check
 
 
