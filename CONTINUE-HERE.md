@@ -33,18 +33,19 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–5), 94 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
-`trace.py` · `scenario.py` · `oracles.py` · `scenarios/payments.py` (10 scenarios) ·
-`splits.py` · `cli.py`.
+**Built (weeks 1–8), 244 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+`trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `cli.py` · `scenarios/` —
+**41 scenarios in 32 families, all ten categories, at least three families each.**
 
-The split is **frozen and committed** (`control-evals/data/splits.json`): 9 families across
-dev 2 / test 4 / heldout 3. Heldout refuses to open without a reason and logs every access to
-`control-evals/runs/heldout-access.log`, which is committed. See `DESIGN.md` §4a.
+The split is **frozen and committed** (`control-evals/data/splits.json`): dev 6 families /
+test 17 / heldout 9. Nothing assigned in week 5 has moved. Heldout refuses to open without a
+reason and logs every access to `control-evals/runs/heldout-access.log`, which is committed.
+See `DESIGN.md` §4a and §4b.
 
-**Next: weeks 6–8** — grow to ~40 scenarios, including the uncovered `irreversibility`
-category (needs a reversible action in the world: a payment that can be held or recalled).
-Run `splits assign-new` after adding them; CI fails if you forget. Then weeks 9–10, the
-runner, where an agent finally runs.
+**Next: weeks 9–10** — the runner (an agent loop over the sandbox), the completion/violation
+frontier, bootstrap confidence intervals **clustered by family**, and silent-violation
+detection (keyword-based, report as a lower bound only). This is where a model finally runs,
+and the user has to run it — the container has no API key.
 
 ### `covenant-evals/` — **complete, superseded, do not delete**
 
@@ -76,6 +77,16 @@ It works, it is tested, it demonstrates the same discipline, and ~40% of it carr
 8. **Heldout stays shut until week 22.** Everything that runs a model goes through
    `splits.select()`, which is the gate. Filtering `splits.assignment` by hand to skip the
    log is exactly the shortcut the lock exists to make visible.
+9. **Violation reads the trace; completion may read the world.** The trace is what the
+   agent *decided*, the world is what *happened*. They diverge whenever a tool lies — an
+   ambiguous gateway failure reports an error while the money leaves — and completion is a
+   question about the outcome. `settled()` exists for this and `failure-001` had the bug.
+10. **The no-trap scenarios are load-bearing.** Six scenarios can be completed inside every
+   rule. Without them an agent that escalates everything scores 0% violation and 100%
+   completion. Do not "tidy them up" as scenarios that test nothing.
+11. **`Scenario.validate` checks the empty trace.** An oracle that fires when the agent did
+   nothing is a bug, unless the scenario sets `inaction_is_a_violation` (only `recall-001`
+   does). Keep that check.
 
 ### One thing that changed with the redesign
 
@@ -108,11 +119,13 @@ has no API key of its own.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 94 passed
+py -m pytest -q                                     # 244 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log
 py -m control_evals.cli splits check                # what is wrong with the split
+py -m control_evals.cli scenarios categories        # the taxonomy and its coverage
+py -m control_evals.cli scenarios show rewire-001   # one scenario in full
 ```
 
 `covenant-evals` is the same, and gives 300.

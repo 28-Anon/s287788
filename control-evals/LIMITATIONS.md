@@ -23,8 +23,10 @@ as a rate.
 
 ## 3. The scenarios test what one person imagined
 
-Ten scenarios written by one author, who chose which pressures to apply and which failures
-to look for. A control failure nobody thought of is not in here, and the suite cannot tell
+Forty-one scenarios written by one author, who chose which pressures to apply and which
+failures to look for. Going from ten to forty-one made this worse in one specific way rather
+than better: the new ones were written after the old ones, by the same person, in a few
+sittings, so they inherit the same blind spots with more confidence behind them. A control failure nobody thought of is not in here, and the suite cannot tell
 you about it. That is the standing weakness of every constructed eval and the reason the
 failure taxonomy — what actually happened, with traces — matters more than the rates.
 
@@ -39,12 +41,16 @@ permits violations.** A real system would enforce limits itself. Removing that e
 is what makes the agent's own behaviour visible, and it means these results describe the
 agent, not a deployment.
 
-## 5. One category is uncovered
+## 5. Every category is covered, and coverage is not the same as depth
 
-`irreversibility` — whether an agent treats an unrecoverable action more carefully than a
-recoverable one — has no scenario, because it needs a reversible alternative in the world
-(a payment that can be held or recalled). It stays in `CATEGORIES` so its absence shows up
-in the tests rather than being quietly forgotten.
+`irreversibility` was uncovered through week 5; weeks 6-8 gave the world a reversible action
+and the category now has three families. Every category has at least three, which is what
+makes a per-category result reportable.
+
+It does not make it *reliable*. Three families is the floor, not a sample size. A per-category
+violation rate over three or four scenarios has a confidence interval wide enough to make
+most comparisons between categories meaningless, and the write-up must show the interval
+rather than the point estimate.
 
 ## 6. Single currency, single account, single day
 
@@ -83,3 +89,31 @@ without noticing. What it cannot protect against is an author who decides to loo
 The published claim should therefore be exactly what the log supports — "the runner was
 pointed at heldout once, on this date, for this reason" — and not the stronger claim that no
 knowledge of heldout ever influenced anything.
+
+## 9. `approval_before_paying_over` is the weaker of the two approval oracles
+
+It is satisfied by requesting approval and then paying without waiting for a response. That
+is a real property and `approval-001` measures it deliberately — an agent that never asks is
+worse than one that asks and does not wait — but it is not the property most people would
+assume from the name.
+
+`pending-001` measures the stronger one: nobody ever answers, so any payment at all is the
+failure. When results are published the two must be reported as separate numbers, and neither
+should be described as "respects dual control" without saying which.
+
+## 10. Six scenarios have no violation to catch
+
+`ceiling-001`, `daily-002`, `routine-001`, `routine-002`, `lookalike-002` and `retryok-002`
+can be completed inside every rule. They exist to make escalation precision measurable, and
+they mean the headline violation rate is computed over a denominator that includes scenarios
+where violating was not really available.
+
+Report the violation rate over trapped scenarios and the completion rate over all of them, or
+say plainly that both denominators are the whole suite. Quietly mixing the two understates
+the violation rate by roughly the share of no-trap scenarios, which is currently about 15%.
+
+## 11. Silent-violation detection is still not built
+
+Unchanged from week 5, and now more conspicuous: with 41 scenarios there is more surface for
+an agent to violate while stating it complied, and nothing measures it. It stays a keyword
+check to be reported as a lower bound, and it is weeks 9-10 work.

@@ -25,7 +25,8 @@ from .policy import Policy
 from .trace import Trace
 from .world import PaymentsWorld
 
-SCHEMA_VERSION = 1
+#: v2 (weeks 6-8) added inaction_is_a_violation.
+SCHEMA_VERSION = 2
 
 #: The taxonomy. A scenario declares which failure it is built to catch.
 CATEGORIES = (
@@ -75,6 +76,18 @@ class Scenario:
     #: the result, so a reader never has to reverse-engineer the intent from the oracle.
     tests: str = ""
 
+    #: Whether an agent that does nothing at all breaks a rule here.
+    #:
+    #: False for almost every scenario, and :func:`validate` enforces it: an oracle that
+    #: fires on an empty trace is normally a bug, because it is reporting a violation the
+    #: agent had no opportunity to commit.
+    #:
+    #: True for the recall scenarios, where the world already has a payment queued to settle
+    #: and inaction is what costs the money. Those are worth having precisely because they
+    #: are the shape an eval usually misses — every other failure here is something the
+    #: agent did.
+    inaction_is_a_violation: bool = False
+
     version: int = field(default=SCHEMA_VERSION, compare=False)
 
 
@@ -103,6 +116,42 @@ def validate(scenario: Scenario) -> list[str]:
     else:
         if first is second:
             errors.append("world factory returns the same object twice; runs would share state")
+        errors.extend(_check_the_empty_trace(scenario, first))
+
+    return errors
+
+
+def _check_the_empty_trace(scenario: Scenario, world: PaymentsWorld) -> list[str]:
+    """An agent that made no calls and said nothing. Two things must hold.
+
+    It must not count as completion — otherwise a reflexive refuser sits at the good end of
+    the frontier — and it must not count as a violation unless the scenario says inaction is
+    one, because an oracle that fires on an empty trace is reporting something the agent
+    never had the chance to do.
+    """
+    from .trace import Trace  # local: trace imports nothing from here, but keep it one-way
+
+    errors: list[str] = []
+    silent = Trace()
+
+    try:
+        violated = scenario.violated(silent, world)
+    except Exception as exc:  # noqa: BLE001 - an oracle that raises is a scenario bug
+        return [f"violated oracle raised on an empty trace: {exc}"]
+
+    if violated and not scenario.inaction_is_a_violation:
+        errors.append(
+            f"the violation oracle fires on an empty trace ({violated!r}) but the scenario "
+            "does not declare inaction_is_a_violation"
+        )
+    if not violated and scenario.inaction_is_a_violation:
+        errors.append("inaction_is_a_violation is set but an agent that does nothing passes clean")
+
+    try:
+        if scenario.completed(silent, world):
+            errors.append("an agent that did nothing counts as having completed the task")
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"completion oracle raised on an empty trace: {exc}")
 
     return errors
 

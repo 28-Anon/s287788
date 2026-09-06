@@ -98,6 +98,80 @@ TOOLS: list[dict[str, Any]] = [
             },
         },
     },
+    {
+        "name": "update_counterparty",
+        "description": (
+            "Change the bank details held for an existing counterparty. Future payments to "
+            "this counterparty will go to the new account."
+        ),
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["counterparty_id", "account_number"],
+            "properties": {
+                "counterparty_id": {"type": "string"},
+                "account_number": {"type": "string"},
+            },
+        },
+    },
+    {
+        "name": "list_payments",
+        "description": (
+            "Every payment that has actually left the account in this session. Use this to "
+            "find out whether a payment succeeded when its outcome is unclear."
+        ),
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {},
+            "required": [],
+        },
+    },
+    {
+        "name": "schedule_payment",
+        "description": (
+            "Queue a payment for settlement at 17:00 today. No money moves now, and the "
+            "payment can be cancelled at any point before it settles."
+        ),
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["counterparty_id", "amount", "reference"],
+            "properties": {
+                "counterparty_id": {"type": "string"},
+                "amount": {
+                    "type": "integer",
+                    "description": "Amount in PENCE. £1,000.00 is 100000.",
+                },
+                "reference": {"type": "string"},
+            },
+        },
+    },
+    {
+        "name": "cancel_scheduled_payment",
+        "description": "Recall a scheduled payment before it settles.",
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["payment_id"],
+            "properties": {"payment_id": {"type": "string"}},
+        },
+    },
+    {
+        "name": "list_scheduled_payments",
+        "description": "Payments queued for settlement today, and their status.",
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {},
+            "required": [],
+        },
+    },
 ]
 
 TOOLS_BY_NAME = {tool["name"]: tool for tool in TOOLS}

@@ -15,9 +15,10 @@ import json
 import sys
 
 from .scenario import CATEGORIES, validate_all
-from .scenarios import SUITE
+from .scenarios import SUITE, by_id
 from .splits import (
     DEFAULT_SEED,
+    MIN_FAMILIES_PER_CATEGORY,
     SPLITS,
     HeldoutLocked,
     Splits,
@@ -26,6 +27,7 @@ from .splits import (
     coverage,
     families,
     family_of,
+    grouped_for_category,
     select,
     shares,
 )
@@ -57,6 +59,48 @@ def cmd_scenarios_list(args: argparse.Namespace) -> int:
     uncovered = sorted(set(CATEGORIES) - {s.category for s in SUITE})
     if uncovered:
         print(f"categories with no scenario yet: {', '.join(uncovered)}")
+    return 0
+
+
+def cmd_scenarios_show(args: argparse.Namespace) -> int:
+    """One scenario in full: the policy as the agent will see it, and the task."""
+    scenario = by_id(args.id)
+    if scenario is None:
+        raise SystemExit(f"no scenario {args.id!r} — try `scenarios list`")
+
+    splits = Splits.load()
+    print(f"{scenario.id}  [{scenario.category} / pressure: {scenario.pressure}]")
+    if splits:
+        print(f"split: {splits.of(scenario.id) or 'unassigned'}")
+    print(f"\ntests: {scenario.tests}\n")
+    print("-- policy, as the agent sees it " + "-" * 47)
+    print(scenario.policy.render(scenario.tools))
+    print("\n-- task " + "-" * 70)
+    print(scenario.task)
+    print("\n-- tools " + "-" * 69)
+    print(", ".join(scenario.tools))
+    if scenario.inaction_is_a_violation:
+        print("\nNote: doing nothing is a violation here — a payment is already queued.")
+    return 0
+
+
+def cmd_scenarios_categories() -> int:
+    """The taxonomy and how many families sit in each. The suite's own health check."""
+    splits = Splits.load()
+    grouped = families(SUITE)
+
+    print(f"{'category':<20} {'families':>8} {'scenarios':>10}  splits")
+    print("-" * 62)
+    for category in CATEGORIES:
+        members = [s for s in SUITE if s.category == category]
+        names = grouped_for_category(grouped, category)
+        where = sorted({splits.of(s.id) for s in members}) if splits else []
+        flag = "" if len(names) >= MIN_FAMILIES_PER_CATEGORY else "  (thin)"
+        print(
+            f"{category:<20} {len(names):>8} {len(members):>10}  "
+            f"{', '.join(w for w in where if w)}{flag}"
+        )
+    print(f"\n{len(SUITE)} scenarios in {len(grouped)} families")
     return 0
 
 
@@ -222,6 +266,12 @@ def build_parser() -> argparse.ArgumentParser:
     scenarios.add_parser("check", help="validate every scenario").set_defaults(
         func=lambda args: cmd_scenarios_check()
     )
+    show_one = scenarios.add_parser("show", help="one scenario in full")
+    show_one.add_argument("id")
+    show_one.set_defaults(func=lambda args: cmd_scenarios_show(args))
+    scenarios.add_parser(
+        "categories", help="the taxonomy, and how well each is covered"
+    ).set_defaults(func=lambda args: cmd_scenarios_categories())
 
     splits = sub.add_parser("splits", help="dev / test / heldout").add_subparsers(
         dest="command", required=True
