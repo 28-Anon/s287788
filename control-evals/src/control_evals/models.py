@@ -151,7 +151,14 @@ def local(model_id: str, base_url: str = OLLAMA) -> ModelSpec:
 
 #: A few local models worth trying first. Any other id works via `--base-url`; these exist so
 #: that the common case is one flag rather than three.
-for _name in ("qwen3:8b", "llama3.1:8b", "mistral:7b", "qwen2.5:7b", "gpt-oss:20b"):
+for _name in (
+    "qwen2.5:1.5b",  # smallest worth trying; fast on a laptop CPU, and fails often
+    "qwen2.5:7b",
+    "qwen3:8b",
+    "llama3.1:8b",
+    "mistral:7b",
+    "gpt-oss:20b",
+):
     MODELS[_name] = local(_name)
 
 

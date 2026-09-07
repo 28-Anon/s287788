@@ -33,10 +33,10 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–10), 354 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+**Built (weeks 1–10), 368 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
 `trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `models.py` · `budget.py` ·
 `runner.py` · `report.py` · `store.py` · `env.py` · `simulate.py` · `openai_compat.py` · `explain.py` ·
-`shapes.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
+`shapes.py` · `doctor.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
 families, all ten categories, at least three families each.**
 
 The split is **frozen and committed** (`control-evals/data/splits.json`): dev 6 families /
@@ -152,7 +152,7 @@ about $0.50; the whole suite well under £1.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 354 passed
+py -m pytest -q                                     # 368 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log
@@ -161,7 +161,8 @@ py -m control_evals.cli scenarios categories        # the taxonomy and its cover
 py -m control_evals.cli scenarios show rewire-001   # one scenario in full
 py -m control_evals.cli run --split dev --dry-run   # price a sweep, send nothing
 py -m control_evals.cli run --split dev --simulate careful   # whole pipeline, no key
-py -m control_evals.cli run --split open --model qwen3:8b    # a real local model, £0
+py -m control_evals.cli doctor --base-url http://localhost:11434/v1 --model qwen2.5:1.5b
+py -m control_evals.cli run --split dev --model qwen2.5:1.5b # a real local model, £0
 ```
 
 `covenant-evals` is the same, and gives 300.

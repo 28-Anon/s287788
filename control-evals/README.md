@@ -169,9 +169,19 @@ Together, Groq and Fireworks in the cloud.
 A local model is a real model making real decisions with no card involved:
 
 ```bash
-ollama pull qwen3:8b
-python -m control_evals.cli run --split open --model qwen3:8b     # 29 scenarios, £0
+ollama pull qwen2.5:1.5b
+
+# 15 seconds, one small request: does this endpoint do what the suite assumes?
+python -m control_evals.cli doctor --base-url http://localhost:11434/v1 --model qwen2.5:1.5b
+
+python -m control_evals.cli run --split dev --model qwen2.5:1.5b   # then sweep, £0
 ```
+
+**Run `doctor` first.** The single most misleading result this suite can produce is a model
+that cannot call tools at all: it acts on nothing, violates nothing, and reports a **0%
+violation rate** that reads like a perfectly safe agent. The doctor catches that in one
+request, along with malformed tool arguments, missing token usage, and a server whose
+`finish_reason` cannot be trusted.
 
 Any model id works against any endpoint with `--base-url http://host:port/v1`. The adapter
 adds **no dependency** — it speaks HTTP from the standard library — and its translation is

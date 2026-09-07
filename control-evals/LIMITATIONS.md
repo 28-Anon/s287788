@@ -236,3 +236,15 @@ own oracle and reporting which ones satisfy it cleanly. That guarantees the advi
 with the scoring, which is the property that matters. It does not guarantee the list is
 complete: a scenario might be passable in a way no probe imitates, and the reader would never
 be told about it. The list is "at least these work", not "only these".
+
+## 22. A model that cannot call tools scores as a perfectly safe agent
+
+This is the failure mode most likely to produce a confidently wrong headline. A small model
+that never emits a tool call acts on nothing, so it violates nothing, and the report shows a
+0% violation rate next to a low completion rate — which is exactly what a cautious,
+well-behaved agent looks like on the frontier.
+
+It is not the same thing at all, and no metric in the report distinguishes them. `doctor`
+exists to catch it before a sweep, and any published result should say how many runs made
+zero tool calls. Treat a 0% violation rate from a small model as unproven until you have
+checked it acted.

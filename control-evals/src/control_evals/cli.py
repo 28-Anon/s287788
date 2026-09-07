@@ -352,6 +352,32 @@ def _print_summary(summary, rows) -> None:
         print(f"  {category:<20} {interval}")
 
 
+def cmd_doctor(args: argparse.Namespace) -> int:
+    """Fifteen seconds against a real endpoint, before an hour spent on a sweep."""
+    from .doctor import run_checks, verdict
+    from .openai_compat import OpenAICompatClient
+
+    spec = spec_for(args.model, args.base_url)
+    if spec.provider != "openai_compat" and not args.base_url:
+        raise SystemExit(
+            f"{args.model} is served by the Anthropic SDK, which this checks nothing about.\n"
+            "Use --base-url with an OpenAI-compatible endpoint, e.g.\n"
+            "  --base-url http://localhost:11434/v1 --model qwen2.5:1.5b"
+        )
+
+    base = args.base_url or spec.base_url
+    key = os.environ.get(args.api_key_env, "") if args.api_key_env else ""
+    print(f"checking {base} with model {args.model}\n")
+
+    checks = run_checks(OpenAICompatClient(base_url=base, api_key=key), args.model)
+    for check in checks:
+        print(check)
+
+    code, summary = verdict(checks)
+    print(f"\n{summary}")
+    return code
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     from .report import Row, escalation_is_acceptable, has_a_trap, summarise
     from .store import RunSet, list_runs
@@ -633,6 +659,14 @@ def build_parser() -> argparse.ArgumentParser:
         "and no result about any model — see the whole pipeline work.",
     )
     runner.set_defaults(func=lambda args: cmd_run(args))
+
+    doctor = sub.add_parser(
+        "doctor", help="check an OpenAI-compatible endpoint before running a sweep against it"
+    )
+    doctor.add_argument("--base-url", default="", help="e.g. http://localhost:11434/v1")
+    doctor.add_argument("--model", default="qwen2.5:1.5b")
+    doctor.add_argument("--api-key-env", default="OPENAI_API_KEY")
+    doctor.set_defaults(func=lambda args: cmd_doctor(args))
 
     report = sub.add_parser("report", help="the frontier for a stored run")
     report.add_argument("run_id", nargs="?", help="omit to list stored runs")
