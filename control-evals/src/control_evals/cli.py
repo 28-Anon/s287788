@@ -14,9 +14,11 @@ import argparse
 import json
 import os
 import sys
+import textwrap
 from datetime import UTC, datetime
 
 from .budget import format_micros
+from .explain import explain
 from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
 from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
@@ -160,6 +162,31 @@ def _client():
     return client
 
 
+def _wrapped(mark: str, label: str, text: str, width: int = 84) -> None:
+    """One labelled line, wrapped under its own label rather than off the screen."""
+    lead = f"        {mark} {label:<5} "
+    body = textwrap.wrap(text, width=width) or [""]
+    print(lead + body[0])
+    for line in body[1:]:
+        print(" " * len(lead) + line)
+
+
+def _open_ai_client(spec, args):
+    """A client for anything that speaks chat-completions. Local endpoints need no key."""
+    from .openai_compat import OpenAICompatClient
+
+    key = os.environ.get(args.api_key_env, "") if args.api_key_env else ""
+    base = args.base_url or spec.base_url
+    local = "localhost" in base or "127.0.0.1" in base
+    if not key and not local:
+        raise SystemExit(
+            f"{base} is not a local endpoint, so it probably needs a key.\n"
+            f"Set ${args.api_key_env}, or pass --api-key-env with the variable that holds it."
+        )
+    print(f"endpoint {base}" + ("  (local — no key, no cost)" if local else ""))
+    return OpenAICompatClient(base_url=base, api_key=key)
+
+
 def cmd_run(args: argparse.Namespace) -> int:
     from .report import Row, row_from_run, summarise
     from .runner import run_scenario
@@ -189,7 +216,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.limit:
         chosen = chosen[: args.limit]
 
-    spec = spec_for(args.model)
+    spec = spec_for(args.model, args.base_url)
     total = len(chosen) * args.samples
 
     print(f"{total} run(s): {len(chosen)} scenario(s) x {args.samples} sample(s)")
@@ -203,7 +230,12 @@ def cmd_run(args: argparse.Namespace) -> int:
         print("\ndry run: nothing was sent. Drop --dry-run to spend it.")
         return 0
 
-    client = None if args.simulate else _client()
+    if args.simulate:
+        client = None
+    elif spec.provider == "openai_compat":
+        client = _open_ai_client(spec, args)
+    else:
+        client = _client()
     # Stamped into the run id, the model field and the meta, so a simulated run can never
     # be read later as a result about a model.
     recorded_model = f"simulated:{args.simulate}" if args.simulate else spec.id
@@ -240,12 +272,25 @@ def cmd_run(args: argparse.Namespace) -> int:
             run_set.records.append(result.as_dict())
             spent += result.cost_micros
 
-            flag = "VIOLATION" if result.violated else ("ok" if result.completed else "-")
-            note = result.violated or result.stopped
-            print(
-                f"  [{index:>3}/{len(chosen)}] {scenario.id:<16} {flag:<9} "
-                f"{result.turns:>2}t {format_micros(result.cost_micros):>9}  {note}"
+            flag = "VIOLATION" if result.violated else ("clean" if result.completed else "-")
+            cost = (
+                ""
+                if args.simulate or not result.cost_micros
+                else (f"  {format_micros(result.cost_micros)}")
             )
+            print(
+                f"  [{index:>3}/{len(chosen)}] {scenario.id:<18} {flag:<9} {result.turns:>2}t{cost}"
+            )
+            if not args.brief and result.ok:
+                why = explain(
+                    scenario, result.trace, result.world, result.violated, result.completed
+                )
+                mark = "x" if result.violated else "+"
+                _wrapped(mark, "rule", why.rule)
+                _wrapped("+" if result.completed else "x", "task", why.task)
+                _wrapped(" ", "did", why.did)
+            elif not args.brief:
+                print(f"        ! {result.stopped}  {result.error or 'not scored'}")
 
             # Written after every run, not at the end: a sweep interrupted halfway has
             # still bought its results and should not lose them.
@@ -564,6 +609,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
         help="estimate the cost and send nothing. Free, and always worth doing first.",
+    )
+    runner.add_argument(
+        "--base-url",
+        default="",
+        help="an OpenAI-compatible endpoint, e.g. http://localhost:11434/v1 for Ollama. "
+        "Any --model id works against it.",
+    )
+    runner.add_argument(
+        "--api-key-env",
+        default="OPENAI_API_KEY",
+        help="environment variable holding the key for a hosted endpoint. Ignored locally.",
+    )
+    runner.add_argument(
+        "--brief",
+        action="store_true",
+        help="one line per scenario instead of the why-it-passed-or-failed summary",
     )
     runner.add_argument(
         "--simulate",

@@ -29,7 +29,12 @@ from dataclasses import dataclass
 #: ``always`` — thinking cannot be turned off; send no ``thinking`` parameter.
 #: ``adaptive`` — send ``{"type": "adaptive"}``.
 #: ``budget`` — the pre-4.6 shape, ``{"type": "enabled", "budget_tokens": N}``.
-THINKING_STYLES = ("always", "adaptive", "budget")
+#: ``none`` — the endpoint has no thinking parameter at all (everything OpenAI-compatible).
+THINKING_STYLES = ("always", "adaptive", "budget", "none")
+
+#: Who serves the model. "anthropic" uses the SDK; "openai_compat" uses the chat-completions
+#: adapter, which is Ollama and vLLM locally and OpenRouter/Together/Groq in the cloud.
+PROVIDERS = ("anthropic", "openai_compat")
 
 EFFORT_LEVELS = ("low", "medium", "high", "xhigh", "max")
 
@@ -41,6 +46,12 @@ class ModelSpec:
     output_per_mtok: float
     thinking_style: str
     supports_effort: bool
+
+    provider: str = "anthropic"
+
+    #: Where an openai_compat model is served. Local endpoints cost nothing to run, which is
+    #: why the prices above are zero for them.
+    base_url: str = ""
 
     #: A ceiling, not a budget — you are billed for tokens generated, not for the number
     #: here. It is set high enough that a long deliberation is never truncated mid-call,
@@ -57,6 +68,12 @@ class ModelSpec:
         to know which generation it is talking to.
         """
         extras: dict = {}
+
+        if self.thinking_style == "none":
+            # A chat-completions endpoint has no thinking or effort parameter. Sending one
+            # is a 400 on some servers and silently ignored on others, and the second is
+            # worse: it looks like the setting took effect.
+            return extras
 
         if self.thinking_style == "adaptive":
             extras["thinking"] = {"type": "adaptive"}
@@ -115,10 +132,46 @@ MODELS: dict[str, ModelSpec] = {
     ),
 }
 
+#: The default local endpoint. Ollama serves this once `ollama serve` is running.
+OLLAMA = "http://localhost:11434/v1"
+
+
+def local(model_id: str, base_url: str = OLLAMA) -> ModelSpec:
+    """A model on your own machine. Costs nothing, so it is priced at nothing."""
+    return ModelSpec(
+        id=model_id,
+        input_per_mtok=0.0,
+        output_per_mtok=0.0,
+        thinking_style="none",
+        supports_effort=False,
+        provider="openai_compat",
+        base_url=base_url,
+    )
+
+
+#: A few local models worth trying first. Any other id works via `--base-url`; these exist so
+#: that the common case is one flag rather than three.
+for _name in ("qwen3:8b", "llama3.1:8b", "mistral:7b", "qwen2.5:7b", "gpt-oss:20b"):
+    MODELS[_name] = local(_name)
+
+
 DEFAULT_MODEL = "claude-opus-5"
 
 
-def spec_for(model_id: str) -> ModelSpec:
+def spec_for(model_id: str, base_url: str = "") -> ModelSpec:
+    """Look up a model, or build an OpenAI-compatible spec on the fly for an unknown one.
+
+    An unknown id with a `--base-url` is not an error: the whole point of the adapter is to
+    reach models nobody has listed here. It is priced at zero and says so — a hosted
+    endpoint's real cost is not knowable from this side, and inventing one would be worse
+    than reporting none.
+    """
+    if base_url:
+        known = MODELS.get(model_id)
+        if known is not None and known.provider == "openai_compat":
+            return ModelSpec(**{**known.__dict__, "base_url": base_url})
+        return local(model_id, base_url)
+
     try:
         return MODELS[model_id]
     except KeyError:

@@ -208,3 +208,31 @@ on the trapped denominator, and 13 silent violations became 15.
 The general rule now holds throughout: **violation is a question about the decision, so it
 reads attempts; completion is a question about the outcome, so it reads the world.** If a
 new oracle is added, that is the question to ask of it.
+
+## 19. The OpenAI-compatible adapter is tested against a fake, like everything else
+
+Every mapping is pinned in both directions — system prompt placement, tool schemas, tool
+results, finish reasons, usage, malformed arguments — but always against a recorded payload,
+never a live server. Real endpoints differ in ways no fake anticipates: some report
+`finish_reason: "stop"` while emitting tool calls (handled, because it is common enough to
+expect), some return content as parts rather than a string (handled), and some will do
+something not listed here (not handled, by definition).
+
+The first run against a real endpoint is what validates it, exactly as the first Anthropic
+sweep validates that side.
+
+## 20. Cost figures for OpenAI-compatible models are zero, and that is a claim about local ones
+
+A local endpoint genuinely costs nothing to call, so zero is right. A hosted one
+(OpenRouter, Together, Groq) is not free, and this suite has no way to know its rates — so it
+reports zero there too, which is **wrong and silent about being wrong**. Read the provider's
+own billing for those. The stored run records the endpoint, so at least you can tell later
+which numbers were free.
+
+## 21. "How to pass this scenario" is derived by probing, and the probes are not exhaustive
+
+Each scenario's completion routes come from running eight canonical behaviours against its
+own oracle and reporting which ones satisfy it cleanly. That guarantees the advice agrees
+with the scoring, which is the property that matters. It does not guarantee the list is
+complete: a scenario might be passable in a way no probe imitates, and the reader would never
+be told about it. The list is "at least these work", not "only these".

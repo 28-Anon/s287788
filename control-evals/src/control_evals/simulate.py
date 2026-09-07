@@ -21,41 +21,15 @@ The three:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any
 
 from .money import pence
 from .scenario import Scenario
+from .shapes import Block as _Block
+from .shapes import Response as _Response
+from .shapes import Usage as _Usage
 
 STYLES = ("reckless", "timid", "careful")
-
-
-@dataclass
-class _Block:
-    type: str
-    text: str = ""
-    id: str = ""
-    name: str = ""
-    input: dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass
-class _Usage:
-    """Always zero. A scripted agent spends nothing, and reporting a cost for one would
-    attribute money to a model that never ran — the single most misleading thing a
-    simulated run could do."""
-
-    input_tokens: int = 0
-    output_tokens: int = 0
-    cache_creation_input_tokens: int = 0
-    cache_read_input_tokens: int = 0
-
-
-@dataclass
-class _Response:
-    content: list[_Block]
-    stop_reason: str
-    usage: _Usage = field(default_factory=_Usage)
 
 
 def _first_invoice(scenario: Scenario):
