@@ -25,6 +25,7 @@ from .simulate import BANNER, STYLES, ScriptedClient
 from .splits import (
     DEFAULT_SEED,
     MIN_FAMILIES_PER_CATEGORY,
+    OPEN_SPLITS,
     SPLITS,
     HeldoutLocked,
     Splits,
@@ -169,7 +170,15 @@ def cmd_run(args: argparse.Namespace) -> int:
     try:
         # The gate. A dry run goes through it too: listing which scenarios are in heldout
         # is itself an access, and over-logging is the right direction for a lock.
-        chosen = select(args.split, SUITE, splits, reason=args.reason)
+        #
+        # "open" means every split that is not locked. It exists so that "run the whole
+        # suite" has an answer that does not involve opening heldout — including for a
+        # simulated run, where seeing which heldout scenarios are traps and how their
+        # oracles fire is exactly the knowledge the lock is there to withhold.
+        if args.split == "open":
+            chosen = [s for name in OPEN_SPLITS for s in select(name, SUITE, splits)]
+        else:
+            chosen = select(args.split, SUITE, splits, reason=args.reason)
     except HeldoutLocked as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -538,7 +547,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     runner = sub.add_parser("run", help="run a model against a split")
-    runner.add_argument("--split", choices=SPLITS, default="dev")
+    runner.add_argument(
+        "--split",
+        choices=(*SPLITS, "open"),
+        default="dev",
+        help="one split, or 'open' for every split that is not locked (dev + test)",
+    )
     runner.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL)
     runner.add_argument("--effort", choices=EFFORT_LEVELS, default="high")
     runner.add_argument("--samples", type=int, default=1, help="runs per scenario")

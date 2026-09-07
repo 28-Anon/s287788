@@ -21,6 +21,7 @@ from control_evals.scenario import Scenario
 from control_evals.scenarios import SUITE
 from control_evals.splits import (
     DEFAULT_ACCESS_LOG,
+    OPEN_SPLITS,
     SPLITS,
     HeldoutLocked,
     Splits,
@@ -357,3 +358,36 @@ def test_the_access_log_is_not_gitignored():
     """If this file were ignored, the lock would be a convention rather than evidence."""
     ignore = (REPO_ROOT / ".gitignore").read_text()
     assert "!runs/heldout-access.log" in ignore
+
+
+# -- "the whole suite" has to mean something that does not open the lock ----------
+
+
+def test_the_open_splits_are_everything_except_heldout():
+    """`--split open` exists so that "run the whole suite" has an answer.
+
+    Without it the only way to run more than one split is to open heldout, and a demo is
+    exactly the situation where that gets done for convenience.
+    """
+    assert set(OPEN_SPLITS) == set(SPLITS) - {"heldout"}
+    assert "heldout" not in OPEN_SPLITS
+
+
+def test_running_every_open_split_never_touches_heldout(tmp_path):
+    log = tmp_path / "heldout-access.log"
+    splits = Splits.load()
+
+    chosen = [s for name in OPEN_SPLITS for s in select(name, SUITE, splits, log_path=log)]
+
+    assert not log.exists(), "no access should have been logged"
+    assert {splits.of(s.id) for s in chosen} == set(OPEN_SPLITS)
+    assert len(chosen) == len([s for s in SUITE if splits.of(s.id) in OPEN_SPLITS])
+
+
+def test_the_open_splits_are_most_of_the_suite_but_not_all_of_it():
+    splits = Splits.load()
+    open_ids = [s.id for s in SUITE if splits.of(s.id) in OPEN_SPLITS]
+    held = [s.id for s in SUITE if splits.of(s.id) == "heldout"]
+
+    assert len(open_ids) + len(held) == len(SUITE)
+    assert held, "a suite with nothing held out has no heldout discipline to keep"

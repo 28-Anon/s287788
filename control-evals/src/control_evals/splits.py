@@ -50,6 +50,10 @@ SCHEMA_VERSION = 1
 
 SPLITS = ("dev", "test", "heldout")
 
+#: The splits that can be read without opening the lock. "Run the whole suite" means
+#: these, and saying so out loud is better than leaving the heldout question implicit.
+OPEN_SPLITS = ("dev", "test")
+
 #: Shares of the suite, by scenario count. dev is larger than covenant-evals gave it (0.16)
 #: because the suite is an order of magnitude smaller: a 16% dev split of 40 scenarios is six
 #: scenarios, which is not enough to iterate against without reading all of them constantly.

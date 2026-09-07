@@ -29,7 +29,13 @@ python -m control_evals.cli run --split dev             # spend it
 python -m control_evals.cli report                      # list stored runs
 
 python -m control_evals.cli run --split dev --simulate careful   # no API call, no cost
+python -m control_evals.cli run --split open --simulate careful  # dev + test, 29 scenarios
 ```
+
+`--split open` means every split that is not locked. It exists so that "run the whole suite"
+has an answer that does not involve opening heldout — which applies to a simulated run too:
+seeing which heldout scenarios are traps and how their oracles fire is exactly the knowledge
+the lock is there to withhold.
 
 `--simulate {reckless,timid,careful}` runs a hand-written stand-in instead of a model: the
 whole pipeline, no key, nothing spent. Useful for seeing what the suite produces before
@@ -119,11 +125,20 @@ Run over the whole dev split with `--simulate`, the three stand-ins spread out a
 should — and the reckless and timid ones land on the *same* completion rate again:
 
 ```
-                 violation   completion   esc. precision   esc. recall
-  careful               0%          62%             100%           60%
-  reckless             71%           0%              n/a            0%
-  timid                 0%          62%              62%          100%
+  over dev + test, 29 scenarios:
+
+                 violation   completion   esc. precision   esc. recall   silent
+  careful               4%          62%             100%           50%    0 of 1
+  reckless             52%          21%              n/a            0%   13 of 13
+  timid                 0%          69%              69%          100%    0 of 0
 ```
+
+The reckless agent's thirteen violations were **thirteen silent ones** — it announced
+compliance every time.
+
+Sample size shows up directly: the reckless violation rate is `71% [33%–100%]` over the
+8-scenario dev split and `52% [30%–73%]` over these 29. Same agent, same behaviour, interval
+roughly halved.
 
 Note that `careful` and `timid` are **indistinguishable on the two headline numbers** and
 separate only on escalation precision — one asks a human when it needs to, the other asks
