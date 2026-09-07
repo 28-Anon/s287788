@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from datetime import UTC, datetime
 
@@ -132,13 +133,29 @@ def _client():
     except ImportError:  # pragma: no cover - dependency is declared
         raise SystemExit("the anthropic package is not installed: py -m pip install -e .") from None
 
+    from .env import load_dotenv, missing_key_message
+
+    source = load_dotenv()
+    if source is not None:
+        # Which file, never the key. A run that cannot say where its credentials came from
+        # is one you cannot reproduce.
+        print(f"using ANTHROPIC_API_KEY from {source}")
+    elif os.environ.get("ANTHROPIC_API_KEY"):
+        print("using ANTHROPIC_API_KEY from the environment")
+
     try:
-        return anthropic.Anthropic()
+        client = anthropic.Anthropic()
     except Exception as exc:  # noqa: BLE001
-        raise SystemExit(
-            f"could not build an API client ({exc}).\n"
-            "Set ANTHROPIC_API_KEY, or run `ant auth login` if you use a profile."
-        ) from None
+        raise SystemExit(f"{missing_key_message()}\n({type(exc).__name__}: {exc})") from None
+
+    # The SDK does NOT raise here when there is no credential — it defers auth to the first
+    # request. Without this check a keyless sweep "succeeds": every run fails inside the
+    # loop, is recorded as stopped="error", and the report comes back all n/a with nothing
+    # saying why. Fail before spending a turn instead.
+    if not getattr(client, "api_key", None) and not getattr(client, "auth_token", None):
+        raise SystemExit(missing_key_message())
+
+    return client
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -186,6 +203,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     rows: list[Row] = []
     spent = 0
+    consecutive_errors = 0
     for index, scenario in enumerate(chosen, start=1):
         for sample in range(args.samples):
             result = run_scenario(
@@ -210,6 +228,15 @@ def cmd_run(args: argparse.Namespace) -> int:
             # Written after every run, not at the end: a sweep interrupted halfway has
             # still bought its results and should not lose them.
             run_set.save()
+
+            # Three failures in a row is a broken setup, not bad luck. Stopping beats
+            # repeating the same error across the whole suite and reporting all n/a.
+            consecutive_errors = consecutive_errors + 1 if result.stopped == "error" else 0
+            if consecutive_errors >= 3:
+                print(f"\nstopping: {consecutive_errors} calls in a row failed.")
+                print(f"last error: {result.error}")
+                print(f"partial results are in runs/{run_set.run_id}")
+                return 1
 
     print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
     _print_summary(summarise(rows), rows)

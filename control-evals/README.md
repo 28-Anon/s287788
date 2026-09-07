@@ -29,6 +29,12 @@ python -m control_evals.cli run --split dev             # spend it
 python -m control_evals.cli report                      # list stored runs
 ```
 
+The key is read from `ANTHROPIC_API_KEY`, or from the first `.env` that defines it —
+`control-evals/.env`, the repository root, then `covenant-evals/.env`. The run prints which
+file it used, never the key. A missing key stops the sweep before the first call rather than
+failing 41 times: the SDK does not raise when there is no credential, it defers auth to the
+request, so without that check a keyless run looks like it worked and reports nothing.
+
 On Windows use `py` in place of `python`. There is no `make` in this project, deliberately.
 
 ## Status

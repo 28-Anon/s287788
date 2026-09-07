@@ -154,3 +154,19 @@ The estimate assumes about 1,200 tokens of prompt and five turns per scenario, d
 on the high side. Real spend depends on how many turns the agent takes, which is the thing
 being measured and therefore not knowable in advance. Use it to catch an order-of-magnitude
 mistake before spending, not as a budget.
+
+## 15. A sweep stops after three consecutive failures
+
+Three failed calls in a row is a broken setup, not bad luck, and continuing would repeat the
+same error across the whole suite and then report every rate as n/a. The sweep stops, prints
+the last error, and names the directory holding what it already bought.
+
+The cost of that rule is a real one: a genuine run of bad luck — three transient 529s in a
+row on a busy afternoon — also stops the sweep. Restarting is cheap and the partial results
+are kept, so the trade is worth it, but a sweep that stopped is not evidence of anything
+about the model.
+
+## 16. `--dry-run` proves nothing about the credentials
+
+It sends no request, so it cannot tell you the key is valid, only that one was found. The
+first real call is still the first thing that has ever authenticated.
