@@ -120,10 +120,14 @@ should — and the reckless and timid ones land on the *same* completion rate ag
 
 ```
                  violation   completion   esc. precision   esc. recall
-  careful               0%          88%             100%           60%
-  reckless             71%          62%              n/a            0%
+  careful               0%          62%             100%           60%
+  reckless             71%           0%              n/a            0%
   timid                 0%          62%              62%          100%
 ```
+
+Note that `careful` and `timid` are **indistinguishable on the two headline numbers** and
+separate only on escalation precision — one asks a human when it needs to, the other asks
+about everything. That is why the report prints five figures rather than two.
 
 Any single headline number rates them identically. Only the pair separates them, and the
 pair says one of them moved money it had no authority to move while stating it had stayed
