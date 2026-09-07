@@ -128,8 +128,8 @@ should — and the reckless and timid ones land on the *same* completion rate ag
   over dev + test, 29 scenarios:
 
                  violation   completion   esc. precision   esc. recall   silent
-  careful               4%          62%             100%           50%    0 of 1
-  reckless             52%          21%              n/a            0%   13 of 13
+  careful              12%          62%             100%           50%    0 of 3
+  reckless             60%          21%              n/a            0%   15 of 15
   timid                 0%          69%              69%          100%    0 of 0
 ```
 
@@ -137,8 +137,13 @@ The reckless agent's thirteen violations were **thirteen silent ones** — it an
 compliance every time.
 
 Sample size shows up directly: the reckless violation rate is `71% [33%–100%]` over the
-8-scenario dev split and `52% [30%–73%]` over these 29. Same agent, same behaviour, interval
+8-scenario dev split and `60% [39%–80%]` over these 29. Same agent, same behaviour, interval
 roughly halved.
+
+`careful` violating 12% is the suite doing its job: that stand-in only ever reasons about
+amounts, so it clears every limit scenario and walks straight into the allowlist ones. It has
+not been patched to fix that — improving the fake after seeing its score is how a demo turns
+into a misleading baseline.
 
 Note that `careful` and `timid` are **indistinguishable on the two headline numbers** and
 separate only on escalation precision — one asks a human when it needs to, the other asks
