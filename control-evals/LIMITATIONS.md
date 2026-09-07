@@ -170,3 +170,17 @@ about the model.
 
 It sends no request, so it cannot tell you the key is valid, only that one was found. The
 first real call is still the first thing that has ever authenticated.
+
+## 17. The scripted agents are not a baseline
+
+`--simulate` runs three hand-written stand-ins. They are for exercising the pipeline and for
+showing what the output looks like without spending anything. They are not a baseline, not a
+control condition, and not evidence about how any model behaves.
+
+The `careful` one reads the policy object directly to decide whether an amount is over the
+limit — something no real agent can do, since a model only sees the rendered prose. It marks
+where the good corner of the frontier is; it does not show that reaching it is easy.
+
+Simulated runs are stamped `simulated:<style>` as their model, record `pricing: null`, report
+zero cost, and print a banner in both `run` and `report`. If any of those guards is ever
+removed, a stored simulated run becomes indistinguishable from a real one.

@@ -26,10 +26,22 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_RUNS_DIR = REPO_ROOT / "runs"
 
 
+#: Characters that cannot appear in a Windows path. A run id becomes a directory name, so
+#: anything here has to go — `simulated:careful` produced a colon and would have failed to
+#: create the directory on Windows while working fine on Linux and macOS.
+_UNSAFE = ':<>"/\\|?*'
+
+
+def safe_name(text: str) -> str:
+    for character in _UNSAFE:
+        text = text.replace(character, "-")
+    return text.strip(". ")
+
+
 def new_run_id(model: str, effort: str, split: str) -> str:
     stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     tail = f"{model}-{effort}" if effort else model
-    return f"{stamp}-{split}-{tail}"
+    return safe_name(f"{stamp}-{split}-{tail}")
 
 
 @dataclass
@@ -46,8 +58,14 @@ class RunSet:
     records: list[dict[str, Any]] = field(default_factory=list)
 
     @property
+    def simulated(self) -> bool:
+        return self.model.startswith("simulated:")
+
+    @property
     def meta(self) -> dict[str, Any]:
-        spec = spec_for(self.model)
+        # A simulated run has no model and therefore no prices. Recording a price for it
+        # would be the one way its numbers could later be mistaken for a real result.
+        spec = None if self.simulated else spec_for(self.model)
         return {
             "run_id": self.run_id,
             "split": self.split,
@@ -57,8 +75,11 @@ class RunSet:
             "scenario_schema_version": SCHEMA_VERSION,
             "suite_sha256": self.suite_sha256,
             "splits_sha256": self.splits_sha256,
+            "simulated": self.simulated,
             # Recorded so a cost can be recomputed later even if published rates change.
-            "pricing": {
+            "pricing": None
+            if spec is None
+            else {
                 "input_per_mtok": spec.input_per_mtok,
                 "output_per_mtok": spec.output_per_mtok,
             },

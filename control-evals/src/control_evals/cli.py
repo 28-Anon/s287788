@@ -21,6 +21,7 @@ from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
 from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
 from .scenarios import SUITE, by_id
+from .simulate import BANNER, STYLES, ScriptedClient
 from .splits import (
     DEFAULT_SEED,
     MIN_FAMILIES_PER_CATEGORY,
@@ -183,19 +184,29 @@ def cmd_run(args: argparse.Namespace) -> int:
     total = len(chosen) * args.samples
 
     print(f"{total} run(s): {len(chosen)} scenario(s) x {args.samples} sample(s)")
-    print(f"model {spec.id}" + (f", effort {args.effort}" if spec.supports_effort else ""))
-    print(_estimate(total, spec))
+    if args.simulate:
+        print(f"\n{BANNER}\n")
+    else:
+        print(f"model {spec.id}" + (f", effort {args.effort}" if spec.supports_effort else ""))
+        print(_estimate(total, spec))
 
     if args.dry_run:
         print("\ndry run: nothing was sent. Drop --dry-run to spend it.")
         return 0
 
-    client = _client()
+    client = None if args.simulate else _client()
+    # Stamped into the run id, the model field and the meta, so a simulated run can never
+    # be read later as a result about a model.
+    recorded_model = f"simulated:{args.simulate}" if args.simulate else spec.id
     run_set = RunSet(
-        run_id=new_run_id(spec.id, args.effort if spec.supports_effort else "", args.split),
+        run_id=new_run_id(
+            recorded_model,
+            "" if args.simulate else (args.effort if spec.supports_effort else ""),
+            args.split,
+        ),
         split=args.split,
-        model=spec.id,
-        effort=args.effort if spec.supports_effort else "",
+        model=recorded_model,
+        effort="" if args.simulate else (args.effort if spec.supports_effort else ""),
         suite_sha256=suite_fingerprint(SUITE),
         splits_sha256=splits.assignment_sha256,
         started_at=datetime.now(UTC).isoformat(timespec="seconds"),
@@ -208,12 +219,14 @@ def cmd_run(args: argparse.Namespace) -> int:
         for sample in range(args.samples):
             result = run_scenario(
                 scenario,
-                client,
+                ScriptedClient(args.simulate, scenario) if args.simulate else client,
                 model=spec.id,
                 effort=args.effort,
                 max_turns=args.max_turns,
                 sample=sample,
             )
+            if args.simulate:
+                result.model = recorded_model
             rows.append(row_from_run(result, scenario))
             run_set.records.append(result.as_dict())
             spent += result.cost_micros
@@ -238,7 +251,10 @@ def cmd_run(args: argparse.Namespace) -> int:
                 print(f"partial results are in runs/{run_set.run_id}")
                 return 1
 
-    print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
+    if args.simulate:
+        print(f"\nsaved to runs/{run_set.run_id} (no API call, no cost)")
+    else:
+        print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
     _print_summary(summarise(rows), rows)
     return 0
 
@@ -321,6 +337,8 @@ def cmd_report(args: argparse.Namespace) -> int:
         )
 
     print(f"{run_set.run_id}: {run_set.model} on {run_set.split}, {len(rows)} runs")
+    if run_set.model.startswith("simulated:"):
+        print(f"\n{BANNER}")
     _print_summary(summarise(rows), rows)
     return 0
 
@@ -532,6 +550,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
         help="estimate the cost and send nothing. Free, and always worth doing first.",
+    )
+    runner.add_argument(
+        "--simulate",
+        choices=STYLES,
+        help="run a scripted stand-in agent instead of a model. No API call, no cost, "
+        "and no result about any model — see the whole pipeline work.",
     )
     runner.set_defaults(func=lambda args: cmd_run(args))
 

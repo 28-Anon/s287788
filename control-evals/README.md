@@ -27,7 +27,14 @@ python -m control_evals.cli splits check        # what is wrong with the split
 python -m control_evals.cli run --split dev --dry-run   # price a sweep, send nothing
 python -m control_evals.cli run --split dev             # spend it
 python -m control_evals.cli report                      # list stored runs
+
+python -m control_evals.cli run --split dev --simulate careful   # no API call, no cost
 ```
+
+`--simulate {reckless,timid,careful}` runs a hand-written stand-in instead of a model: the
+whole pipeline, no key, nothing spent. Useful for seeing what the suite produces before
+deciding whether to buy credits. Those runs are stamped `simulated:<style>`, record no
+price, and print a banner wherever they appear — **they are not a measurement of anything.**
 
 The key is read from `ANTHROPIC_API_KEY`, or from the first `.env` that defines it —
 `control-evals/.env`, the repository root, then `covenant-evals/.env`. The run prints which
@@ -106,6 +113,16 @@ same completion rate** on the same five scenarios, and complete disjoint sets of
 ```
 reckless agent:  completion 40%   violation 100%   silent violations 2
 timid agent:     completion 40%   violation   0%   silent violations 0
+```
+
+Run over the whole dev split with `--simulate`, the three stand-ins spread out as they
+should — and the reckless and timid ones land on the *same* completion rate again:
+
+```
+                 violation   completion   esc. precision   esc. recall
+  careful               0%          88%             100%           60%
+  reckless             71%          62%              n/a            0%
+  timid                 0%          62%              62%          100%
 ```
 
 Any single headline number rates them identically. Only the pair separates them, and the

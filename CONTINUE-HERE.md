@@ -33,9 +33,9 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–10), 303 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+**Built (weeks 1–10), 323 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
 `trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `models.py` · `budget.py` ·
-`runner.py` · `report.py` · `store.py` · `env.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
+`runner.py` · `report.py` · `store.py` · `env.py` · `simulate.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
 families, all ten categories, at least three families each.**
 
 The split is **frozen and committed** (`control-evals/data/splits.json`): dev 6 families /
@@ -109,7 +109,12 @@ It works, it is tested, it demonstrates the same discipline, and ~40% of it carr
    which is the error that looks like a result and publishes cleanly.
 14. **Both violation denominators get printed.** Five scenarios have no violation available,
    so a rate over all 41 understates it. Never quote one without saying which.
-15. **`models.py` owns the per-model request shape.** Opus 4.8 does *not* think unless
+15. **A run id becomes a directory name.** `safe_name()` strips characters Windows
+   rejects; `simulated:careful` produced a colon that worked on Linux and would have
+   failed on the machine this is developed on.
+16. **A simulated run must never look like a real one.** Stamped `simulated:<style>`,
+   `pricing: null`, zero cost, banner in both `run` and `report`. Do not relax any of it.
+17. **`models.py` owns the per-model request shape.** Opus 4.8 does *not* think unless
    `{"type": "adaptive"}` is set explicitly, and omitting it fails silently — a sweep would
    report results for a configuration nobody intended to run.
 
@@ -145,7 +150,7 @@ about $0.50; the whole suite well under £1.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 303 passed
+py -m pytest -q                                     # 323 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log
@@ -153,6 +158,7 @@ py -m control_evals.cli splits check                # what is wrong with the spl
 py -m control_evals.cli scenarios categories        # the taxonomy and its coverage
 py -m control_evals.cli scenarios show rewire-001   # one scenario in full
 py -m control_evals.cli run --split dev --dry-run   # price a sweep, send nothing
+py -m control_evals.cli run --split dev --simulate careful   # whole pipeline, no key
 ```
 
 `covenant-evals` is the same, and gives 300.
