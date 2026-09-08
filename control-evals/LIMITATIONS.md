@@ -35,8 +35,8 @@ violation. Report it as "at least N of M violations were silent", never as a rat
 
 ## 3. The scenarios test what one person imagined
 
-Forty-one scenarios written by one author, who chose which pressures to apply and which
-failures to look for. Going from ten to forty-one made this worse in one specific way rather
+Forty-nine scenarios written by one author, who chose which pressures to apply and which
+failures to look for. Going from ten to forty-nine made this worse in one specific way rather
 than better: the new ones were written after the old ones, by the same person, in a few
 sittings, so they inherit the same blind spots with more confidence behind them. A control failure nobody thought of is not in here, and the suite cannot tell
 you about it. That is the standing weakness of every constructed eval and the reason the
@@ -121,18 +121,19 @@ that one does have a trap: paying the similarly-named entity violates the allowl
 correct answer being "pay it" is not the same as there being nothing to catch.)
 
 They exist to make escalation precision measurable, and they mean a violation rate over all
-41 scenarios understates the rate by roughly their share. `summarise` therefore reports two:
-over the 36 trapped scenarios, and over the whole suite. Neither is wrong; quoting one
+49 scenarios understates the rate by roughly their share. `summarise` therefore reports two:
+over the 44 trapped scenarios, and over the whole suite. Neither is wrong; quoting one
 without saying which is.
 
-The larger and more useful count is that **fourteen scenarios cannot be completed by
+The larger and more useful count is that **seventeen scenarios cannot be completed by
 escalating** — that is what stops reflexive refusal scoring well.
 
-## 11. Silent-violation detection is still not built
+## 11. Silent-violation detection was built in weeks 9-10, and is still only a keyword check
 
-Unchanged from week 5, and now more conspicuous: with 41 scenarios there is more surface for
-an agent to violate while stating it complied, and nothing measures it. It stays a keyword
-check to be reported as a lower bound, and it is weeks 9-10 work.
+This section used to say the detection did not exist. It does now — `report.claims_compliance`
+and the count printed by `summarise` — but building it did not remove the limitation, it only
+moved it. The residual problem is §2: an agent can imply compliance without using any phrase
+in the list, so the number is a lower bound and is never printed as a rate.
 
 ## 12. The runner is tested against a fake client, not against the API
 
@@ -146,6 +147,11 @@ tests keep passing while a real sweep breaks.** `runner.py` reads every response
 defensively for that reason, and the first real sweep is the thing that actually validates
 the integration. Until it has been run, treat "the runner works" as untested against reality
 in exactly the way covenant-evals' EDGAR client was.
+
+This is now narrower than it was on one side. The **OpenAI-compatible** path is exercised
+over a real socket by `tests/test_http_transport.py` — see §19 — so on that side only the
+model is fake, not the transport. The Anthropic SDK path still has no equivalent: the SDK
+client is injected as a fake and nothing in this repository has ever spoken to Anthropic.
 
 ## 13. Prices are hardcoded, and partner platforms bill differently
 
@@ -209,17 +215,21 @@ The general rule now holds throughout: **violation is a question about the decis
 reads attempts; completion is a question about the outcome, so it reads the world.** If a
 new oracle is added, that is the question to ask of it.
 
-## 19. The OpenAI-compatible adapter is tested against a fake, like everything else
+## 19. The OpenAI-compatible adapter is now tested over a real socket, but not against a real model
 
-Every mapping is pinned in both directions — system prompt placement, tool schemas, tool
-results, finish reasons, usage, malformed arguments — but always against a recorded payload,
-never a live server. Real endpoints differ in ways no fake anticipates: some report
-`finish_reason: "stop"` while emitting tool calls (handled, because it is common enough to
-expect), some return content as parts rather than a string (handled), and some will do
-something not listed here (not handled, by definition).
+This section used to say the adapter was only ever tested against a recorded payload. That
+gap is closed: `tests/test_http_transport.py` stands up an actual `http.server` on localhost
+and drives the real `http_transport` through it — the wire encoding, the headers, HTTP 400 /
+401 / 404 / 429 / 500 / 503, a dead endpoint, the whole runner over a socket, a guardrail over
+a socket, and `doctor` against a live server. Nothing is stubbed on the transport path.
 
-The first run against a real endpoint is what validates it, exactly as the first Anthropic
-sweep validates that side.
+What is still fake is the **model**. The server on the other end returns replies this project
+wrote, so every mapping is pinned against payloads shaped the way this project expects real
+ones to be. Endpoints differ in ways no fake anticipates: some report `finish_reason: "stop"`
+while emitting tool calls (handled, because it is common enough to expect), some return
+content as parts rather than a string (handled), and some will do something not listed here
+(not handled, by definition). `doctor` exists to find that out in one request rather than in
+the middle of a sweep — run it first.
 
 ## 20. Cost figures for OpenAI-compatible models are zero, and that is a claim about local ones
 
