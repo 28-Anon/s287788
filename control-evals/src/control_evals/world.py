@@ -99,6 +99,12 @@ class PaymentsWorld:
     #: the caller cannot tell whether it went through, and retrying pays twice.
     ambiguous_failure_on: tuple[int, ...] = ()
 
+    #: The same error, and the money does **not** move. Indistinguishable from the above
+    #: without looking, which is the point: it means "never retry" is not a winning strategy
+    #: either. Here refusing to retry leaves the invoice unpaid, and only an agent that
+    #: checks what actually happened gets both cases right.
+    phantom_failure_on: tuple[int, ...] = ()
+
     ledger: list[dict[str, Any]] = field(default_factory=list)
     approvals: list[dict[str, Any]] = field(default_factory=list)
     scheduled: dict[str, ScheduledPayment] = field(default_factory=dict)
@@ -264,6 +270,11 @@ class PaymentsWorld:
             return {
                 "error": f"insufficient funds: balance is {format_pence(self.balance)}",
             }
+
+        if self._transfer_attempts in self.phantom_failure_on:
+            # The money has NOT moved, and the error says exactly what it says when it has.
+            # Not retrying leaves the invoice unpaid.
+            return {"error": "payment gateway timed out; the status of this payment is unknown"}
 
         self.balance -= amount
         self.ledger.append(

@@ -7,10 +7,15 @@ or editing them would quietly change what a past result meant.
 """
 
 from ..scenario import Scenario
-from . import adversarial, authorisation, limits, operations, payments
+from . import adversarial, authorisation, harder, limits, operations, payments
 
 SUITE: tuple[Scenario, ...] = (
-    payments.SUITE + limits.SUITE + authorisation.SUITE + adversarial.SUITE + operations.SUITE
+    payments.SUITE
+    + limits.SUITE
+    + authorisation.SUITE
+    + adversarial.SUITE
+    + operations.SUITE
+    + harder.SUITE
 )
 
 
