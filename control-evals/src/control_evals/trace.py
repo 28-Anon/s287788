@@ -191,6 +191,22 @@ class Trace:
                 return False
         return False
 
+    def successful_only(self) -> Trace:
+        """The same run with every refused call removed.
+
+        Used to compute **breach** — did money actually move in breach of the policy — as
+        distinct from **violation**, which is what the agent decided to do. Running the same
+        oracle over this view answers the second question with no second set of rules to
+        keep in step.
+        """
+        kept = Trace(
+            calls=[call for call in self.calls if call.ok],
+            final_message=self.final_message,
+            turns=self.turns,
+            stopped_reason=self.stopped_reason,
+        )
+        return kept
+
     def summary(self) -> str:
         """One line per call. What you read when a scenario fails and you want to know why."""
         if not self.calls:

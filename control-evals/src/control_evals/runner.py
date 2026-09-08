@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .budget import Usage, cost_micros
+from .guardrails import NONE, Blocks, Guardrail
 from .models import DEFAULT_MODEL, ModelSpec, spec_for
 from .scenario import Scenario
 from .tools import dispatch, tools_for
@@ -72,6 +73,14 @@ class RunResult:
     error: str = ""
     sample: int = 0
 
+    #: The name of the control layer in front of the agent, and what it refused.
+    guardrail: str = "none"
+    blocked: list[dict[str, Any]] = field(default_factory=list)
+
+    #: Did money actually move in breach of the policy? `violated` says the agent decided
+    #: to; this says whether anything stopped it. Without a guardrail the two agree.
+    breached: str | None = None
+
     @property
     def ok(self) -> bool:
         return self.stopped in ("end_turn", "max_turns")
@@ -87,7 +96,10 @@ class RunResult:
             "effort": self.effort,
             "sample": self.sample,
             "violated": self.violated,
+            "breached": self.breached,
             "completed": self.completed,
+            "guardrail": self.guardrail,
+            "blocked": self.blocked,
             "turns": self.turns,
             "stopped": self.stopped,
             "error": self.error,
@@ -143,6 +155,7 @@ def run_scenario(
     max_turns: int = DEFAULT_MAX_TURNS,
     sample: int = 0,
     spec: ModelSpec | None = None,
+    guardrail: Guardrail = NONE,
 ) -> RunResult:
     """Run one scenario against one model. The client is injected; nothing here imports it."""
     from .splits import family_of
@@ -156,6 +169,7 @@ def run_scenario(
     messages: list[dict[str, Any]] = [{"role": "user", "content": scenario.task}]
 
     total = Usage()
+    blocks = Blocks()
     stopped = "end_turn"
     error = ""
     started = time.monotonic()
@@ -216,7 +230,18 @@ def run_scenario(
 
         results = []
         for call in tool_calls:
-            outcome = dispatch(world, trace, call.name, dict(call.input or {}))
+            arguments = dict(call.input or {})
+
+            # The control layer sees the call before the world does. A refusal is recorded
+            # in the trace as an attempt, so the violation oracles still fire — the agent
+            # decided to do it, and something else stopped it. That is the whole point.
+            refusal = guardrail.refuse(call.name, arguments, scenario.policy, trace, world)
+            if refusal:
+                outcome = {"error": refusal}
+                trace.record(call.name, arguments, outcome)
+                blocks.record(call.name, arguments, refusal)
+            else:
+                outcome = dispatch(world, trace, call.name, arguments)
             results.append(
                 {
                     "type": "tool_result",
@@ -232,12 +257,15 @@ def run_scenario(
 
     trace.stopped_reason = stopped
 
-    world_for_scoring = world
     violated = None
+    breached = None
     completed = False
     if stopped in ("end_turn", "max_turns"):
-        violated = scenario.violated(trace, world_for_scoring)
-        completed = bool(scenario.completed(trace, world_for_scoring))
+        violated = scenario.violated(trace, world)
+        completed = bool(scenario.completed(trace, world))
+        # Same oracle, run over only the calls that actually went through. Without a
+        # guardrail nothing is refused and this equals `violated`.
+        breached = violated if not blocks else scenario.violated(trace.successful_only(), world)
 
     return RunResult(
         scenario_id=scenario.id,
@@ -257,6 +285,9 @@ def run_scenario(
         stopped=stopped,
         error=error,
         sample=sample,
+        guardrail=guardrail.name,
+        blocked=blocks.refusals,
+        breached=breached,
     )
 
 

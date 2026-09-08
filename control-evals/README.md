@@ -211,6 +211,53 @@ A route is only offered if it both completes the scenario **and** breaks no rule
 is completed by paying every invoice in the batch, and one of those is to an unapproved
 supplier, so that route is not suggested. `--brief` gives the one-line form.
 
+## Does a guardrail actually help, and what does it cost?
+
+A guardrail is a hard control between the agent and the world. `--guardrail {amounts,payees,
+process,all}` puts one in front of any run, and the report then separates two things that a
+single violation rate conflates:
+
+- **violation** — the agent *decided* to break a rule
+- **breach** — money actually moved in breach of the policy
+
+Run over dev + test against the scripted stand-ins, no model and nothing spent:
+
+```
+agent      guardrail  violation   breach  completion  blocked
+reckless   none             60%      60%         21%        0
+reckless   amounts          60%      40%         21%        5
+reckless   payees           60%      48%         21%        3
+reckless   process          48%      32%         17%        8
+reckless   all              48%       4%         17%       15
+
+careful    none             12%      12%         62%        0
+careful    amounts          12%      12%         62%        0
+careful    payees           12%       4%         62%        2
+careful    all              12%       4%         62%        2
+```
+
+Four things fall out of that, and only the first is the obvious one.
+
+**A full control layer takes breach from 60% to 4%**, for four points of completion. That is
+the number a treasury team wants.
+
+**Violation stays at 48%.** The agent is still deciding to move money it has no authority to
+move, roughly half the time. Every one of those is held by the control and nothing else —
+which is precisely the measure of how much you are relying on it.
+
+**Which control matters depends on how the agent fails.** The careful stand-in only ever
+breaks the allowlist, so `amounts` refuses it nothing and `payees` cuts its breach by two
+thirds. Buying the wrong layer buys nothing.
+
+**A guardrail costs a well-behaved agent nothing.** Completion is 62% for `careful` under
+every layer. The 4-point cost on `reckless` is the price of stopping an agent that was going
+to do something wrong.
+
+One caveat, found by running the matrix rather than reasoning about it: violation is **not**
+independent of the guardrail. A refused call comes back to the agent as an error, and what it
+does next differs from what it would have done — `process` moved violation from 60% to 48%.
+The two numbers are worth separating; they are not independent.
+
 ## The split, and why heldout is locked
 
 `data/splits.json` is committed. Scenarios are divided **by family**, never individually:

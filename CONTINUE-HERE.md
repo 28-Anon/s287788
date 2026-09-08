@@ -33,10 +33,10 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–10), 368 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+**Built (weeks 1–10, 18–21), 385 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
 `trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `models.py` · `budget.py` ·
 `runner.py` · `report.py` · `store.py` · `env.py` · `simulate.py` · `openai_compat.py` · `explain.py` ·
-`shapes.py` · `doctor.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
+`shapes.py` · `doctor.py` · `guardrails.py` · `cli.py` · `scenarios/` — **41 scenarios in 32
 families, all ten categories, at least three families each.**
 
 The split is **frozen and committed** (`control-evals/data/splits.json`): dev 6 families /
@@ -46,6 +46,11 @@ See `DESIGN.md` §4a and §4b.
 
 The runner exists and is tested offline against a fake client. **No model has actually been
 called yet** — that needs the user's API key. See `DESIGN.md` §4c.
+
+**Weeks 18–21 (the guardrail layer) were taken out of order**, because weeks 11–13 are
+"first results" and need a real run. The guardrail experiment is the only one left that can be
+run to completion for free, since both the agent and the guardrail are deterministic code. See
+the matrix in `README.md`.
 
 **Next: the first real sweep**, which is on the user. The key is picked up from
 `ANTHROPIC_API_KEY` or the first `.env` that has it (`control-evals/`, repo root, then
@@ -152,7 +157,7 @@ about $0.50; the whole suite well under £1.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 368 passed
+py -m pytest -q                                     # 385 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log

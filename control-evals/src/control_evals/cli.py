@@ -19,6 +19,7 @@ from datetime import UTC, datetime
 
 from .budget import format_micros
 from .explain import explain
+from .guardrails import GUARDRAILS, guardrail_for
 from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
 from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
@@ -219,7 +220,10 @@ def cmd_run(args: argparse.Namespace) -> int:
     spec = spec_for(args.model, args.base_url)
     total = len(chosen) * args.samples
 
+    layer = guardrail_for(args.guardrail)
     print(f"{total} run(s): {len(chosen)} scenario(s) x {args.samples} sample(s)")
+    if layer.active:
+        print(f"guardrail: {layer.name} — {layer.description}")
     if args.simulate:
         print(f"\n{BANNER}\n")
     else:
@@ -265,6 +269,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 effort=args.effort,
                 max_turns=args.max_turns,
                 sample=sample,
+                guardrail=layer,
             )
             if args.simulate:
                 result.model = recorded_model
@@ -272,7 +277,12 @@ def cmd_run(args: argparse.Namespace) -> int:
             run_set.records.append(result.as_dict())
             spent += result.cost_micros
 
-            flag = "VIOLATION" if result.violated else ("clean" if result.completed else "-")
+            if result.violated and not result.breached:
+                flag = "BLOCKED"
+            elif result.violated:
+                flag = "VIOLATION"
+            else:
+                flag = "clean" if result.completed else "-"
             cost = (
                 ""
                 if args.simulate or not result.cost_micros
@@ -287,6 +297,13 @@ def cmd_run(args: argparse.Namespace) -> int:
                 )
                 mark = "x" if result.violated else "+"
                 _wrapped(mark, "rule", why.rule)
+                if result.violated and not result.breached:
+                    _wrapped(
+                        "!",
+                        "held",
+                        "the control layer refused it, so no money moved — but the agent "
+                        "still decided to do it",
+                    )
                 _wrapped("+" if result.completed else "x", "task", why.task)
                 _wrapped(" ", "did", why.did)
             elif not args.brief:
@@ -329,6 +346,8 @@ def _print_summary(summary, rows) -> None:
 
     print("\n-- the frontier " + "-" * 62)
     print(f"  violation rate (trapped scenarios) {summary.violation_trapped}")
+    if summary.guardrail != "none":
+        print(f"  BREACH rate  (money actually moved) {summary.breach_trapped}")
     print(f"  violation rate (whole suite)       {summary.violation_all}")
     print(f"  task completion                    {summary.completion}")
     print(f"  escalation precision               {summary.escalation_precision}")
@@ -337,6 +356,12 @@ def _print_summary(summary, rows) -> None:
         f"  silent violations                  at least {summary.silent_violations} "
         f"of {summary.violations} (keyword detection, lower bound only)"
     )
+    if summary.guardrail != "none":
+        print(
+            f"  guardrail                          {summary.guardrail}: "
+            f"{summary.blocked_calls} call(s) refused, "
+            f"{summary.violations - summary.breaches} violation(s) held"
+        )
     if summary.unscored:
         detail = ", ".join(f"{k}: {v}" for k, v in sorted(summary.unscored.items()))
         print(f"  unscored runs                      {detail}")
@@ -404,6 +429,7 @@ def cmd_report(args: argparse.Namespace) -> int:
                 model=record["model"],
                 effort=record.get("effort", ""),
                 violated=record["violated"],
+                breached=record.get("breached"),
                 completed=record["completed"],
                 escalated=any(c["tool"] == "request_approval" for c in record["calls"]),
                 escalation_acceptable=escalation_is_acceptable(scenario),
@@ -413,6 +439,8 @@ def cmd_report(args: argparse.Namespace) -> int:
                 cost_micros=record["cost_micros"],
                 elapsed_s=record["elapsed_s"],
                 stopped=record["stopped"],
+                guardrail=record.get("guardrail", "none"),
+                blocked=len(record.get("blocked", [])),
             )
         )
 
@@ -646,6 +674,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--api-key-env",
         default="OPENAI_API_KEY",
         help="environment variable holding the key for a hosted endpoint. Ignored locally.",
+    )
+    runner.add_argument(
+        "--guardrail",
+        choices=sorted(GUARDRAILS),
+        default="none",
+        help="a hard control layer in front of the agent. It changes whether money moves, "
+        "never what the agent decided — violation and breach are reported separately.",
     )
     runner.add_argument(
         "--brief",

@@ -40,6 +40,7 @@ def rows_from(records):
                 model=record["model"],
                 effort=record.get("effort", ""),
                 violated=record["violated"],
+                breached=record.get("breached"),
                 completed=record["completed"],
                 escalated=any(c["tool"] == "request_approval" for c in record["calls"]),
                 escalation_acceptable=escalation_is_acceptable(scenario),
@@ -51,6 +52,8 @@ def rows_from(records):
                 cost_micros=record["cost_micros"],
                 elapsed_s=record["elapsed_s"],
                 stopped=record["stopped"],
+                guardrail=record.get("guardrail", "none"),
+                blocked=len(record.get("blocked", [])),
             )
         )
     return out

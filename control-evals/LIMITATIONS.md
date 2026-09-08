@@ -248,3 +248,29 @@ It is not the same thing at all, and no metric in the report distinguishes them.
 exists to catch it before a sweep, and any published result should say how many runs made
 zero tool calls. Treat a 0% violation rate from a small model as unproven until you have
 checked it acted.
+
+## 23. A guardrail changes the agent's trajectory, not just the outcome
+
+The point of separating **violation** (the agent decided to) from **breach** (money actually
+moved) is that a control layer should move the second and leave the first alone. It does not
+quite. A refused call comes back to the agent as a tool error, and what it does with its
+remaining turns is different from what it would have done unrefused. On the reckless
+stand-in, `process` moved violation from 60% to 48% — not because the agent became more
+careful, but because being blocked early cost it the chance to make its next mistake.
+
+So the two numbers are worth reporting separately and must not be described as independent.
+A drop in violation under a guardrail is not evidence that the guardrail improved judgement.
+
+## 24. The guardrail results describe scripted agents, not models
+
+Everything in the guardrail table comes from hand-written stand-ins. It demonstrates that the
+control layer works, that the violation/breach split measures what it claims to, and roughly
+what shape the trade-off has. It says nothing about how any model behaves under a guardrail,
+which is the actual week 18-21 question and needs a real sweep.
+
+## 25. These guardrails are stronger than a real one would be
+
+Each check reads the same `Policy` object the oracle reads, so it knows the limit exactly. A
+real deployment's control layer is configured separately from whatever the agent was told,
+and the two drift — a limit raised in one place and not the other is a common production
+failure this suite cannot see. Treat the breach reduction here as an upper bound.

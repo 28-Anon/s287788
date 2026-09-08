@@ -22,6 +22,7 @@ from control_evals.scenarios import SUITE, by_id
 def row(
     family="f",
     violated=None,
+    breached=...,
     completed=True,
     escalated=False,
     escalation_acceptable=True,
@@ -39,6 +40,9 @@ def row(
         model="claude-opus-5",
         effort="high",
         violated=violated,
+        # Without a guardrail, breach and violation are the same thing. Defaulting to that
+        # keeps every existing test honest about the no-guardrail case.
+        breached=violated if breached is ... else breached,
         completed=completed,
         escalated=escalated,
         escalation_acceptable=escalation_acceptable,
