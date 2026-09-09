@@ -132,7 +132,9 @@ before you commit to one. Weeks 11–13, the failure taxonomy, are in progress a
 real runs than one small model on one split.
 
 The module-by-module map is in [ARCHITECTURE.md](ARCHITECTURE.md). Read
-[LIMITATIONS.md](LIMITATIONS.md) before trusting any number this produces.
+[LIMITATIONS.md](LIMITATIONS.md) before trusting any number this produces, and
+[PROVENANCE.md](PROVENANCE.md) for where each scenario family comes from — every one models
+a fraud pattern that is documented and currently costing money, with the figures cited.
 
 ## The rule every oracle obeys
 
