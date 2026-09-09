@@ -152,7 +152,10 @@ def local(model_id: str, base_url: str = OLLAMA) -> ModelSpec:
 #: A few local models worth trying first. Any other id works via `--base-url`; these exist so
 #: that the common case is one flag rather than three.
 for _name in (
-    "qwen2.5:1.5b",  # smallest worth trying; fast on a laptop CPU, and fails often
+    "qwen2.5:1.5b",  # too small to call tools at all — fails the doctor, and is listed
+    #                  so that finding that out costs one command
+    "llama3.2:3b",  # the smallest observed to pass every check. 2GB, runs on a laptop
+    "qwen2.5:3b",
     "qwen2.5:7b",
     "qwen3:8b",
     "llama3.1:8b",

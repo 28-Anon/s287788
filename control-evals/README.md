@@ -234,13 +234,19 @@ Together, Groq and Fireworks in the cloud.
 A local model is a real model making real decisions with no card involved:
 
 ```bash
-ollama pull qwen2.5:1.5b
+ollama pull llama3.2:3b
 
 # 15 seconds, one small request: does this endpoint do what the suite assumes?
-python -m control_evals.cli doctor --base-url http://localhost:11434/v1 --model qwen2.5:1.5b
+python -m control_evals.cli doctor --base-url http://localhost:11434/v1 --model llama3.2:3b
 
-python -m control_evals.cli run --split dev --model qwen2.5:1.5b   # then sweep, £0
+# then sweep, £0
+python -m control_evals.cli run --split dev --model llama3.2:3b \
+    --base-url http://localhost:11434/v1
 ```
+
+`llama3.2:3b` is the smallest model observed to pass every check — 2 GB, and it runs on a
+laptop. `qwen2.5:1.5b` is listed too and **fails**: it cannot call tools at all, which is
+worth seeing once, because that failure is invisible in a violation rate.
 
 **Run `doctor` first.** The single most misleading result this suite can produce is a model
 that cannot call tools at all: it acts on nothing, violates nothing, and reports a **0%
@@ -273,7 +279,8 @@ list of suspects — and `--show-request` prints the exact probe body to replay 
 `qwen2.5:7b`, `llama3.1:8b` and `mistral:7b` all call tools; 1.5B is below the size where it
 works reliably.
 
-Any model id works against any endpoint with `--base-url http://host:port/v1`. The adapter
+Any model id works against any endpoint with `--base-url http://host:port/v1` — the server
+decides what it serves, so `--model` stops being a closed list the moment you name one. The adapter
 adds **no dependency** — it speaks HTTP from the standard library — and its translation is
 pinned in both directions by tests, because a silent mistranslation would look exactly like a
 model behaving badly, and telling those apart is what this suite is for.

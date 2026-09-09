@@ -6,6 +6,7 @@ again. The test scores a sweep in memory, writes it out, reads it back, and requ
 summaries to agree.
 """
 
+import argparse
 import json
 
 import pytest
@@ -232,3 +233,47 @@ def test_the_runner_reaches_the_suite_only_through_the_split_gate():
 
     with pytest.raises(HeldoutLocked):
         select("heldout", SUITE, splits)
+
+
+# ---------------------------------------------------------------------------
+# --model is a closed list only until someone points at their own server
+#
+# The README has always claimed "any model id works against it with --base-url". It did not:
+# argparse held a fixed choices list, so a doctor that passed every check was followed by
+# `invalid choice: 'llama3.2:3b'`. The endpoint is the authority on what it serves.
+# ---------------------------------------------------------------------------
+
+
+def test_an_unlisted_model_is_allowed_when_the_endpoint_is_named():
+    from control_evals.cli import _check_model
+
+    args = argparse.Namespace(model="gemma3:4b", base_url="http://localhost:11434/v1")
+    _check_model(args)  # must not raise
+
+
+def test_an_unlisted_model_with_no_endpoint_is_a_mistake_worth_stopping_for():
+    from control_evals.cli import _check_model
+
+    args = argparse.Namespace(model="gemma3:4b", base_url="")
+    with pytest.raises(SystemExit) as caught:
+        _check_model(args)
+
+    message = str(caught.value)
+    assert "unknown model" in message
+    assert "claude-opus-5" in message, "the list is the useful part of the answer"
+    assert "--base-url" in message, "and so is the way round it"
+
+
+def test_a_known_model_needs_no_endpoint():
+    from control_evals.cli import _check_model
+
+    _check_model(argparse.Namespace(model="claude-opus-5", base_url=""))
+
+
+def test_the_local_models_listed_are_all_priced_at_zero():
+    """A local model that quietly carried a price would put fake money in a report."""
+    from control_evals.models import MODELS
+
+    local = [m for m in MODELS.values() if m.provider == "openai_compat"]
+    assert local, "the list exists"
+    assert all(m.input_per_mtok == 0.0 and m.output_per_mtok == 0.0 for m in local)

@@ -191,12 +191,30 @@ def _open_ai_client(spec, args):
     )
 
 
+def _check_model(args: argparse.Namespace) -> None:
+    """A closed list of models is right up to the moment someone points at their own server.
+
+    With `--base-url` the endpoint is the authority on what exists, so any id is allowed and
+    a wrong one comes back as the endpoint's own 404 — which says more than argparse could.
+    Without one, an unknown id is a real mistake and the list is the useful answer.
+    """
+    if args.base_url or args.model in MODELS:
+        return
+    raise SystemExit(
+        f"unknown model {args.model!r}.\n"
+        f"Known models: {', '.join(sorted(MODELS))}\n"
+        f"For anything else, say where it is served:\n"
+        f"  --model {args.model} --base-url http://localhost:11434/v1"
+    )
+
+
 def cmd_run(args: argparse.Namespace) -> int:
     from .report import Row, row_from_run, summarise
     from .runner import run_scenario
     from .splits import suite_fingerprint
     from .store import RunSet, new_run_id
 
+    _check_model(args)
     splits = _require_splits()
     try:
         # The gate. A dry run goes through it too: listing which scenarios are in heldout
@@ -573,6 +591,7 @@ def cmd_splits_check() -> int:
 
 
 def cmd_splits_show(args: argparse.Namespace) -> int:
+    _check_model(args)
     splits = _require_splits()
     try:
         chosen = select(args.split, SUITE, splits, reason=args.reason)
@@ -667,7 +686,13 @@ def build_parser() -> argparse.ArgumentParser:
         default="dev",
         help="one split, or 'open' for every split that is not locked (dev + test)",
     )
-    runner.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL)
+    runner.add_argument(
+        "--model",
+        default=DEFAULT_MODEL,
+        metavar="MODEL",
+        help="one of: " + ", ".join(sorted(MODELS)) + " — or, with --base-url, any id that "
+        "endpoint serves. The server decides what exists, not this list.",
+    )
     runner.add_argument("--effort", choices=EFFORT_LEVELS, default="high")
     runner.add_argument("--samples", type=int, default=1, help="runs per scenario")
     runner.add_argument("--limit", type=int, help="only the first N scenarios")
