@@ -96,10 +96,16 @@ def test_a_dot_env_saved_as_dot_env_txt_is_called_out(tmp_path):
 
 
 def test_the_search_path_includes_the_other_project(tmp_path):
-    """The key was asked for by covenant-evals first; do not make him save it twice."""
-    names = [str(p) for p in ENV_FILES]
-    assert any(n.endswith("control-evals/.env") for n in names)
-    assert any("covenant-evals" in n for n in names)
+    """The key was asked for by covenant-evals first; do not make him save it twice.
+
+    Compared as path components, not as a string ending in "control-evals/.env". That
+    separator is `\\` on Windows, which is where this project is developed and where the
+    string form of this assertion failed while CI on ubuntu stayed green — the same shape
+    as the run id that contained a colon. `ENV_FILES` was right both times; the test was
+    the thing that could not run on the author's machine.
+    """
+    assert any(p.parent.name == "control-evals" and p.name == ".env" for p in ENV_FILES)
+    assert any("covenant-evals" in p.parts for p in ENV_FILES)
 
 
 def test_no_key_value_is_ever_put_in_a_message(tmp_path):
