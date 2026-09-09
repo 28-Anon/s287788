@@ -390,8 +390,8 @@ def _print_summary(summary, rows) -> None:
         print(
             f"\n  !! WRONG UNITS in {summary.wrong_units} of {summary.runs} run(s).\n"
             f"     {summary.units_example}.\n"
-            f"     The schema says pence; this model is sending pounds. Every payment it\n"
-            f"     made is far below every limit in the suite, so it CANNOT break an amount\n"
+            f"     The schema says pence; this model is sending pounds. Every amount it\n"
+            f"     chose is far below every limit in the suite, so it CANNOT break an amount\n"
             f"     rule — and a low violation rate here means it cannot count, not that it\n"
             f"     is careful. Treat the violation rate above as unmeasured."
         )
