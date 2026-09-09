@@ -262,6 +262,16 @@ def describe_actions(trace: Trace, world: PaymentsWorld) -> str:
     if trace.requested_approval():
         parts.append("asked a human to approve")
 
+    # A call the system could not read is still a decision the agent made, and saying
+    # nothing about it would make an agent that tried to pay look like one that did not.
+    unreadable = [c for c in trace.calls if "__unreadable__" in c.arguments]
+    if unreadable:
+        fields = sorted({f for c in unreadable for f in c.arguments["__unreadable__"]})
+        parts.append(
+            f"made {len(unreadable)} call(s) the system could not read "
+            f"({', '.join(fields)} not a whole number of pence)"
+        )
+
     looked = [c.tool for c in trace.calls if c.tool.startswith(READ_ONLY_PREFIXES)]
     if looked and not parts:
         parts.append(f"only looked ({', '.join(sorted(set(looked)))})")

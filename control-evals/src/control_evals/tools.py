@@ -11,6 +11,7 @@ an agent *can* be confused about units is a separate scenario, deliberately writ
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .trace import Trace
@@ -185,6 +186,79 @@ def tools_for(names: list[str]) -> list[dict[str, Any]]:
     return [TOOLS_BY_NAME[name] for name in names]
 
 
+#: An integer and nothing else. No "£", no ",", no "18000.00" — see coerce_arguments.
+_PLAIN_INTEGER = re.compile(r"[+-]?\d+")
+
+
+def coerce_arguments(name: str, arguments: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    """Bring integer-typed arguments to `int`, or say why they cannot be.
+
+    Real models send `{"amount": "18000"}`. Every fake in this repository sends `18000`, so
+    nothing caught it until llama3.2:3b did it on the fourth scenario of the first real
+    sweep. The consequence was not one crash but three, in ascending order of seriousness:
+    the world refused the call, `explain` blew up on `int + str`, and — the one that
+    matters — the **violation oracle** blew up comparing `str > int`. Violation counts
+    attempts, and an attempt typed as a string is still an attempt. A scorer that raises
+    instead of recording it loses the finding.
+
+    So coercion happens once, here, at the boundary, and everything downstream sees `int`.
+
+    **What is deliberately not accepted:** anything with a currency symbol or a thousands
+    separator. `"£18,000"` does not mean 18000 pence, it means the model is thinking in
+    pounds, and quietly reading it as pence would turn £18,000 into £180 — a hundredfold
+    error, in the safe-looking direction, in the number the whole suite is about. That is a
+    malformed call and is reported to the model as one, which is also what a real payment
+    API would do.
+    """
+    schema = TOOLS_BY_NAME.get(name, {}).get("input_schema", {})
+    integers = {
+        field
+        for field, spec in schema.get("properties", {}).items()
+        if spec.get("type") == "integer"
+    }
+
+    coerced = dict(arguments)
+    problems: list[str] = []
+    unreadable: dict[str, Any] = {}
+    for field in integers & set(coerced):
+        value = coerced[field]
+        if isinstance(value, bool):
+            # `bool` is a subclass of `int`, so `True` would otherwise sail through as a
+            # payment of one penny. Nothing sensible means that.
+            problems.append(f"{field} must be a number of pence, not {value!r}")
+            unreadable[field] = coerced.pop(field)
+            continue
+        if isinstance(value, int):
+            continue
+        if isinstance(value, float):
+            # A whole number in float clothing is fine; a fraction of a penny is not.
+            if value.is_integer():
+                coerced[field] = int(value)
+            else:
+                problems.append(f"{field} must be a whole number of pence, not {value!r}")
+                unreadable[field] = coerced.pop(field)
+            continue
+        if isinstance(value, str) and _PLAIN_INTEGER.fullmatch(value.strip()):
+            coerced[field] = int(value.strip())
+            continue
+        problems.append(
+            f"{field} must be an integer number of pence, not {value!r}. "
+            f"£1,000.00 is 100000 — no currency symbol, no separators."
+        )
+        # Taken out of the recorded arguments rather than left in place. Every reader of an
+        # amount does `arguments.get("amount", 0)`, so an unreadable value left behind would
+        # propagate a `str` into nine call sites and raise in whichever ran first. Absent, it
+        # reads as zero everywhere — which is the honest answer: "£18,000" could mean pence
+        # or pounds, so the amount attempted is genuinely unknown and must not be asserted to
+        # be over any limit. It is kept under __unreadable__ so nothing is lost and `explain`
+        # can still say the call was made.
+        unreadable[field] = coerced.pop(field)
+
+    if unreadable:
+        coerced["__unreadable__"] = unreadable
+    return coerced, problems
+
+
 def dispatch(
     world: PaymentsWorld, trace: Trace, name: str, arguments: dict[str, Any]
 ) -> dict[str, Any]:
@@ -194,9 +268,14 @@ def dispatch(
     the agent, not a reason to lose the scenario.
     """
     handler = getattr(world, name, None)
+    arguments, problems = coerce_arguments(name, arguments)
 
     if handler is None or name not in TOOLS_BY_NAME:
         result: dict[str, Any] = {"error": f"no such tool: {name}"}
+    elif problems:
+        # Recorded as an attempt, because it is one. The agent decided to move this money;
+        # it merely said the amount in a form the system will not act on.
+        result = {"error": f"bad arguments for {name}: {'; '.join(problems)}"}
     else:
         try:
             result = handler(**arguments)
