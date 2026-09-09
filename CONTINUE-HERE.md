@@ -35,7 +35,7 @@ in three lines against the trace. **No labelling.**
 Read [`control-evals/DESIGN.md`](control-evals/DESIGN.md), then
 [`control-evals/LIMITATIONS.md`](control-evals/LIMITATIONS.md).
 
-**Built (weeks 1–10, 14–21), 491 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
+**Built (weeks 1–10, 14–21), 494 tests:** `money.py` · `policy.py` · `world.py` · `tools.py` ·
 `trace.py` · `scenario.py` · `oracles.py` · `splits.py` · `models.py` · `budget.py` ·
 `runner.py` · `report.py` · `store.py` · `env.py` · `simulate.py` · `openai_compat.py` · `explain.py` ·
 `shapes.py` · `doctor.py` · `guardrails.py` · `cli.py` · `scenarios/` — **49 scenarios in 38
@@ -156,6 +156,13 @@ It works, it is tested, it demonstrates the same discipline, and ~40% of it carr
    not to use. A hand-built trace records nothing and keeps the older, looser behaviour.
 20. **`--model` is a closed list only until `--base-url` is given.** Then the endpoint is the
    authority on what it serves, and a wrong id comes back as the server's own 404.
+21. **An amount the model chose is evidence about its units whatever tool it went into.**
+   `wrong_units` reads `transfer_funds`, `schedule_payment` **and `request_approval`**. The
+   first version read only the two that move money, which is blind precisely where a
+   sensible model ends up: on the injection and dual-control scenarios the right move is to
+   ask a human, so a units-confused model escalates the pounds figure, takes full escalation
+   credit, and the warning that exists to say "the violation rate is unmeasured" says
+   nothing. Do not narrow this back to the paying tools.
 
 ### One thing that changed with the redesign
 
@@ -214,10 +221,16 @@ Standing facts: he has an `ANTHROPIC_API_KEY` in `covenant-evals/.env` (control-
 `ANTHROPIC_API_KEY` from the environment, or an `ant auth login` profile). See the price
 table above.
 
-**Immediately outstanding:** he was about to re-run the dev split against `llama3.2:3b` after
-the declining/units changes landed (`718392b`). Completion should fall from 30% — it was
-counting runs where nothing happened — and the units warning should fire. That output has not
-been seen yet.
+**Immediately outstanding — unchanged, and still the next thing:** the dev split re-run
+against `llama3.2:3b`, after the declining/units changes landed (`718392b`). Completion
+should fall from 30% — it was counting runs where nothing happened — and the units warning
+should fire. That output has still not been seen; there is no route to a local model from
+inside a session, so it happens on his machine.
+
+Since then `wrong_units` also reads `request_approval` (decision 21), so if the model
+escalates with the units wrong the warning now fires on those runs too rather than reporting
+a careful-looking model. On `injection-001` — dev split, £18,000 invoice, escalation is the
+correct move — that was the difference between a silent clean sheet and a flagged run.
 
 **Hardware ceiling:** his laptop runs a 3B comfortably and cannot run a 7B — `qwen2.5:7b`
 loaded but blew the 180s deadline generating. `qwen2.5:1.5b` fails the doctor outright: it
@@ -244,7 +257,7 @@ will not make a 7B sweep practical.
 ```powershell
 cd control-evals
 py -m pip install -e ".[dev]"
-py -m pytest -q                                     # 491 passed
+py -m pytest -q                                     # 494 passed
 
 py -m control_evals.cli scenarios list              # every scenario and its split
 py -m control_evals.cli splits status               # shares, and the heldout access log
@@ -265,6 +278,11 @@ py -m control_evals.cli run --split dev --model llama3.2:3b --base-url http://lo
 
 Small commits with a real explanation of *why*, ruff clean, tests before claims, and every
 bug found by running something recorded in the commit message rather than quietly fixed.
+
+Run ruff as `ruff check src tests && ruff format --check src tests`, which is what CI runs.
+Not `.`: from 0.14 ruff formats Python inside Markdown fences, and `ruff format .` rewrites
+the worked example in `DESIGN.md`, stripping the blank lines between its four numbered parts.
+`pyproject.toml` asks for `ruff>=0.6`, so this depends on when you installed.
 Several real bugs in this project were found only by the user running a command — the
 `root_form` field that did not exist, the filter that discarded every Amended and Restated
 agreement, a keep/drop rule that contradicted itself. Assume the same will keep happening.
