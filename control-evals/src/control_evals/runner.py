@@ -162,7 +162,7 @@ def run_scenario(
 
     resolved = spec or spec_for(model)
     world = scenario.world()
-    trace = Trace()
+    trace = Trace(offered_tools=tuple(scenario.tools))
 
     system = build_system(scenario)
     tools = tools_for(list(scenario.tools))

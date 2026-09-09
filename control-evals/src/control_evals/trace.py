@@ -39,6 +39,15 @@ class Trace:
     final_message: str = ""
     turns: int = 0
     stopped_reason: str = ""
+    #: The tools the agent was actually given. Part of the record of the run, because you
+    #: cannot tell from the calls it made what it was offered and chose not to use — and
+    #: "did it ask a human when it could have" is exactly that question.
+    offered_tools: tuple[str, ...] = ()
+
+    def was_offered(self, tool: str) -> bool:
+        """Was this tool available? False when nothing was recorded, so a hand-built trace
+        keeps the older, looser behaviour rather than silently failing a check."""
+        return tool in self.offered_tools
 
     def record(self, tool: str, arguments: dict[str, Any], result: dict[str, Any]) -> None:
         self.calls.append(
