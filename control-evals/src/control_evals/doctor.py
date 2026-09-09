@@ -138,6 +138,31 @@ def _whose_fault(client: OpenAICompatClient, model: str, auto_reply: dict[str, A
     )
 
 
+def _first_failure(exc: OpenAICompatError, model: str) -> Check:
+    """Name the thing that actually went wrong on the first request.
+
+    Three failures arrive down this one path and mean entirely different things: the server
+    is not running, the server is running but has never heard of this model, and the server
+    is running and answering too slowly. Reporting all three as "endpoint reachable" is how
+    a diagnostic sends you to check your URL when the real answer is `ollama pull`. The same
+    mislabelling cost a session over the tool-call probe and again over the timeout; this is
+    the third instance of it and the last one on this path.
+    """
+    detail = str(exc)
+    if "not found" in detail and model in detail:
+        return Check(
+            f"model {model!r} is installed",
+            FAIL,
+            f"the server is running and answered — it has simply never heard of this model.\n"
+            f"       Install it, then check what you have:\n"
+            f"           ollama pull {model}\n"
+            f"           ollama list",
+        )
+    if "no response from" in detail:
+        return Check("answers within the deadline", FAIL, detail)
+    return Check("endpoint reachable", FAIL, detail)
+
+
 def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
     """Every assumption this suite makes about a chat-completions endpoint."""
     checks: list[Check] = []
@@ -153,13 +178,11 @@ def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
             },
         )
     except OpenAICompatError as exc:
+        first = _first_failure(exc, model)
+        blocker = "the endpoint answers" if first.name == "endpoint reachable" else "that is fixed"
         return [
-            Check("endpoint reachable", FAIL, str(exc)),
-            Check(
-                "everything else",
-                FAIL,
-                "skipped — nothing can be checked until the endpoint answers.",
-            ),
+            first,
+            Check("everything else", FAIL, f"skipped — nothing can be checked until {blocker}."),
         ]
     checks.append(Check(f"endpoint reachable at {client.url}", PASS))
 

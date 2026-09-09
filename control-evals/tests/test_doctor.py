@@ -267,3 +267,53 @@ def test_show_request_prints_the_body_that_was_actually_sent():
 
     assert sent[1] == probe_payload("m")
     assert json.loads(json.dumps(probe_payload("m"))) == probe_payload("m"), "must be printable"
+
+
+# ---------------------------------------------------------------------------
+# The first request fails for three different reasons
+#
+# All three used to be reported as "endpoint reachable", which is the wrong thing to check
+# in two of them: an uninstalled model means the endpoint answered perfectly, and a slow one
+# means it accepted the request. The fix is `ollama pull`, a smaller model, and `ollama
+# serve` respectively — three different places to look.
+# ---------------------------------------------------------------------------
+
+
+def test_an_uninstalled_model_is_named_as_such_not_as_an_unreachable_endpoint():
+    detail = (
+        "HTTP 404 from http://localhost:11434/v1/chat/completions: model 'llama3.2:3b' not found"
+    )
+    checks = run_checks(endpoint(OpenAICompatError(detail)), "llama3.2:3b")
+
+    assert "is installed" in checks[0].name
+    assert "llama3.2:3b" in checks[0].name
+    assert "ollama pull llama3.2:3b" in checks[0].detail
+    assert "the server is running and answered" in checks[0].detail
+    assert verdict(checks)[0] == 1
+
+
+def test_a_slow_first_reply_is_a_deadline_failure_not_an_unreachable_endpoint():
+    checks = run_checks(
+        endpoint(OpenAICompatError("no response from http://x/v1 within 180s. The server ...")),
+        "qwen2.5:7b",
+    )
+
+    assert checks[0].name == "answers within the deadline"
+    assert verdict(checks)[0] == 1
+
+
+def test_a_genuinely_dead_endpoint_still_says_so():
+    """The label must still be right in the case it was always right for."""
+    checks = run_checks(endpoint(OpenAICompatError("could not reach http://x: [Errno 111]")), "m")
+
+    assert checks[0].name == "endpoint reachable"
+
+
+def test_another_models_404_is_not_read_as_this_model_missing():
+    """The name has to match, or an unrelated 404 gets a misleading remedy attached."""
+    detail = "HTTP 404 from http://x/v1: model 'some-other-model' not found"
+    checks = run_checks(endpoint(OpenAICompatError(detail)), "llama3.2:3b")
+
+    assert checks[0].name == "endpoint reachable", (
+        "no ollama pull suggestion for someone else's 404"
+    )
