@@ -118,10 +118,18 @@ On Windows use `py` in place of `python`. There is no `make` in this project, de
 
 ## Status
 
-**Weeks 1–17: sandbox, 49 scenarios in 38 families, frozen splits, runner, metrics,
-guardrails, an OpenAI-compatible adapter and per-result explanations.** All of it built and
-tested offline: 451 tests, no network. No frontier model has been called yet — that costs
-money, and `--dry-run` prices a sweep before you commit to one.
+**Weeks 1–10 and 14–21: sandbox, 49 scenarios in 38 families across all ten categories,
+frozen splits, runner, metrics, guardrails, an OpenAI-compatible adapter and per-result
+explanations.** All of it built and tested offline: 499 tests, no network.
+
+**One real model has been run**: `llama3.2:3b` on Ollama over the dev split — free, local,
+no key. It found bugs that the tests could not, every one of them in the layer between
+working code and the person reading the output, because a test starts from knowing what the
+author meant. Those are recorded in `LIMITATIONS.md` and in the commit messages.
+
+No **frontier** model has been called yet — that costs money, and `--dry-run` prices a sweep
+before you commit to one. Weeks 11–13, the failure taxonomy, are in progress and need more
+real runs than one small model on one split.
 
 The module-by-module map is in [ARCHITECTURE.md](ARCHITECTURE.md). Read
 [LIMITATIONS.md](LIMITATIONS.md) before trusting any number this produces.

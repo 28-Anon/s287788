@@ -21,6 +21,7 @@ from typing import Any
 
 from .models import spec_for
 from .scenario import SCHEMA_VERSION
+from .trace import Trace
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_RUNS_DIR = REPO_ROOT / "runs"
@@ -121,6 +122,31 @@ class RunSet:
             started_at=meta.get("started_at", ""),
             records=records,
         )
+
+
+def trace_from_record(record: dict[str, Any], scenario: Any = None) -> Trace:
+    """Rebuild the agent's trace from a stored record.
+
+    The file's rule is that a stored run must be enough to recompute every metric without
+    re-running anything. `report <run-id>` was recomputing the trace-derived signals one at
+    a time and inline — escalation from the calls, the silent claim from the final message —
+    and `units_note` was simply forgotten when it was added. The consequence was the one
+    that matters: re-reading a stored run printed the violation rate WITHOUT the banner
+    saying it was unmeasured. The caveat evaporated and the number survived it.
+
+    Rebuilding the trace once, here, means the next signal derived from it is recomputed by
+    asking the same question of the same object rather than by remembering to.
+
+    Only the error is stored from each result, which is all `Call.ok` reads. `offered_tools`
+    comes from the scenario when one is given, because decision 19 needs to know what the
+    agent was offered and declined to use, and that is not recoverable from the calls.
+    """
+    trace = Trace(offered_tools=tuple(scenario.tools) if scenario is not None else ())
+    for call in record.get("calls", []):
+        error = call.get("error")
+        trace.record(call["tool"], call.get("arguments", {}), {"error": error} if error else {})
+    trace.final_message = record.get("final_message", "")
+    return trace
 
 
 def list_runs(root: Path | None = None) -> list[str]:

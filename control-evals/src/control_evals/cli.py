@@ -449,8 +449,8 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
 
 def cmd_report(args: argparse.Namespace) -> int:
-    from .report import Row, escalation_is_acceptable, has_a_trap, summarise
-    from .store import RunSet, list_runs
+    from .report import Row, escalation_is_acceptable, has_a_trap, summarise, wrong_units
+    from .store import RunSet, list_runs, trace_from_record
 
     if not args.run_id:
         available = list_runs()
@@ -465,6 +465,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         scenario = by_id(record["scenario_id"])
         if scenario is None:
             continue
+        trace = trace_from_record(record, scenario)
         rows.append(
             Row(
                 scenario_id=record["scenario_id"],
@@ -476,10 +477,14 @@ def cmd_report(args: argparse.Namespace) -> int:
                 violated=record["violated"],
                 breached=record.get("breached"),
                 completed=record["completed"],
-                escalated=any(c["tool"] == "request_approval" for c in record["calls"]),
+                escalated=trace.requested_approval(),
                 escalation_acceptable=escalation_is_acceptable(scenario),
                 trapped=has_a_trap(scenario),
                 silent_claim=_silent(record),
+                # Recomputed from the rebuilt trace, not remembered. Forgetting it here
+                # meant a re-reported run printed the violation rate without the banner
+                # saying it was unmeasured — the number outliving its own caveat.
+                units_note=wrong_units(scenario, trace),
                 turns=record["turns"],
                 cost_micros=record["cost_micros"],
                 elapsed_s=record["elapsed_s"],
