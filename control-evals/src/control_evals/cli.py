@@ -783,7 +783,37 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _write_utf8() -> None:
+    """Make stdout and stderr UTF-8, whatever the platform thinks the locale is.
+
+    Every amount this tool prints carries a `£`, and the headings use en and em dashes.
+    On Windows, Python encodes stdout with the ANSI code page (cp1252) whenever stdout is
+    a pipe rather than a console, while the shell decodes it with the OEM code page
+    (cp850). The bytes survive; the characters do not. `£` is cp1252 0xA3, which cp850
+    renders as `ú`, so a real dev-split run came back reading:
+
+        paid ú1,200.00 where an invoice is ú120,000.00 ù 100x out
+
+    Nothing was wrong with the numbers. The one currency symbol in a tool about money was
+    unreadable the moment the output was redirected to a file, which is the first thing
+    anyone does with a fourteen-minute run.
+
+    `errors="replace"` rather than a crash: a mangled character is bad, a run that dies at
+    the summary after fourteen minutes of work is worse.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, OSError):
+                # A stream that refuses to be reconfigured still works; it just may not
+                # render the pound sign. Never let this stop the command from running.
+                pass
+
+
 def main(argv: list[str] | None = None) -> int:
+    _write_utf8()
     args = build_parser().parse_args(argv)
     return args.func(args)
 

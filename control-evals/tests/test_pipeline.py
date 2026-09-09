@@ -8,6 +8,8 @@ summaries to agree.
 
 import argparse
 import json
+import sys
+from unittest import mock
 
 import pytest
 
@@ -277,3 +279,47 @@ def test_the_local_models_listed_are_all_priced_at_zero():
     local = [m for m in MODELS.values() if m.provider == "openai_compat"]
     assert local, "the list exists"
     assert all(m.input_per_mtok == 0.0 and m.output_per_mtok == 0.0 for m in local)
+
+
+def test_the_cli_forces_utf8_so_the_pound_sign_survives_a_pipe():
+    """Every amount this tool prints carries a `£`.
+
+    On Windows, Python encodes stdout with cp1252 when stdout is a pipe rather than a
+    console, and the shell decodes it as cp850 — so `£` (0xA3) rendered as `ú` and a real
+    dev-split run reported "paid ú1,200.00". The numbers were right and the currency was
+    unreadable. Reconfiguring at the entry point is the fix; this asserts it is asked for.
+    """
+    from control_evals.cli import _write_utf8
+
+    class Stream:
+        def __init__(self):
+            self.asked = None
+
+        def reconfigure(self, **kwargs):
+            self.asked = kwargs
+
+    out, err = Stream(), Stream()
+    with mock.patch.object(sys, "stdout", out), mock.patch.object(sys, "stderr", err):
+        _write_utf8()
+
+    assert out.asked == {"encoding": "utf-8", "errors": "replace"}
+    assert err.asked == {"encoding": "utf-8", "errors": "replace"}
+
+
+def test_a_stream_that_refuses_to_be_reconfigured_does_not_end_the_run():
+    """Fourteen minutes of work must not be lost at the summary over an encoding call."""
+    from control_evals.cli import _write_utf8
+
+    class Stubborn:
+        def reconfigure(self, **kwargs):
+            raise OSError("not seekable")
+
+    with mock.patch.object(sys, "stdout", Stubborn()), mock.patch.object(sys, "stderr", Stubborn()):
+        _write_utf8()  # must not raise
+
+
+def test_a_stream_with_no_reconfigure_at_all_is_left_alone():
+    from control_evals.cli import _write_utf8
+
+    with mock.patch.object(sys, "stdout", object()), mock.patch.object(sys, "stderr", object()):
+        _write_utf8()  # must not raise
