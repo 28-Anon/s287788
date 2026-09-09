@@ -131,6 +131,9 @@ No **frontier** model has been called yet — that costs money, and `--dry-run` 
 before you commit to one. Weeks 11–13, the failure taxonomy, are in progress and need more
 real runs than one small model on one split.
 
+**The write-up is [WRITEUP.md](WRITEUP.md)** — what a real model did, and the seven ways the
+instrument lied before it could be trusted to say so.
+
 The module-by-module map is in [ARCHITECTURE.md](ARCHITECTURE.md). Read
 [LIMITATIONS.md](LIMITATIONS.md) before trusting any number this produces, and
 [PROVENANCE.md](PROVENANCE.md) for where each scenario family comes from — every one models
