@@ -542,6 +542,136 @@ enough to switch on." Bottleneck positions are where pricing power lives, and th
 
 ---
 
+## 15a. THE RISK ROUTE — model risk, and insurance specifically
+
+Added after `control-evals/` was built, because the project turned out to be a stronger
+credential for the risk world than for the AI world, and that was not obvious in advance.
+
+Salary figures below are UK, approximate, and worth checking against current postings before
+you plan around any of them.
+
+### 15a.1 Why this project is a model-risk credential
+
+Model risk management is the function that decides whether a model may be deployed, and
+keeps deciding afterwards. In banks it runs under the PRA's SS1/23 model risk management
+principles; in insurers it runs as the internal model validation function required under
+Solvency UK, for which Lloyd's publishes its own Internal Model Validation Guidance.
+
+The discipline's central rule is that **validation must be independent of development** —
+the person who built it cannot be the person who signs it off. Every unusual decision in
+this repository is that rule expressed in code:
+
+- **Ground truth by construction, not by labelling.** The policy defines the violation, so
+  there is nothing for the author's judgement to contaminate.
+- **A heldout split that is locked until week 22**, mechanically, with a committed access
+  log. That is a pre-registration device: it stops you tuning against the number you will
+  eventually publish.
+- **Frozen splits, by family, never re-cut.** The assignment cannot drift toward a
+  flattering answer.
+- **Both violation denominators printed**, always, because quoting one without saying which
+  is the standard way to make a rate look better than it is.
+- **Bootstrap intervals clustered over families rather than runs**, because resampling
+  correlated runs returns an interval narrower than the evidence supports — an error that
+  looks like a result and publishes cleanly.
+- **`LIMITATIONS.md`**, 27 entries, written against your own work.
+
+Most graduates entering model risk have never validated anything. You have validated your
+own instrument, found seven ways it lied to you, and written down what it still cannot
+measure. That is the job, and the artefact is already public.
+
+The strongest single line you have is not "I built an eval harness". It is: *my headline
+number was 13% and I can show you why that number was meaningless.* Anyone can produce a
+scoreboard. Recognising that your own instrument was not measuring anything, and building
+the warning that says so, is the thing model risk exists to do.
+
+**Roles and rough bands:** graduate model risk / model validation analyst, £45–60k;
+VP-level model validation in a bank or insurer, roughly £90–130k within a few years;
+independent validation contractors bill considerably more. The function is regulated,
+budgeted and staffed regardless of AI sentiment, which is the point — it does not depend on
+a hype cycle holding.
+
+### 15a.2 Insurance — three separate doors, and the first one is wide open
+
+**Door 1: cyber and crime underwriting. This is the closest match, and it is not close.**
+
+Business email compromise and funds transfer fraud are **58% of cyber insurance claims**,
+and **71% of funds transfer fraud is driven by social engineering**. That is the same loss
+this suite models, priced by an insurer instead of suffered by a bank.
+
+Now the part that should genuinely change your plans. Guidance to buyers of cyber cover
+says the social-engineering sub-limit should be anchored to *the largest single transaction
+the finance team can authorise without a secondary verification* — and that whether the
+sub-limit pays at all turns on the verification protocol: if a CFO can wire a large sum
+because an email said to, the policy may not respond. Over 40% of cyber claims result in no
+payout, and exclusions are the most common reason.
+
+Read that against `policy.py`. `max_single_payment` and `approval_required_above` are
+**the underwriting variable**. Dual control is **the coverage condition**. This project did
+not set out to model an insurance policy and it models one exactly.
+
+And here is the gap you are positioned for. When a *human* holds that authority, an
+underwriter can ask about the verification protocol and take an answer. When an **AI agent**
+holds it, the question becomes: what is the largest payment this agent will actually make
+without escalating? That is a behavioural question, not a policy-document question, and
+nobody in the market has a method for answering it. You have built one. It even produces
+the frontier an underwriter would need — violation rate against completion, rather than a
+single number that rates a useless agent and a good one identically.
+
+**Door 2: internal model validation.** The Solvency UK validation function, and Lloyd's own
+Internal Model Validation Guidance. This is §15a.1 applied to capital models rather than AI
+ones. The independence discipline transfers directly; the actuarial content does not, and
+progressing far usually means IFoA exams. Worth knowing before you commit.
+
+**Door 3: AI liability, and it is early.** The Lloyd's Market Association published an AI
+Adoption Toolkit on 23 April 2026 organised around governance and accountability, risk
+tiering, data protection, training, and pragmatic adoption. Lloyd's has submitted written
+evidence to Parliament on AI. The London market is actively working out how to underwrite AI
+deployment risk and does not yet have an accepted methodology for it. Early is riskier and
+the ceiling is higher; it is also where a 19-year-old with a public artefact can be visible
+in a way they cannot be in a mature function.
+
+### 15a.3 What this changes about the plan
+
+Nothing in §17 changes. The write-up is still the conversion step, and it does not exist.
+
+What changes is **who the twenty people are**. §17 says to send it to model-risk leads and
+evals researchers. Add to that list: cyber and crime underwriters in the London market,
+insurance model validation leads, and whoever at the LMA is working on the AI toolkit. The
+question you send an underwriter is not the one you send a lab, and it is a better question:
+*your social-engineering sub-limit is anchored to the largest payment authorisable without
+secondary verification — how are you setting that number when the thing authorising it is an
+agent?*
+
+Nobody has a good answer. You have a harness that produces one.
+
+---
+
+### 15a.4 Sources for §15a
+
+Read September 2026. Check the current edition before quoting any figure — these are annual
+or actively revised.
+
+- FBI Internet Crime Complaint Center, *2025 IC3 Annual Report* — BEC losses and volumes:
+  <https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf>
+- UK Finance, *Annual Fraud Report 2026* — UK APP and invoice/mandate figures:
+  <https://www.ukfinance.org.uk/system/files/2026-06/UK%20Finance%20Fraud%20Report%202026.pdf>
+- Lloyd's, *Internal Model Validation Guidance*, April 2026:
+  <https://assets.lloyds.com/media-651c0e64-c1d0-4f97-90f7-883c69fe2ef2/81508fa3-aede-4faa-b696-c4af20d6e9ea/Internal%20Model%20Validation%20Guidance%20-%20April%202026%20FINAL.pdf>
+- Lloyd's Market Association, *AI Adoption Toolkit*, 23 April 2026:
+  <https://lmalloyds.com/ai-and-ml-in-actuarial-and-risk/>
+- Lloyd's of London, written evidence to Parliament on AI in financial services:
+  <https://committees.parliament.uk/writtenevidence/140107/pdf/>
+- Cyber claims composition (BEC and funds transfer fraud as a share of claims, the
+  social-engineering sub-limit and verification-protocol condition, and the no-payout rate)
+  is from broker and vendor market commentary, not a regulator. **Treat it as a lead, not a
+  citation** — before putting a number in writing, get it from an insurer's or broker's own
+  published claims report (Coalition, Beazley, Marsh and Aon all publish one).
+- PRA SS1/23, *Model risk management principles for banks* — banks only; insurers sit under
+  the Solvency UK validation requirement instead. Confirm which regime applies before
+  citing either at an employer.
+
+---
+
 ## 16. THE ONE TYPE OF COMPANY I SHOULD EVENTUALLY BUILD
 
 **An AI-native credit and counterparty monitoring platform for private-credit and
