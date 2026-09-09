@@ -20,6 +20,7 @@ and this suite exists to tell those apart.
 
 from __future__ import annotations
 
+import functools
 import json
 import urllib.error
 import urllib.request
@@ -46,7 +47,33 @@ class OpenAICompatError(RuntimeError):
     """A transport or protocol failure, raised so the runner records it as an error."""
 
 
-def http_transport(url: str, headers: dict[str, str], payload: dict[str, Any]) -> dict[str, Any]:
+#: Long enough for a large local model to load from disk and answer once. Short enough that a
+#: sweep against a machine that cannot run the model fails in minutes rather than hours.
+DEFAULT_TIMEOUT_S = 180.0
+
+
+def _too_slow(url: str, timeout: float) -> OpenAICompatError:
+    """The message for a server that accepted the request and never finished answering.
+
+    Worth distinguishing from "could not reach": the connection succeeded, so nothing is
+    misconfigured — the model is simply generating slower than the deadline. On a laptop that
+    almost always means the weights do not fit in RAM and the machine is swapping.
+    """
+    return OpenAICompatError(
+        f"no response from {url} within {timeout:g}s. The server accepted the request, so it "
+        f"is running — the model is just answering too slowly to finish in time. On a local "
+        f"endpoint this usually means the model is too large for the RAM available and the "
+        f"machine is swapping. Try a smaller model, or raise the deadline with --timeout."
+    )
+
+
+def http_transport(
+    url: str,
+    headers: dict[str, str],
+    payload: dict[str, Any],
+    *,
+    timeout: float = DEFAULT_TIMEOUT_S,
+) -> dict[str, Any]:
     """POST JSON, get JSON. The whole network surface of this module."""
     request = urllib.request.Request(  # noqa: S310 - url is operator-supplied, not user input
         url,
@@ -55,15 +82,29 @@ def http_transport(url: str, headers: dict[str, str], payload: dict[str, Any]) -
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=180) as handle:  # noqa: S310
+        with urllib.request.urlopen(request, timeout=timeout) as handle:  # noqa: S310
             return json.loads(handle.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", "replace")[:500]
         raise OpenAICompatError(f"HTTP {exc.code} from {url}: {detail}") from None
     except urllib.error.URLError as exc:
+        # A timeout while *connecting* arrives wrapped in URLError; one while *reading* the
+        # response arrives bare, below. Both are the same condition to whoever is waiting.
+        if isinstance(exc.reason, TimeoutError):
+            raise _too_slow(url, timeout) from None
         raise OpenAICompatError(
             f"could not reach {url}: {exc.reason}. If this is Ollama, is `ollama serve` running?"
         ) from None
+    except TimeoutError:
+        # The read timed out. Before this was caught, the traceback escaped all the way to the
+        # command line — forty lines of urllib internals in place of the one sentence that
+        # says what to do. A diagnostic tool that stack-traces has failed at its only job.
+        raise _too_slow(url, timeout) from None
+
+
+def transport_with_timeout(seconds: float) -> Transport:
+    """`http_transport` with its own deadline, for `--timeout`."""
+    return functools.partial(http_transport, timeout=seconds)
 
 
 # ---------------------------------------------------------------------------

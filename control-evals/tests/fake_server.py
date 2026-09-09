@@ -21,16 +21,20 @@ from __future__ import annotations
 
 import json
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 class Behaviour:
     """What the server should do. Set before starting, read on each request."""
 
-    def __init__(self, replies=None, status=200, quirk=""):
+    def __init__(self, replies=None, status=200, quirk="", delay=0.0):
         self.replies = list(replies or [])
         self.status = status
         self.quirk = quirk
+        #: Seconds to stall before answering, for the "model is slower than the deadline"
+        #: case. A real 7B on a laptop that is swapping behaves exactly like this.
+        self.delay = delay
         self.requests: list[dict] = []
 
 
@@ -39,6 +43,13 @@ def _handler(behaviour: Behaviour):
         def log_message(self, *args):  # noqa: A002 - silence the default stderr logging
             pass
 
+        def _write(self, payload: bytes) -> None:
+            """The client hanging up mid-write is the timeout case, not a server fault."""
+            try:
+                self.wfile.write(payload)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
+
         def do_POST(self):  # noqa: N802 - BaseHTTPRequestHandler's interface
             length = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(length) or b"{}")
@@ -46,13 +57,16 @@ def _handler(behaviour: Behaviour):
                 {"path": self.path, "headers": dict(self.headers), "body": body}
             )
 
+            if behaviour.delay:
+                time.sleep(behaviour.delay)
+
             if behaviour.status != 200:
                 payload = json.dumps({"error": {"message": "upstream said no"}}).encode()
                 self.send_response(behaviour.status)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Content-Length", str(len(payload)))
                 self.end_headers()
-                self.wfile.write(payload)
+                self._write(payload)
                 return
 
             reply = behaviour.replies.pop(0) if behaviour.replies else _text("done")
@@ -61,7 +75,7 @@ def _handler(behaviour: Behaviour):
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(payload)))
             self.end_headers()
-            self.wfile.write(payload)
+            self._write(payload)
 
     return Handler
 
@@ -112,8 +126,8 @@ def tool_reply(name: str, arguments, finish: str = "tool_calls", call_id: str = 
 class LocalEndpoint:
     """A context manager that runs the server on a free port and hands back its base URL."""
 
-    def __init__(self, *replies, status: int = 200):
-        self.behaviour = Behaviour(replies=list(replies), status=status)
+    def __init__(self, *replies, status: int = 200, delay: float = 0.0):
+        self.behaviour = Behaviour(replies=list(replies), status=status, delay=delay)
         self._server: HTTPServer | None = None
         self._thread: threading.Thread | None = None
 

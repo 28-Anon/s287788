@@ -21,6 +21,7 @@ from .budget import format_micros
 from .explain import explain
 from .guardrails import GUARDRAILS, guardrail_for
 from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
+from .openai_compat import DEFAULT_TIMEOUT_S
 from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
 from .scenarios import SUITE, by_id
@@ -174,7 +175,7 @@ def _wrapped(mark: str, label: str, text: str, width: int = 84) -> None:
 
 def _open_ai_client(spec, args):
     """A client for anything that speaks chat-completions. Local endpoints need no key."""
-    from .openai_compat import OpenAICompatClient
+    from .openai_compat import OpenAICompatClient, transport_with_timeout
 
     key = os.environ.get(args.api_key_env, "") if args.api_key_env else ""
     base = args.base_url or spec.base_url
@@ -185,7 +186,9 @@ def _open_ai_client(spec, args):
             f"Set ${args.api_key_env}, or pass --api-key-env with the variable that holds it."
         )
     print(f"endpoint {base}" + ("  (local — no key, no cost)" if local else ""))
-    return OpenAICompatClient(base_url=base, api_key=key)
+    return OpenAICompatClient(
+        base_url=base, api_key=key, transport=transport_with_timeout(args.timeout)
+    )
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -380,7 +383,7 @@ def _print_summary(summary, rows) -> None:
 def cmd_doctor(args: argparse.Namespace) -> int:
     """Fifteen seconds against a real endpoint, before an hour spent on a sweep."""
     from .doctor import probe_payload, run_checks, verdict
-    from .openai_compat import OpenAICompatClient
+    from .openai_compat import OpenAICompatClient, transport_with_timeout
 
     spec = spec_for(args.model, args.base_url)
     if spec.provider != "openai_compat" and not args.base_url:
@@ -394,7 +397,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     key = os.environ.get(args.api_key_env, "") if args.api_key_env else ""
     print(f"checking {base} with model {args.model}\n")
 
-    checks = run_checks(OpenAICompatClient(base_url=base, api_key=key), args.model)
+    client = OpenAICompatClient(
+        base_url=base, api_key=key, transport=transport_with_timeout(args.timeout)
+    )
+    checks = run_checks(client, args.model)
     for check in checks:
         print(check)
 
@@ -685,6 +691,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="environment variable holding the key for a hosted endpoint. Ignored locally.",
     )
     runner.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_TIMEOUT_S,
+        metavar="SECONDS",
+        help="how long to wait for one reply (default %(default)ss). A local model too big "
+        "for the machine will blow through this; the message says so rather than hanging.",
+    )
+    runner.add_argument(
         "--guardrail",
         choices=sorted(GUARDRAILS),
         default="none",
@@ -710,6 +724,14 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--base-url", default="", help="e.g. http://localhost:11434/v1")
     doctor.add_argument("--model", default="qwen2.5:1.5b")
     doctor.add_argument("--api-key-env", default="OPENAI_API_KEY")
+    doctor.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_TIMEOUT_S,
+        metavar="SECONDS",
+        help="how long to wait for one reply (default %(default)ss). A local model too big "
+        "for the machine will blow through this; the message says so rather than hanging.",
+    )
     doctor.add_argument(
         "--show-request",
         action="store_true",

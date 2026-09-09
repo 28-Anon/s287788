@@ -213,7 +213,13 @@ def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
     try:
         tool_reply = _raw(client, probe_payload(model))
     except OpenAICompatError as exc:
-        checks.append(Check("accepts tool definitions", FAIL, str(exc)))
+        # A rejection and a timeout both land here and mean opposite things: one says the
+        # server would not take the tool definitions, the other says it took them and could
+        # not finish. Labelling a timeout "accepts tool definitions" sends you to debug the
+        # schema when the real problem is the machine.
+        timed_out = "no response from" in str(exc)
+        name = "answers within the deadline" if timed_out else "accepts tool definitions"
+        checks.append(Check(name, FAIL, str(exc)))
         return checks
     checks.append(Check("accepts tool definitions", PASS))
 

@@ -168,6 +168,21 @@ on the high side. Real spend depends on how many turns the agent takes, which is
 being measured and therefore not knowable in advance. Use it to catch an order-of-magnitude
 mistake before spending, not as a budget.
 
+## 14b. A model too slow for the machine fails on the clock, not on the merits
+
+`--timeout` (default 180s) is the deadline for one reply. A local model whose weights do not
+fit in RAM will blow through it while the machine swaps, and the run records an error rather
+than a judgement.
+
+That is the right outcome and it is worth naming, because the cause is invisible from the
+result: nothing about the endpoint is misconfigured, the server is running, and the model is
+even answering — just not fast enough. `doctor` reports it as **"answers within the
+deadline"** rather than as a rejected request, since a timeout labelled "accepts tool
+definitions" sends you to debug a schema when the real problem is the hardware.
+
+Raising `--timeout` will get an answer eventually. It will not make a sweep practical: ten
+scenarios of several turns each, at a minute or more per turn, is measured in hours.
+
 ## 15. A sweep stops after three consecutive failures
 
 Three failed calls in a row is a broken setup, not bad luck, and continuing would repeat the

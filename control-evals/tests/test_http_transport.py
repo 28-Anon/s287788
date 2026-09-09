@@ -12,9 +12,13 @@ it over HTTP, and assert on what actually crossed the wire.
 
 import pytest
 
-from control_evals.doctor import FAIL, PASS, run_checks
+from control_evals.doctor import FAIL, PASS, run_checks, verdict
 from control_evals.money import pence
-from control_evals.openai_compat import OpenAICompatClient, OpenAICompatError
+from control_evals.openai_compat import (
+    OpenAICompatClient,
+    OpenAICompatError,
+    transport_with_timeout,
+)
 from control_evals.runner import run_scenario
 from control_evals.scenarios import by_id
 from control_evals.scenarios.common import ACME
@@ -198,3 +202,84 @@ def test_doctor_reports_a_dead_endpoint_rather_than_crashing():
     client = OpenAICompatClient(base_url="http://127.0.0.1:1/v1")
     checks = run_checks(client, "tiny")
     assert checks[0].status == FAIL and "reachable" in checks[0].name
+
+
+# ---------------------------------------------------------------------------
+# A server that is alive but slower than the deadline
+#
+# Found the hard way: a 7B model on a laptop with too little RAM answered the first two
+# probes and then timed out generating the third. `http_transport` caught HTTPError and
+# URLError but not the bare TimeoutError from the socket read, so forty lines of urllib
+# internals reached the command line in place of one sentence saying what to do. The dead
+# endpoint above was tested; the *slow* one was not, and they fail differently.
+# ---------------------------------------------------------------------------
+
+
+def test_a_slow_server_raises_the_adapter_error_not_a_raw_timeout():
+    with LocalEndpoint(text_reply(), delay=0.5) as endpoint:
+        client = OpenAICompatClient(
+            base_url=endpoint.base_url, transport=transport_with_timeout(0.15)
+        )
+        with pytest.raises(OpenAICompatError) as caught:
+            client.messages.create(
+                model="tiny", max_tokens=16, messages=[{"role": "user", "content": "hi"}]
+            )
+
+    assert not isinstance(caught.value, TimeoutError)
+    message = str(caught.value)
+    assert "within 0.15s" in message, message
+    assert "too large for the RAM" in message, "say what to actually do about it"
+    assert "--timeout" in message
+
+
+def test_a_slow_server_is_not_reported_as_unreachable():
+    """The two have different fixes: one is a config problem, the other is a hardware one."""
+    with LocalEndpoint(text_reply(), delay=0.5) as endpoint:
+        client = OpenAICompatClient(
+            base_url=endpoint.base_url, transport=transport_with_timeout(0.15)
+        )
+        with pytest.raises(OpenAICompatError) as caught:
+            client.messages.create(
+                model="tiny", max_tokens=16, messages=[{"role": "user", "content": "hi"}]
+            )
+
+    assert "ollama serve" not in str(caught.value), "the server is plainly running"
+    assert "accepted the request" in str(caught.value)
+
+
+def test_the_doctor_reports_a_slow_model_as_a_check_rather_than_a_traceback():
+    """The whole point of the doctor. It must never be the thing that stack-traces."""
+    with LocalEndpoint(text_reply("ready"), delay=0.4) as endpoint:
+        client = OpenAICompatClient(
+            base_url=endpoint.base_url, transport=transport_with_timeout(0.15)
+        )
+        checks = run_checks(client, "too-big-for-this-laptop")
+
+    assert checks[0].status == FAIL
+    assert "no response" in checks[0].detail
+    assert verdict(checks)[0] == 1
+
+
+def test_a_timeout_partway_through_is_still_a_check_and_not_a_crash():
+    """The real failure: checks 1-3 pass, then the tool probe blows the deadline."""
+
+    class Slowing:
+        """Fast enough for the first probe, too slow for the second."""
+
+        def __init__(self, endpoint):
+            self.endpoint = endpoint
+            self.calls = 0
+
+        def __call__(self, url, headers, payload):
+            self.calls += 1
+            self.endpoint.behaviour.delay = 0.0 if self.calls == 1 else 0.4
+            return transport_with_timeout(0.15)(url, headers, payload)
+
+    with LocalEndpoint(text_reply("ready"), text_reply("slow")) as endpoint:
+        client = OpenAICompatClient(base_url=endpoint.base_url, transport=Slowing(endpoint))
+        checks = run_checks(client, "too-big")
+
+    assert checks[0].status == PASS, "the endpoint really was reachable"
+    assert any(c.status == FAIL and "no response" in c.detail for c in checks), [
+        str(c) for c in checks
+    ]
