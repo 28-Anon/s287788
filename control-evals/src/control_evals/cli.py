@@ -20,7 +20,7 @@ from datetime import UTC, datetime
 from .budget import format_micros
 from .explain import explain
 from .guardrails import GUARDRAILS, guardrail_for
-from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, spec_for
+from .models import DEFAULT_MODEL, EFFORT_LEVELS, MODELS, is_local_endpoint, spec_for
 from .openai_compat import DEFAULT_TIMEOUT_S
 from .runner import DEFAULT_MAX_TURNS
 from .scenario import CATEGORIES, validate_all
@@ -179,13 +179,30 @@ def _open_ai_client(spec, args):
 
     key = os.environ.get(args.api_key_env, "") if args.api_key_env else ""
     base = args.base_url or spec.base_url
-    local = "localhost" in base or "127.0.0.1" in base
+    # Parsed, not searched: `"localhost" in base` is true of localhost.example.com, which is
+    # somebody else's billed server. See models.is_local_endpoint.
+    local = is_local_endpoint(base)
     if not key and not local:
         raise SystemExit(
             f"{base} is not a local endpoint, so it probably needs a key.\n"
             f"Set ${args.api_key_env}, or pass --api-key-env with the variable that holds it."
         )
-    print(f"endpoint {base}" + ("  (local — no key, no cost)" if local else ""))
+    if local:
+        print(f"endpoint {base}  (local — no key, no cost)")
+    elif spec.pricing_known:
+        print(
+            f"endpoint {base}  (hosted, billed at "
+            f"${spec.input_per_mtok}/${spec.output_per_mtok} per Mtok as given)"
+        )
+    else:
+        print(f"endpoint {base}  (hosted — THIS ENDPOINT BILLS YOU)")
+        print(
+            "  !! COST NOT TRACKED. This suite has no rates for this endpoint, so every\n"
+            "     cost below reads as zero and that zero is a missing measurement, not a\n"
+            "     free run. Your provider is still charging you. Pass --price-in and\n"
+            "     --price-out (USD per million tokens, from the provider's own page) to\n"
+            "     have the sweep priced and the figure stored with the run."
+        )
     return OpenAICompatClient(
         base_url=base, api_key=key, transport=transport_with_timeout(args.timeout)
     )
@@ -238,7 +255,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.limit:
         chosen = chosen[: args.limit]
 
-    spec = spec_for(args.model, args.base_url)
+    spec = spec_for(args.model, args.base_url, args.price_in, args.price_out)
     total = len(chosen) * args.samples
 
     layer = guardrail_for(args.guardrail)
@@ -272,6 +289,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         ),
         split=args.split,
         model=recorded_model,
+        base_url=args.base_url,
         effort="" if args.simulate else (args.effort if spec.supports_effort else ""),
         suite_sha256=suite_fingerprint(SUITE),
         splits_sha256=splits.assignment_sha256,
@@ -346,7 +364,13 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.simulate:
         print(f"\nsaved to runs/{run_set.run_id} (no API call, no cost)")
     else:
-        print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
+        if spec.pricing_known:
+            print(f"\nspent {format_micros(spent)}, saved to runs/{run_set.run_id}")
+        else:
+            # Never print a figure here. "$0.0000" against a hosted endpoint is the exact
+            # sentence LIMITATIONS §20 warns about, and it is the last line a reader sees.
+            print("\ncost not tracked (hosted endpoint, no rates given)")
+            print(f"saved to runs/{run_set.run_id}")
     _print_summary(summarise(rows), rows)
     return 0
 
@@ -354,6 +378,14 @@ def cmd_run(args: argparse.Namespace) -> int:
 def _estimate(runs: int, spec) -> str:
     """A rough number before spending, from the shape of a scenario rather than a guess."""
     from .budget import Usage, cost_micros
+
+    if not spec.pricing_known:
+        # The whole point of --dry-run is to know what a sweep costs before committing to
+        # it. Printing $0.0000 here would answer that question wrongly and confidently.
+        return (
+            "cost NOT ESTIMATED — no rates recorded for this hosted endpoint. It bills you\n"
+            "and this suite cannot say how much. Pass --price-in / --price-out to price it."
+        )
 
     # ~1,200 tokens of policy, task and tool schemas; ~5 turns; the prefix is resent each
     # turn, so input scales with turns. Deliberately an over-estimate.
@@ -734,6 +766,20 @@ def build_parser() -> argparse.ArgumentParser:
     runner.add_argument("--scenario", action="append", help="run only these ids")
     runner.add_argument("--max-turns", type=int, default=DEFAULT_MAX_TURNS)
     runner.add_argument("--reason", default="", help="required for heldout; it is logged")
+    runner.add_argument(
+        "--price-in",
+        type=float,
+        default=None,
+        help="USD per million INPUT tokens for a hosted OpenAI-compatible endpoint, from "
+        "the provider's own pricing page. Without it a hosted run is reported as "
+        "cost-not-tracked rather than as free.",
+    )
+    runner.add_argument(
+        "--price-out",
+        type=float,
+        default=None,
+        help="USD per million OUTPUT tokens for a hosted endpoint. See --price-in.",
+    )
     runner.add_argument(
         "--dry-run",
         action="store_true",

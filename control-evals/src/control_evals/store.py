@@ -56,6 +56,10 @@ class RunSet:
     suite_sha256: str
     splits_sha256: str
     started_at: str = ""
+    #: Where an OpenAI-compatible model was served. Recorded because whether the endpoint
+    #: was local decides whether a cost of zero is a fact or a missing measurement, and
+    #: because without it the model id cannot be resolved back to a spec — see `meta`.
+    base_url: str = ""
     records: list[dict[str, Any]] = field(default_factory=list)
 
     @property
@@ -66,7 +70,19 @@ class RunSet:
     def meta(self) -> dict[str, Any]:
         # A simulated run has no model and therefore no prices. Recording a price for it
         # would be the one way its numbers could later be mistaken for a real result.
-        spec = None if self.simulated else spec_for(self.model)
+        #
+        # `spec_for` is given the base_url, and its failure is caught. Both matter: `--model`
+        # deliberately accepts any id once `--base-url` is set, so looking the id up without
+        # the url raised KeyError for exactly the models the flag exists to reach — and it
+        # raised here, at save time, after the whole sweep had run. A 34-scenario local
+        # sweep is twenty minutes to lose at the last step. A run that cannot be priced is
+        # still a run worth keeping; the pricing is what is missing, not the results.
+        spec: Any = None
+        if not self.simulated:
+            try:
+                spec = spec_for(self.model, self.base_url)
+            except KeyError:
+                spec = None
         return {
             "run_id": self.run_id,
             "split": self.split,
@@ -77,9 +93,12 @@ class RunSet:
             "suite_sha256": self.suite_sha256,
             "splits_sha256": self.splits_sha256,
             "simulated": self.simulated,
+            "base_url": self.base_url,
             # Recorded so a cost can be recomputed later even if published rates change.
+            # null means "not knowable", and is what a hosted endpoint with no rates
+            # supplied records. It is never a stand-in for free — see LIMITATIONS §20.
             "pricing": None
-            if spec is None
+            if spec is None or not spec.pricing_known
             else {
                 "input_per_mtok": spec.input_per_mtok,
                 "output_per_mtok": spec.output_per_mtok,
@@ -120,6 +139,7 @@ class RunSet:
             suite_sha256=meta.get("suite_sha256", ""),
             splits_sha256=meta.get("splits_sha256", ""),
             started_at=meta.get("started_at", ""),
+            base_url=meta.get("base_url", ""),
             records=records,
         )
 

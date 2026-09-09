@@ -398,3 +398,109 @@ def test_a_rebuilt_trace_keeps_whether_each_call_was_refused():
 
     assert [c.ok for c in trace.calls] == [True, False]
     assert trace.of("add_counterparty")[0].arguments["name"] == "X"
+
+
+# ---------------------------------------------------------------------------
+# Zero is a claim about a local endpoint, not a default for every endpoint
+# ---------------------------------------------------------------------------
+
+
+def test_a_hosted_lookalike_host_is_not_treated_as_local():
+    """`"localhost" in url` was the old test. It is true of somebody else's billed server.
+
+    This is the whole failure in one line: a substring check prices a paid endpoint at
+    nothing, which is the error the function exists to prevent.
+    """
+    from control_evals.models import is_local_endpoint
+
+    assert is_local_endpoint("http://localhost:11434/v1") is True
+    assert is_local_endpoint("http://127.0.0.1:11434/v1") is True
+    assert is_local_endpoint("http://[::1]:8000/v1") is True
+    assert is_local_endpoint("https://localhost.example.com/v1") is False
+    assert is_local_endpoint("https://api.groq.com/openai/v1") is False
+
+
+def test_a_hosted_endpoint_without_rates_is_not_priced_at_zero():
+    """It bills you. Reporting zero is wrong and silent about being wrong — LIMITATIONS §20."""
+    from control_evals.models import spec_for
+
+    spec = spec_for("llama-3.3-70b", "https://api.groq.com/openai/v1")
+
+    assert spec.pricing_known is False
+
+
+def test_a_local_endpoint_is_priced_at_zero_because_that_is_true():
+    from control_evals.models import spec_for
+
+    spec = spec_for("llama3.2:3b", "http://localhost:11434/v1")
+
+    assert spec.pricing_known is True
+    assert spec.input_per_mtok == 0.0
+
+
+def test_supplied_rates_make_a_hosted_run_priceable():
+    from control_evals.budget import Usage, cost_micros
+    from control_evals.models import spec_for
+
+    spec = spec_for(
+        "llama-3.3-70b", "https://api.groq.com/openai/v1", input_per_mtok=0.59, output_per_mtok=0.79
+    )
+
+    assert spec.pricing_known is True
+    assert cost_micros(Usage(input_tokens=1_000_000, output_tokens=0), spec) == 590_000
+
+
+def test_saving_a_run_for_an_unlisted_model_does_not_raise(tmp_path):
+    """`--model` accepts any id once `--base-url` is set — that is the point of the flag.
+
+    `meta` looked the id up WITHOUT the url, so it raised KeyError for exactly those
+    models, at save time, after the whole sweep had run. Twenty minutes of local sweep
+    lost at the last step.
+    """
+    from control_evals.store import RunSet
+
+    run_set = RunSet(
+        run_id="unlisted",
+        split="dev",
+        model="mistral-nemo:12b",
+        effort="",
+        suite_sha256="a",
+        splits_sha256="b",
+        base_url="http://localhost:11434/v1",
+    )
+    run_set.save(tmp_path)
+
+    assert RunSet.load("unlisted", tmp_path).base_url == "http://localhost:11434/v1"
+
+
+def test_an_unresolvable_model_records_no_pricing_rather_than_failing(tmp_path):
+    """A run that cannot be priced is still a run worth keeping."""
+    from control_evals.store import RunSet
+
+    meta = RunSet(
+        run_id="x",
+        split="dev",
+        model="something-nobody-listed",
+        effort="",
+        suite_sha256="a",
+        splits_sha256="b",
+    ).meta
+
+    assert meta["pricing"] is None
+
+
+def test_a_hosted_run_records_null_pricing_never_a_zero(tmp_path):
+    """null means "not knowable". It must never be mistaken for free."""
+    from control_evals.store import RunSet
+
+    meta = RunSet(
+        run_id="x",
+        split="dev",
+        model="llama-3.3-70b",
+        effort="",
+        suite_sha256="a",
+        splits_sha256="b",
+        base_url="https://api.groq.com/openai/v1",
+    ).meta
+
+    assert meta["pricing"] is None

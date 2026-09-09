@@ -312,13 +312,36 @@ content as parts rather than a string (handled), and some will do something not 
 (not handled, by definition). `doctor` exists to find that out in one request rather than in
 the middle of a sweep — run it first.
 
-## 20. Cost figures for OpenAI-compatible models are zero, and that is a claim about local ones
+## 20. A cost of zero is now a claim about a local endpoint, and nothing else
 
-A local endpoint genuinely costs nothing to call, so zero is right. A hosted one
-(OpenRouter, Together, Groq) is not free, and this suite has no way to know its rates — so it
-reports zero there too, which is **wrong and silent about being wrong**. Read the provider's
-own billing for those. The stored run records the endpoint, so at least you can tell later
-which numbers were free.
+A local endpoint genuinely costs nothing to call, so zero is right there. This section used
+to say that a hosted one (OpenRouter, Together, Groq) reported zero as well — **wrong, and
+silent about being wrong.** A sweep against a billed endpoint printed `$0.0000` on the last
+line while the provider charged for it.
+
+Three things changed. The endpoint's **host is parsed** rather than searched for: the old
+test was `"localhost" in base_url`, which is true of `https://localhost.example.com/v1`, so
+a substring match could price somebody else's billed server at nothing — the exact error
+this is about. A hosted endpoint with no rates supplied is marked `pricing_known=False`, and
+every figure derived from it says **"cost not tracked"** rather than naming a number: the
+run banner, `--dry-run`, the final line, and the stored `pricing`, which is `null`. And
+rates can be **supplied** — `--price-in` and `--price-out`, USD per million tokens, from the
+provider's own page — after which a hosted sweep is priced, estimated and stored like any
+other.
+
+What is still true: this suite does not know any hosted provider's rates and will not guess
+them. `--dry-run` against a hosted endpoint with no rates says it cannot estimate, which is
+the honest answer to "what will this cost" and the reason to go and read the pricing page.
+Rates you supply are recorded with the run, so a figure can always be traced to the numbers
+it was computed from — and if you type them in wrong, the cost is wrong in exactly the way
+your typing was.
+
+The stored run also records the `base_url` now. That was needed for a second reason: `meta`
+resolved the model id **without** it, so saving a run for any id not in the table raised
+`KeyError` — and `--model` accepts any id once `--base-url` is given, which is the entire
+point of that flag. The failure landed at save time, after the sweep had run, which on the
+open split is twenty minutes of work lost at the last step. A run that cannot be priced is
+still a run worth keeping; the pricing is what is missing, not the results.
 
 ## 21. "How to pass this scenario" is derived by probing, and the probes are not exhaustive
 

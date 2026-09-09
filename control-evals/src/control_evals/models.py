@@ -23,6 +23,7 @@ be recomputed from a stored run without another network call.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from urllib.parse import urlsplit
 
 #: How a model wants its thinking configured.
 #:
@@ -52,6 +53,11 @@ class ModelSpec:
     #: Where an openai_compat model is served. Local endpoints cost nothing to run, which is
     #: why the prices above are zero for them.
     base_url: str = ""
+
+    #: Whether the rates above are a fact or a placeholder. False means "this endpoint bills
+    #: and nobody told us the rates", and every cost figure derived from it must say so
+    #: rather than print a confident zero. See `spec_for` and LIMITATIONS §20.
+    pricing_known: bool = True
 
     #: A ceiling, not a budget — you are billed for tokens generated, not for the number
     #: here. It is set high enough that a long deliberation is never truncated mid-call,
@@ -135,6 +141,25 @@ MODELS: dict[str, ModelSpec] = {
 #: The default local endpoint. Ollama serves this once `ollama serve` is running.
 OLLAMA = "http://localhost:11434/v1"
 
+#: Hosts that genuinely cost nothing to call, because the machine is yours.
+_LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "0.0.0.0", "::1", "[::1]", ""})
+
+
+def is_local_endpoint(base_url: str) -> bool:
+    """Is this endpoint on the machine running the sweep?
+
+    The distinction is the whole of LIMITATIONS §20: a local endpoint is free, so pricing it
+    at zero is correct, and a hosted one bills you while this suite reports zero and says
+    nothing about it.
+
+    The host is **parsed**, not searched for. `"localhost" in url` was the old test, and it
+    is true of `https://localhost.example.com/v1`, which is somebody else's server: a
+    substring check here would price a paid endpoint at nothing, which is the precise error
+    this function exists to prevent.
+    """
+    host = (urlsplit(base_url).hostname or "").lower()
+    return host in _LOCAL_HOSTS or host.endswith(".localhost") or host.startswith("127.")
+
 
 def local(model_id: str, base_url: str = OLLAMA) -> ModelSpec:
     """A model on your own machine. Costs nothing, so it is priced at nothing."""
@@ -168,19 +193,47 @@ for _name in (
 DEFAULT_MODEL = "claude-opus-5"
 
 
-def spec_for(model_id: str, base_url: str = "") -> ModelSpec:
+def spec_for(
+    model_id: str,
+    base_url: str = "",
+    input_per_mtok: float | None = None,
+    output_per_mtok: float | None = None,
+) -> ModelSpec:
     """Look up a model, or build an OpenAI-compatible spec on the fly for an unknown one.
 
     An unknown id with a `--base-url` is not an error: the whole point of the adapter is to
-    reach models nobody has listed here. It is priced at zero and says so — a hosted
-    endpoint's real cost is not knowable from this side, and inventing one would be worse
-    than reporting none.
+    reach models nobody has listed here.
+
+    **Zero is a claim, not a default.** It used to be applied to every OpenAI-compatible
+    model regardless of where it was served, so a sweep against OpenRouter or Groq printed
+    `$0.0000` while the provider billed for it — wrong, and silent about being wrong. Now
+    only a genuinely local endpoint is priced at zero, because there the zero is true.
+    A hosted endpoint with no rates supplied is marked `pricing_known=False` and every
+    figure derived from it says "not tracked" instead of naming a number.
+
+    Rates can be supplied (`--price-in` / `--price-out`, USD per million tokens) from the
+    provider's own page, and then the cost is computed and stored like any other.
     """
     if base_url:
         known = MODELS.get(model_id)
-        if known is not None and known.provider == "openai_compat":
-            return ModelSpec(**{**known.__dict__, "base_url": base_url})
-        return local(model_id, base_url)
+        base = (
+            ModelSpec(**{**known.__dict__, "base_url": base_url})
+            if known is not None and known.provider == "openai_compat"
+            else local(model_id, base_url)
+        )
+        if input_per_mtok is not None or output_per_mtok is not None:
+            return ModelSpec(
+                **{
+                    **base.__dict__,
+                    "input_per_mtok": input_per_mtok or 0.0,
+                    "output_per_mtok": output_per_mtok or 0.0,
+                    "pricing_known": True,
+                }
+            )
+        if is_local_endpoint(base_url):
+            return base
+        # Hosted, and nobody said what it costs. Say that, rather than zero.
+        return ModelSpec(**{**base.__dict__, "pricing_known": False})
 
     try:
         return MODELS[model_id]
