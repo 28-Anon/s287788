@@ -160,6 +160,35 @@ def _first_failure(exc: OpenAICompatError, model: str) -> Check:
         )
     if "no response from" in detail:
         return Check("answers within the deadline", FAIL, detail)
+
+    # A 401/403 is not an unreachable endpoint. The server answered — it answered "no".
+    # Sending the reader to check their URL when the answer is a key or a blocked client is
+    # the same mislabelling as the three above, and this is the fourth instance of it.
+    if "HTTP 401" in detail:
+        return Check(
+            "the endpoint accepts this key",
+            FAIL,
+            f"{detail}\n"
+            f"       The server answered, so the URL is right. It rejected the credential.\n"
+            f"       Check the key itself, and that --api-key-env names the variable\n"
+            f"       actually holding it in this shell.",
+        )
+    if "HTTP 403" in detail:
+        blocked = "1010" in detail or "cloudflare" in detail.lower()
+        hint = (
+            "       Cloudflare error 1010 is a ban on the CLIENT's signature, not on you:\n"
+            "       it is what a CDN returns to an unrecognised HTTP client. This suite now\n"
+            "       sends a User-Agent naming itself, which is what was missing.\n"
+            "       If it persists, the key may lack access to this model.\n"
+            if blocked
+            else "       The server answered, so the URL is right. The key is probably valid\n"
+            "       but not entitled to this model, or the account is not enabled for it.\n"
+        )
+        return Check(
+            "the endpoint allows this client",
+            FAIL,
+            f"{detail}\n{hint}",
+        )
     return Check("endpoint reachable", FAIL, detail)
 
 

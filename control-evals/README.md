@@ -120,7 +120,7 @@ On Windows use `py` in place of `python`. There is no `make` in this project, de
 
 **Weeks 1–10 and 14–21: sandbox, 49 scenarios in 38 families across all ten categories,
 frozen splits, runner, metrics, guardrails, an OpenAI-compatible adapter and per-result
-explanations.** All of it built and tested offline: 518 tests, no network.
+explanations.** All of it built and tested offline: 524 tests, no network.
 
 **One real model has been run**: `llama3.2:3b` on Ollama over the dev split — free, local,
 no key. It found bugs that the tests could not, every one of them in the layer between

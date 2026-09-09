@@ -317,3 +317,43 @@ def test_another_models_404_is_not_read_as_this_model_missing():
     assert checks[0].name == "endpoint reachable", (
         "no ollama pull suggestion for someone else's 404"
     )
+
+
+def test_a_403_is_not_reported_as_an_unreachable_endpoint():
+    """The server answered. It answered "no".
+
+    Reporting that as "endpoint reachable [FAIL]" sends the reader to check their URL when
+    the URL was never the problem — the same mislabelling as the model-not-installed and
+    the too-slow cases, and the fourth instance on this path.
+    """
+    from control_evals.doctor import _first_failure
+    from control_evals.openai_compat import OpenAICompatError
+
+    exc = OpenAICompatError(
+        "HTTP 403 from https://api.groq.com/openai/v1/chat/completions: error code: 1010"
+    )
+    check = _first_failure(exc, "llama-3.3-70b-versatile")
+
+    assert check.name != "endpoint reachable"
+    assert "1010" in check.detail
+    assert "signature" in check.detail
+
+
+def test_a_401_points_at_the_key_and_not_the_url():
+    from control_evals.doctor import _first_failure
+    from control_evals.openai_compat import OpenAICompatError
+
+    check = _first_failure(OpenAICompatError("HTTP 401 from https://x/v1: unauthorized"), "m")
+
+    assert "key" in check.name
+    assert "--api-key-env" in check.detail
+
+
+def test_a_plain_403_without_cloudflare_blames_entitlement_not_the_client():
+    from control_evals.doctor import _first_failure
+    from control_evals.openai_compat import OpenAICompatError
+
+    check = _first_failure(OpenAICompatError("HTTP 403 from https://x/v1: forbidden"), "m")
+
+    assert "1010" not in check.detail
+    assert "entitled" in check.detail

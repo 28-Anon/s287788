@@ -312,6 +312,16 @@ content as parts rather than a string (handled), and some will do something not 
 (not handled, by definition). `doctor` exists to find that out in one request rather than in
 the middle of a sweep — run it first.
 
+**It earned its keep the first time it was pointed at a hosted provider.** Groq sits behind
+Cloudflare, and the request came back `HTTP 403 ... error code: 1010` — Cloudflare's ban on
+an unrecognised *client signature*. The key was valid, the model id was right, the payload
+was right; the request simply never said what was making it, because `urllib` supplies
+`Python-urllib/3.x` and this module sent no `User-Agent` of its own. Fifteen seconds, before
+a sweep, rather than a wall of failures inside one. It now sends an honest identifier — its
+own name and repository, never a browser string, because a costume is a lie about what is
+calling and the answer to a provider that still refuses is a provider that documents API
+access.
+
 ## 20. A cost of zero is now a claim about a local endpoint, and nothing else
 
 A local endpoint genuinely costs nothing to call, so zero is right there. This section used

@@ -28,6 +28,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from . import __version__
 from .shapes import Block, Response, Usage
 
 #: OpenAI's `finish_reason` to the runner's `stop_reason`. "content_filter" maps to refusal
@@ -67,6 +68,18 @@ def _too_slow(url: str, timeout: float) -> OpenAICompatError:
     )
 
 
+#: How this client identifies itself. urllib's default is `Python-urllib/3.x`, which sits on
+#: the default block list of every major CDN: Groq is behind Cloudflare, and a `doctor` run
+#: against it came back `HTTP 403 ... error code: 1010` — Cloudflare's "banned by client
+#: signature". Nothing was wrong with the key, the model id or the payload.
+#:
+#: This is an honest name, not a disguise. Every real SDK sends one; this one sent nothing
+#: and inherited a name that means "an unattended script". Do not replace it with a browser
+#: string — that would be a lie about what is calling, and the fix for a provider that still
+#: refuses is to use a provider that documents API access, not to look like Chrome.
+USER_AGENT = f"control-evals/{__version__} (+https://github.com/28-Anon/s287788)"
+
+
 def http_transport(
     url: str,
     headers: dict[str, str],
@@ -78,7 +91,7 @@ def http_transport(
     request = urllib.request.Request(  # noqa: S310 - url is operator-supplied, not user input
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json", **headers},
+        headers={"Content-Type": "application/json", "User-Agent": USER_AGENT, **headers},
         method="POST",
     )
     try:

@@ -283,3 +283,52 @@ def test_a_timeout_partway_through_is_still_a_check_and_not_a_crash():
     assert any(c.status == FAIL and "no response" in c.detail for c in checks), [
         str(c) for c in checks
     ]
+
+
+# -- identifying ourselves -------------------------------------------------------
+
+
+def test_the_client_names_itself_over_the_wire():
+    """urllib's default is `Python-urllib/3.x`, which CDNs block by default.
+
+    A `doctor` run against Groq — which sits behind Cloudflare — came back
+    `HTTP 403 ... error code: 1010`, Cloudflare's "banned by client signature". The key,
+    the model id and the payload were all fine; the request simply did not say what was
+    making it. Every real SDK sends a User-Agent. This one sent none and inherited a name
+    that means "an unattended script".
+    """
+    with LocalEndpoint(text_reply()) as endpoint:
+        client_for(endpoint).messages.create(
+            model="tiny", max_tokens=64, messages=[{"role": "user", "content": "hi"}]
+        )
+
+    agent = endpoint.requests[0]["headers"]["User-Agent"]
+    assert agent.startswith("control-evals/")
+    assert "python-urllib" not in agent.lower()
+
+
+def test_the_user_agent_is_honest_and_not_a_browser():
+    """An honest name, not a disguise.
+
+    Pretending to be Chrome would be a lie about what is calling, and the answer to a
+    provider that still refuses is a provider that documents API access — not a costume.
+    """
+    from control_evals.openai_compat import USER_AGENT
+
+    for browser in ("Mozilla", "Chrome", "Safari", "AppleWebKit", "Gecko"):
+        assert browser not in USER_AGENT
+
+
+def test_an_explicit_user_agent_still_wins():
+    """Caller-supplied headers override the default, so a provider that wants a specific
+    identifier can be given one without editing this module."""
+    from control_evals.openai_compat import http_transport
+
+    with LocalEndpoint(text_reply()) as endpoint:
+        http_transport(
+            f"{endpoint.base_url}/chat/completions",
+            {"User-Agent": "something-else/1.0"},
+            {"model": "tiny", "messages": []},
+        )
+
+    assert endpoint.requests[0]["headers"]["User-Agent"] == "something-else/1.0"
