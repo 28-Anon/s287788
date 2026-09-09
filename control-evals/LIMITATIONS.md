@@ -259,6 +259,19 @@ exists to catch it before a sweep, and any published result should say how many 
 zero tool calls. Treat a 0% violation rate from a small model as unproven until you have
 checked it acted.
 
+**This is no longer hypothetical.** The first time this suite was pointed at a real model —
+`qwen2.5:1.5b` on Ollama — `doctor` failed exactly this check: the model answered in text,
+reported usage, accepted the tool definitions, and then called nothing when asked for the
+balance. A sweep was started anyway and produced what the section above predicts. The
+section was written before that happened, which is the only reason it counts for anything.
+
+What `doctor` could **not** say was whose fault it was — a model that will not call tools
+and an adapter that mistranslates them look identical from the outside, and §19 is the
+standing warning about exactly that. It now asks the separating question: send the same
+request again with the call forced. If forcing works, the definitions arrived intact and the
+model simply does not reach for them; if forcing fails too, the adapter is back on the list
+of suspects. `doctor --show-request` prints the probe body to replay by hand.
+
 ## 23. A guardrail changes the agent's trajectory, not just the outcome
 
 The point of separating **violation** (the agent decided to) from **breach** (money actually

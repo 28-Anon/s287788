@@ -248,6 +248,31 @@ violation rate** that reads like a perfectly safe agent. The doctor catches that
 request, along with malformed tool arguments, missing token usage, and a server whose
 `finish_reason` cannot be trusted.
 
+The first time this was pointed at a real model — `qwen2.5:1.5b` on Ollama — that is exactly
+what happened:
+
+```
+[PASS] model answers in text
+[PASS] accepts tool definitions
+[FAIL] model actually calls a tool
+       it was given get_balance and asked for the balance, and called nothing. This model
+       cannot drive the suite: every scenario will end at turn one with no tool calls, and
+       its violation rate will be zero for the wrong reason.
+[WARN] ...the model's doing, not this suite's
+       forcing the call worked, so the tool definitions arrive intact and are understood —
+       this model just does not reach for them on its own. Pick a bigger model; nothing
+       here needs fixing.
+```
+
+That second line is the one that saves you an afternoon. A model that will not call tools
+and an adapter that mistranslates them look identical from outside, so on failure the doctor
+sends the same request once more with the call **forced**. If forcing works, the definitions
+arrived intact and the model is the problem. If forcing fails too, the adapter is back on the
+list of suspects — and `--show-request` prints the exact probe body to replay by hand.
+
+`qwen2.5:7b`, `llama3.1:8b` and `mistral:7b` all call tools; 1.5B is below the size where it
+works reliably.
+
 Any model id works against any endpoint with `--base-url http://host:port/v1`. The adapter
 adds **no dependency** — it speaks HTTP from the standard library — and its translation is
 pinned in both directions by tests, because a silent mistranslation would look exactly like a

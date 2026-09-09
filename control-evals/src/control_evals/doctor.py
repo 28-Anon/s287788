@@ -42,6 +42,21 @@ PROBE_TOOL = [
 ]
 
 
+def probe_payload(model: str, tool_choice: Any = "auto") -> dict[str, Any]:
+    """The exact tool-call probe. One builder, so `--show-request` cannot print a body that
+    differs from the one actually sent — a diagnostic that lies is worse than none."""
+    return {
+        "model": model,
+        "max_tokens": 256,
+        "messages": [
+            {"role": "system", "content": "You settle supplier payments using tools."},
+            {"role": "user", "content": "How much is in the account? Use your tools."},
+        ],
+        "tools": to_openai_tools(PROBE_TOOL),
+        "tool_choice": tool_choice,
+    }
+
+
 @dataclass
 class Check:
     name: str
@@ -56,6 +71,71 @@ class Check:
 def _raw(client: OpenAICompatClient, payload: dict[str, Any]) -> dict[str, Any]:
     headers = {"Authorization": f"Bearer {client.api_key}"} if client.api_key else {}
     return client.transport(client.url, headers, payload)
+
+
+def _said_instead(reply: dict[str, Any]) -> str:
+    """The prose the model produced in place of a tool call, trimmed."""
+    try:
+        text = from_openai_response(reply).content
+    except OpenAICompatError:
+        return ""
+    said = " ".join(b.text for b in text if b.type == "text").strip()
+    return said[:200]
+
+
+def _whose_fault(client: OpenAICompatClient, model: str, auto_reply: dict[str, Any]) -> Check:
+    """After a failed tool-call probe: was that the model, or was it us?
+
+    The check above cannot tell those apart, and the distinction decides what you do next —
+    swap the model, or open `openai_compat.py`. `LIMITATIONS.md` §19 is the standing warning
+    that a silent mistranslation looks exactly like a model behaving badly, so this asks the
+    one question that separates them: **send the identical request with the call forced.**
+
+    If forcing produces a call, the tools reached the model and were understood; it simply
+    chose not to use them, which is a fact about the model. If forcing produces nothing
+    either, the tools are not arriving in a form this server acts on, and the model is not
+    the first thing to suspect.
+
+    One extra request, only ever on the failure path.
+    """
+    said = _said_instead(auto_reply)
+    aside = f'\n       it said instead: "{said}"' if said else ""
+
+    try:
+        forced = _raw(
+            client,
+            probe_payload(model, {"type": "function", "function": {"name": "get_balance"}}),
+        )
+    except OpenAICompatError as exc:
+        return Check(
+            "...the model's doing, or this suite's?",
+            WARN,
+            f"could not tell: forcing the call was refused by the server ({exc}). Some "
+            f"servers reject a named tool_choice outright, which says nothing either "
+            f"way.{aside}",
+        )
+
+    try:
+        forced_calls = [b for b in from_openai_response(forced).content if b.type == "tool_use"]
+    except OpenAICompatError as exc:
+        return Check("...the model's doing, or this suite's?", WARN, f"unreadable reply: {exc}")
+
+    if forced_calls:
+        return Check(
+            "...the model's doing, not this suite's",
+            WARN,
+            "forcing the call worked, so the tool definitions arrive intact and are "
+            "understood — this model just does not reach for them on its own. Pick a bigger "
+            f"model; nothing here needs fixing.{aside}",
+        )
+    return Check(
+        "...the model's doing, or this suite's?",
+        WARN,
+        "forcing the call did not work either. Either the model genuinely cannot call "
+        "tools, or the definitions are not reaching it in a form this server acts on. "
+        "Replay the request with --show-request against another model on the same server: "
+        f"if that one calls the tool, the server is fine and the model is not.{aside}",
+    )
 
 
 def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
@@ -131,19 +211,7 @@ def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
 
     # 4. The one that actually decides whether a sweep is worth running.
     try:
-        tool_reply = _raw(
-            client,
-            {
-                "model": model,
-                "max_tokens": 256,
-                "messages": [
-                    {"role": "system", "content": "You settle supplier payments using tools."},
-                    {"role": "user", "content": "How much is in the account? Use your tools."},
-                ],
-                "tools": to_openai_tools(PROBE_TOOL),
-                "tool_choice": "auto",
-            },
-        )
+        tool_reply = _raw(client, probe_payload(model))
     except OpenAICompatError as exc:
         checks.append(Check("accepts tool definitions", FAIL, str(exc)))
         return checks
@@ -161,6 +229,7 @@ def run_checks(client: OpenAICompatClient, model: str) -> list[Check]:
                 "no tool calls, and its violation rate will be zero for the wrong reason.",
             )
         )
+        checks.append(_whose_fault(client, model, tool_reply))
         return checks
 
     call = calls[0]

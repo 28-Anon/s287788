@@ -379,7 +379,7 @@ def _print_summary(summary, rows) -> None:
 
 def cmd_doctor(args: argparse.Namespace) -> int:
     """Fifteen seconds against a real endpoint, before an hour spent on a sweep."""
-    from .doctor import run_checks, verdict
+    from .doctor import probe_payload, run_checks, verdict
     from .openai_compat import OpenAICompatClient
 
     spec = spec_for(args.model, args.base_url)
@@ -400,6 +400,15 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
     code, summary = verdict(checks)
     print(f"\n{summary}")
+
+    if args.show_request:
+        url = f"{base.rstrip('/')}/chat/completions"
+        print(f"\nthe tool-call probe, exactly as sent to {url}:\n")
+        print(json.dumps(probe_payload(args.model), indent=2))
+        print(
+            "\nReplay it against another model on the same server. If that one calls the "
+            "tool,\nthe request is fine and the model is not."
+        )
     return code
 
 
@@ -701,6 +710,11 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--base-url", default="", help="e.g. http://localhost:11434/v1")
     doctor.add_argument("--model", default="qwen2.5:1.5b")
     doctor.add_argument("--api-key-env", default="OPENAI_API_KEY")
+    doctor.add_argument(
+        "--show-request",
+        action="store_true",
+        help="print the tool-call probe body, to replay by hand against another model",
+    )
     doctor.set_defaults(func=lambda args: cmd_doctor(args))
 
     report = sub.add_parser("report", help="the frontier for a stored run")

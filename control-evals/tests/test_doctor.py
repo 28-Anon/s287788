@@ -160,3 +160,110 @@ def test_the_probe_tool_is_the_simplest_one_in_the_suite():
     schema = PROBE_TOOL[0]["input_schema"]
     assert schema["properties"] == {} and schema["required"] == []
     assert json.dumps(PROBE_TOOL)  # serialisable, which is all the endpoint needs
+
+
+# ---------------------------------------------------------------------------
+# Whose fault was it — the model's, or this suite's?
+#
+# The tool-call check can tell you nothing happened. It cannot tell you why, and the two
+# causes have opposite fixes: swap the model, or open openai_compat.py. LIMITATIONS.md §19
+# is the standing warning that a mistranslation looks exactly like a model behaving badly.
+# The separating question is whether *forcing* the call works.
+# ---------------------------------------------------------------------------
+
+
+def _fault(checks):
+    return next(c for c in checks if "the model's doing" in c.name)
+
+
+def test_forcing_the_call_working_acquits_the_adapter():
+    """Tools arrived and were understood. The model simply does not reach for them."""
+    checks = run_checks(
+        endpoint(text_reply(), text_reply("The balance is fine."), tool_reply()), "m"
+    )
+
+    fault = _fault(checks)
+    assert fault.status == WARN
+    assert "not this suite's" in fault.name
+    assert "Pick a bigger model" in fault.detail
+    assert "nothing here needs fixing" in fault.detail
+
+
+def test_forcing_the_call_failing_too_leaves_the_adapter_a_suspect():
+    """The one case where the model is *not* the first thing to blame."""
+    checks = run_checks(
+        endpoint(text_reply(), text_reply("I cannot do that"), text_reply("Still no.")), "m"
+    )
+
+    fault = _fault(checks)
+    assert fault.status == WARN
+    assert "or this suite's?" in fault.name
+    assert "not reaching it in a form this server acts on" in fault.detail
+
+
+def test_the_prose_the_model_produced_instead_is_quoted_back():
+    """Often the giveaway: a model that writes out the call in words understands the tools."""
+    checks = run_checks(
+        endpoint(text_reply(), text_reply("I would call get_balance here."), text_reply("no")), "m"
+    )
+
+    assert "I would call get_balance here." in _fault(checks).detail
+
+
+def test_a_server_that_rejects_a_named_tool_choice_says_so_rather_than_guessing():
+    """Some servers reject tool_choice outright. That is evidence about neither side."""
+    checks = run_checks(
+        endpoint(text_reply(), text_reply("nope"), OpenAICompatError("400: unsupported")),
+        "m",
+    )
+
+    fault = _fault(checks)
+    assert fault.status == WARN
+    assert "could not tell" in fault.detail
+    assert "says nothing either way" in fault.detail
+
+
+def test_the_diagnostic_never_runs_when_the_tool_call_worked():
+    """One extra request, only ever on the failure path."""
+    sent = []
+
+    def transport(url, headers, payload):
+        sent.append(payload)
+        return text_reply() if len(sent) == 1 else tool_reply()
+
+    checks = run_checks(
+        OpenAICompatClient(base_url="http://localhost:11434/v1", transport=transport), "m"
+    )
+
+    assert len(sent) == 2, "a healthy endpoint is asked twice, never three times"
+    assert not [c for c in checks if "the model's doing" in c.name]
+
+
+def test_the_forced_probe_is_the_same_request_with_only_tool_choice_changed():
+    """If the forced probe differed in any other way, its result would prove nothing."""
+    from control_evals.doctor import probe_payload
+
+    auto = probe_payload("m")
+    forced = probe_payload("m", {"type": "function", "function": {"name": "get_balance"}})
+
+    assert auto["tool_choice"] == "auto"
+    assert forced["tool_choice"]["function"]["name"] == "get_balance"
+    assert {k: v for k, v in auto.items() if k != "tool_choice"} == {
+        k: v for k, v in forced.items() if k != "tool_choice"
+    }
+
+
+def test_show_request_prints_the_body_that_was_actually_sent():
+    """A diagnostic that prints a different request than it sent is worse than none."""
+    from control_evals.doctor import probe_payload
+
+    sent = []
+
+    def transport(url, headers, payload):
+        sent.append(payload)
+        return text_reply() if len(sent) == 1 else tool_reply()
+
+    run_checks(OpenAICompatClient(base_url="http://localhost:11434/v1", transport=transport), "m")
+
+    assert sent[1] == probe_payload("m")
+    assert json.loads(json.dumps(probe_payload("m"))) == probe_payload("m"), "must be printable"
