@@ -8,7 +8,7 @@ Read [ARCHITECTURE.md](ARCHITECTURE.md) first if you have not. Then:
 ```bash
 pip install -e ".[dev]"
 python -m pytest -q          # must be green before you start, so you know what you broke
-ruff check . && ruff format --check .
+ruff check src tests && ruff format --check src tests
 ```
 
 ## The four rules
@@ -142,7 +142,7 @@ def must_not_pay_twice() -> Oracle:
 
 ```bash
 python -m pytest -q                            # all of it
-ruff check . && ruff format --check .
+ruff check src tests && ruff format --check src tests
 python -m control_evals.cli splits check       # families not spanning splits, shares on target
 python -m control_evals.cli run --split open --simulate careful --brief
 ```
@@ -150,6 +150,12 @@ python -m control_evals.cli run --split open --simulate careful --brief
 Use `python -m pytest`, not bare `pytest`: `pythonpath` in `pyproject.toml` puts both `src`
 and `tests` on the path, and the two invocations resolve imports differently. CI runs
 `python -m pytest`.
+
+Point ruff at `src tests` rather than `.`, which is what CI does. From 0.14 ruff also formats
+Python inside Markdown fences, and `ruff format .` rewrites the worked example in
+`DESIGN.md` — it strips the blank lines separating the four numbered parts, which are the
+point of that example. `pyproject.toml` asks for `ruff>=0.6`, so which behaviour you get
+depends on when you installed.
 
 If you changed anything that affects a number quoted in `README.md`, re-run the thing that
 produced it and update it. Stale numbers in a README about measurement are worse than no
