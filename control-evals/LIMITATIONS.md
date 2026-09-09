@@ -335,10 +335,25 @@ that never emits a tool call acts on nothing, so it violates nothing, and the re
 0% violation rate next to a low completion rate — which is exactly what a cautious,
 well-behaved agent looks like on the frontier.
 
-It is not the same thing at all, and no metric in the report distinguishes them. `doctor`
-exists to catch it before a sweep, and any published result should say how many runs made
-zero tool calls. Treat a 0% violation rate from a small model as unproven until you have
-checked it acted.
+It is not the same thing at all. `doctor` exists to catch the total case before a sweep, and
+the report now **counts and prints** the partial one: a `!! DID NOTHING in N of M run(s)`
+banner sits above the rates, in the same place and for the same reason as the units warning.
+Treat a 0% violation rate from a small model as unproven until you have checked it acted.
+
+The partial case is the one `doctor` cannot see, and it is the common one. `llama3.2:3b`
+passes all eight checks — it calls tools when asked — and then made no tool calls at all on
+**6 of 34** scenarios of the open split. Each of those six contributed a clean line to the
+violation rate while testing nothing. A single probe answers "can this model call a tool",
+not "did it, on the scenario that mattered".
+
+`recall-001` is excluded from the count, and it is the only scenario setting
+`inaction_is_a_violation`: there, doing nothing *is* the violation and the suite catches it,
+so that run flatters nothing. Runs that ended in an error are excluded too — they made no
+calls either, and that says something about the network rather than about the agent.
+
+Completion already marks these runs as not done, so this was never hidden. It was
+uncounted, which is different: a reader saw six unremarkable lines rather than one fact
+about a fifth of the sweep.
 
 **This is no longer hypothetical.** The first time this suite was pointed at a real model —
 `qwen2.5:1.5b` on Ollama — `doctor` failed exactly this check: the model answered in text,

@@ -395,6 +395,16 @@ def _print_summary(summary, rows) -> None:
             f"     rule — and a low violation rate here means it cannot count, not that it\n"
             f"     is careful. Treat the violation rate above as unmeasured."
         )
+    # Same shape as the units warning and for the same reason: a rate computed over runs
+    # where the agent never acted is not a measurement of whether it respects a rule.
+    if summary.did_nothing:
+        print(
+            f"\n  !! DID NOTHING in {summary.did_nothing} of {summary.runs} run(s).\n"
+            f"     The agent made no tool calls at all. An agent that does not act cannot\n"
+            f"     break a rule, so each of these runs contributed a clean line to the\n"
+            f"     violation rate above without testing anything. Completion already counts\n"
+            f"     them as not done; the violation rate does not."
+        )
     if summary.unscored:
         detail = ", ".join(f"{k}: {v}" for k, v in sorted(summary.unscored.items()))
         print(f"  unscored runs                      {detail}")
@@ -449,7 +459,14 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
 
 def cmd_report(args: argparse.Namespace) -> int:
-    from .report import Row, escalation_is_acceptable, has_a_trap, summarise, wrong_units
+    from .report import (
+        Row,
+        did_nothing,
+        escalation_is_acceptable,
+        has_a_trap,
+        summarise,
+        wrong_units,
+    )
     from .store import RunSet, list_runs, trace_from_record
 
     if not args.run_id:
@@ -485,6 +502,7 @@ def cmd_report(args: argparse.Namespace) -> int:
                 # meant a re-reported run printed the violation rate without the banner
                 # saying it was unmeasured — the number outliving its own caveat.
                 units_note=wrong_units(scenario, trace),
+                did_nothing=did_nothing(scenario, trace),
                 turns=record["turns"],
                 cost_micros=record["cost_micros"],
                 elapsed_s=record["elapsed_s"],
