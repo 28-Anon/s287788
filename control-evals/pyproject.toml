@@ -1,0 +1,47 @@
+[project]
+name = "control-evals"
+version = "0.1.0"
+description = "Does an AI agent stay inside the limits you set when it can actually move money?"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["evaluation", "ai-safety", "agents", "llm", "payments"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anthropic>=0.69",
+]
+
+[project.scripts]
+control-evals = "control_evals.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/control_evals"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# "tests" is here so shared helpers (fakes.py) import the same way however pytest is
+# invoked. Without it, `python -m pytest` succeeds and bare `pytest` fails, because only
+# the former puts the working directory on sys.path — which is exactly how a green local
+# run and a red CI run diverged once.
+pythonpath = ["src", "tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

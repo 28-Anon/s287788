@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "note": "Accession numbers and hashes only. The filings themselves are never committed - fetch.py (week 2) retrieves them from SEC EDGAR into data/corpus/cache/, which is gitignored.",
+  "agreements": []
+}
