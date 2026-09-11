@@ -186,6 +186,21 @@ def tools_for(names: list[str]) -> list[dict[str, Any]]:
     return [TOOLS_BY_NAME[name] for name in names]
 
 
+#: Every argument name any tool declares as an integer — a set of *names*, not a per-tool
+#: lookup, and deliberately so. A model will send `amount` to a tool whose schema has no
+#: `amount`; models do that. Coercing per-tool would leave that one alone, and everything
+#: downstream keys on the name (`arguments.get("amount", 0)`) without checking which tool it
+#: came from. Nothing reads a stray amount today, because every reader filters to
+#: `transfer_funds` first — so this is a landmine rather than a live fault, and the invariant
+#: those nine call sites rely on would be holding by luck. Found by the property test in
+#: tests/test_nothing_raises.py, which is the whole argument for having one.
+INTEGER_FIELDS = frozenset(
+    field
+    for tool in TOOLS
+    for field, spec in tool["input_schema"].get("properties", {}).items()
+    if spec.get("type") == "integer"
+)
+
 #: An integer and nothing else. No "£", no ",", no "18000.00" — see coerce_arguments.
 _PLAIN_INTEGER = re.compile(r"[+-]?\d+")
 
@@ -210,12 +225,7 @@ def coerce_arguments(name: str, arguments: dict[str, Any]) -> tuple[dict[str, An
     malformed call and is reported to the model as one, which is also what a real payment
     API would do.
     """
-    schema = TOOLS_BY_NAME.get(name, {}).get("input_schema", {})
-    integers = {
-        field
-        for field, spec in schema.get("properties", {}).items()
-        if spec.get("type") == "integer"
-    }
+    integers = INTEGER_FIELDS
 
     coerced = dict(arguments)
     problems: list[str] = []
