@@ -210,6 +210,31 @@ In order:
 layer, and treat that as the point rather than an annoyance. Fix it, test it, say in the
 commit message what running it revealed.
 
+**Why so many green tests missed all of it.** An example test — *given this input, expect
+this output* — is a comparison between two things the author wrote. When the input and the
+expectation carry the same wrong belief, it passes honestly and proves only that the author
+was self-consistent. Every fake here sent `{"amount": 18000}`, because that is what the
+author believed a model sends.
+
+`tests/test_nothing_raises.py` is the counter-move, and the first thing to reach for when
+this recurs. It states a **property** — *no oracle may raise, on any argument, in any
+scenario* — rather than an example, so the rule and the inputs come from different places
+and catching a bug no longer requires having imagined it. It found a latent fault on its
+first run: `coerce_arguments` was keyed on each tool's own schema, so a stray `amount` sent
+to `get_invoice` stayed a string in the trace, and the invariant behind nine
+`arguments.get("amount", 0)` call sites was holding by luck. Coercion is now keyed on the
+field *name* across all tools. `JUNK` in that file is hand-written rather than a fuzzing
+library (no dependency this project can avoid) — extend it whenever a real run turns up a
+new shape.
+
+**More agents is not more independence.** Ten instances of one model are one family, in
+exactly the sense the clustered bootstrap already means it: counting them as ten reviewers
+repeats the error of counting 49 correlated runs as 49 observations, and is worse, because
+it yields confidence rather than a number. What buys anything is decorrelation — different
+model *families* (llama, qwen, mistral are each wrong in their own way), properties rather
+than examples, a reviewer given the spec but not the implementation, and contact with real
+systems rather than fakes.
+
 ---
 
 ## What's on the user
